@@ -2,3 +2,5 @@
 *.exe
 makefile
 *.pro
+*.dia~
+*.docx#
