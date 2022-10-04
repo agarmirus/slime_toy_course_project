@@ -3,6 +3,8 @@
 
 #include "object.hpp"
 
+using namespace std;
+
 class LightSource: public Object
 {
     private:
@@ -16,8 +18,6 @@ class LightSource: public Object
 
         ~Point() = default;
 
-        virtual void update(const size_t ms) {return;}
-
         virtual void move(
             const double dx,
             const double dy,
@@ -29,11 +29,6 @@ class LightSource: public Object
             const double zAngle
         );
 
-        virtual void setMass(const double mass) {return;}
-        virtual void setStiffness(const double k) {return;}
-        virtual void setKd(const double kd) {return;}
-        virtual void setKs(const double ks) {return;}
-        virtual void setKt(const double kt) {return;}
         virtual void setPos(
             const double x,
             const double y,
@@ -45,15 +40,7 @@ class LightSource: public Object
             const short unsigned b
         );
         virtual void setIntensity(const double i) {this->i = i;}
-        virtual void setMassPoints(List<shared_ptr<MassPoints>> &massPoints) {return;}
-        virtual void setFaces(List<shared_ptr<PlaneFace>> &faces) {return;}
-
-        virtual pair<Point, RGBColor> getIntersection(const Ray &ray); // вернуть нечто пустое
-        virtual shared_ptr<PlaneFace> getIntersectedPlane(const Ray &ray); // и тут тоже
-
-        virtual double getKd() {return;}
-        virtual double getKs() {return;}
-        virtual double getKt() {return;}
+        
         virtual RGBColor getRGB() {return color;}
         virtual Point getPos() {return pos;}
         virtual double getIntensity() {return i;}
