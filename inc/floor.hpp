@@ -11,20 +11,19 @@ using namespace std;
 class Floor: public Object
 {
     private:
-        PlaneFace face;
+        shared_ptr<PlaneFace> face;
+        shared_ptr<Texture> texture;
 
         double kd;
         double ks;
         double kt;
-
-        Texture texture;
     
     public:
         PlaneFace() = default;
         PlaneFace(
-            const PlaneFace &face, const double kd,
+            shared_ptr<PlaneFace> &face, const double kd,
             const double ks, const double kt,
-            const Texture &texture
+            shared_ptr<Texture> &texture
         );
 
         virtual void setKd(const double kd) {this->kd = kd;}

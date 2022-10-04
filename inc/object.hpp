@@ -43,8 +43,8 @@ class Object
             const short unsigned b
         ) {return;}
         virtual void setIntensity(const double i) {return;}
-        virtual void setMassPoints(List<shared_ptr<MassPoints>> &massPoints) {return;}
-        virtual void setFaces(List<shared_ptr<PlaneFace>> &faces) {return;}
+        virtual void setMassPoints(list<shared_ptr<MassPoints>> &massPoints) {return;}
+        virtual void setFaces(list<shared_ptr<PlaneFace>> &faces) {return;}
 
         virtual pair<Point, RGBColor> getIntersection(const Ray &ray); // пустая пара
         virtual const shared_ptr<PlaneFace> getIntersectedPlane(const Ray &ray); // тоже что-то пустое

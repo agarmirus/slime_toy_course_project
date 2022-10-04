@@ -8,9 +8,9 @@ using namespace std;
 class Slime: public Object
 {
     private:
-        List<MassPoint> massPoints;
-        List<PlaneFace> faces;
-        SphereCover cover;
+        list<shared_ptr<MassPoint>> massPoints;
+        list<shared_ptr<PlaneFace>> faces;
+        shared_ptr<SphereCover> cover;
 
         double mass;
         double k;
@@ -36,8 +36,8 @@ class Slime: public Object
             const short unsigned g,
             const short unsigned b
         );
-        virtual void setMassPoints(List<shared_ptr<MassPoints>> &massPoints) {this->massPoints = massPoints;}
-        virtual void setFaces(List<shared_ptr<PlaneFace>> &faces) {this->faces = faces;}
+        virtual void setMassPoints(list<shared_ptr<MassPoint>> &massPoints) {this->massPoints = massPoints;}
+        virtual void setFaces(list<shared_ptr<PlaneFace>> &faces) {this->faces = faces;}
 
         virtual pair<Point, RGBColor> getIntersection(const Ray &ray);
         virtual const shared_ptr<PlaneFace> getIntersectedPlane(const Ray &ray);
