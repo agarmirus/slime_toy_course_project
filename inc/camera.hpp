@@ -8,11 +8,10 @@ using namespace std;
 class Camera: public Object
 {
     private:
-        Point pos;
-        Vector3d viewVector;
+        shared_ptr<Point> pos;
+        shared_ptr<Vector3d> viewVector;
 
     public:
-        Camera() = default;
         Camera(const Point &pos, const Vector3d &viewVector);
 
         virtual ~Camera() = default;
@@ -34,7 +33,7 @@ class Camera: public Object
             const double z
         );
 
-        virtual Point getPos() {return pos;}
+        virtual const Point &getPos() {return *pos;}
 };
 
 #endif

@@ -20,9 +20,12 @@ class Slime: public Object
         double kt;
         double kl;
 
-        RGBColor color;
+        shared_ptr<RGBColor> color;
     
     public:
+        Slime() = default;
+        ~Slime() = default;
+        
         virtual void update(const size_t ms);
 
         virtual void setMass(const double mass) {this->mass = mass;}
@@ -46,8 +49,7 @@ class Slime: public Object
         virtual double getKs() {return ks;}
         virtual double getKt() {return kt;}
         virtual double getKl() {return kl;}
-        virtual RGBColor getRGB() {return color;}
-        virtual Point getPos() {return pos;}
+        virtual const RGBColor &getRGB() {return *color;}
 };
 
 #endif

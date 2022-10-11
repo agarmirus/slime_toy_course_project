@@ -8,13 +8,14 @@ using namespace std;
 class LightSource: public Object
 {
     private:
-        Point pos;
-        RGBColor color;
+        shared_ptr<Point> pos;
+        shared_ptr<RGBColor> color;
+
         double i;
 
     public:
         Point() = default;
-        Point(const Point &pos) {this->pos = pos};
+        Point(shared_ptr<Point> &pos) {this->pos = pos};
 
         ~Point() = default;
 
@@ -41,8 +42,8 @@ class LightSource: public Object
         );
         virtual void setIntensity(const double i) {this->i = i;}
         
-        virtual RGBColor getRGB() {return color;}
-        virtual Point getPos() {return pos;}
+        virtual const RGBColor &getRGB() {return *color;}
+        virtual const Point &getPos() {return *pos;}
         virtual double getIntensity() {return i;}
 };
 

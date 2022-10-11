@@ -53,8 +53,8 @@ class Object
         virtual double getKs() {return 0.0;}
         virtual double getKt() {return 0.0;}
         virtual double getKl() {return 0.0;}
-        virtual RGBColor getRGB() {return RGBColor(0, 0, 0);}
-        virtual Point getPos() {return Point(0.0, 0.0, 0.0);}
+        virtual const RGBColor &getRGB();
+        virtual const Point &getPos();
         virtual double getIntensity() {return 0.0;}
 };
 
