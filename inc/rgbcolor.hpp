@@ -1,25 +1,25 @@
 #ifndef RGBCOLOR_H
 #define RGBCOLOR_H
 
+#include <cmath>
+
 class RGBColor
 {
     private:
-        short int r;
-        short int g;
-        short int b;
+        short r;
+        short g;
+        short b;
     
     public:
         RGBColor() = default;
         RGBColor(const short r, const short g, const short b);
 
-        RGBColor(const RGBColor &color);
-
         virtual void sum(const RGBColor &color);
-        virtual void mult(const short int k);
+        virtual void mult(const double k);
 
-        virtual void setR(const short int r) {this->r = r;}
-        virtual void setG(const short int g) {this->g = g;}
-        virtual void setB(const short int b) {this->b = b;}
+        virtual void setR(const short r) {this->r = r;}
+        virtual void setG(const short g) {this->g = g;}
+        virtual void setB(const short b) {this->b = b;}
 
         virtual short int getR() {return r;}
         virtual short int getG() {return g;}
