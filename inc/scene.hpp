@@ -23,16 +23,11 @@ class Scene
         Scene(
             const shared_ptr<Object> &camera, const shared_ptr<Object> &lightSource,
             const shared_ptr<Object> &slime, const shared_ptr<Object> &floor
-        ) {
-            this->camera = camera;
-            this->lightSource = lightSource;
-            this->slime = slime;
-            this->floor = floor;
-        }
+        );
 
         virtual ~Scene() = default;
 
-        virtual void update(const size_t ms);
+        virtual void update(const size_t ms) {slime->update(ms);}
 
         virtual shared_ptr<Object> getCamera() {return camera;}
         virtual shared_ptr<Object> getLightSource() {return lightSource;}

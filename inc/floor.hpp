@@ -19,8 +19,8 @@ class Floor: public Object
         double kt;
     
     public:
-        PlaneFace() = default;
-        PlaneFace(
+        Floor() = default;
+        Floor(
             const shared_ptr<PlaneFace> &face, const double kd,
             const double ks, const double kt,
             const shared_ptr<Texture> &texture
