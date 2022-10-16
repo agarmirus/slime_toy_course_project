@@ -24,7 +24,8 @@ class Slime: public Object
     
     public:
         Slime() = default;
-        ~Slime() = default;
+
+        virtual ~Slime() = default;
         
         virtual void update(const size_t ms);
 
@@ -34,11 +35,7 @@ class Slime: public Object
         virtual void setKs(const double ks) {this->ks = ks;}
         virtual void setKt(const double kt) {this->kt = kt;}
         virtual void setKl(const double kl) {this->kl = kl;}
-        virtual void setRGB(
-            const short unsigned r,
-            const short unsigned g,
-            const short unsigned b
-        );
+        virtual void setRGB(const shared_ptr<RGBColor> &color);
         virtual void setMassPoints(list<shared_ptr<MassPoint>> &massPoints) {this->massPoints = massPoints;}
         virtual void setFaces(list<shared_ptr<PlaneFace>> &faces) {this->faces = faces;}
 

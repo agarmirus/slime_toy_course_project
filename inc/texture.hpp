@@ -5,6 +5,8 @@
 
 class Texture
 {
+    public:
+        virtual RGBColor getColor() = 0;
 };
 
 #endif

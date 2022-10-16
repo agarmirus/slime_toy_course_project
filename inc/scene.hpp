@@ -21,8 +21,8 @@ class Scene
     public:
         Scene() = default;
         Scene(
-            shared_ptr<Object> &camera, shared_ptr<Object> &lightSource,
-            shared_ptr<Object> &slime, shared_ptr<Object> &floor
+            const shared_ptr<Object> &camera, const shared_ptr<Object> &lightSource,
+            const shared_ptr<Object> &slime, const shared_ptr<Object> &floor
         ) {
             this->camera = camera;
             this->lightSource = lightSource;

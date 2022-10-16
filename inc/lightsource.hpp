@@ -30,16 +30,8 @@ class LightSource: public Object
             const double zAngle
         );
 
-        virtual void setPos(
-            const double x,
-            const double y,
-            const double z
-        );
-        virtual void setRGB(
-            const short unsigned r,
-            const short unsigned g,
-            const short unsigned b
-        );
+        virtual void setPos(shared_ptr<Point> &pos) {this->pos = pos;}
+        virtual void setRGB(const shared_ptr<RGBColor> &color) {this->color = color;}
         virtual void setIntensity(const double i) {this->i = i;}
         
         virtual const RGBColor &getRGB() {return *color;}

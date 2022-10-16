@@ -27,11 +27,7 @@ class Camera: public Object
             const double zAngle
         );
 
-        virtual void setPos(
-            const double x,
-            const double y,
-            const double z
-        );
+        virtual void setPos(const shared_ptr<Point> &pos) {this->pos = pos;}
 
         virtual const Point &getPos() {return *pos;}
 };

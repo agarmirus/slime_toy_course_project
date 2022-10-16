@@ -9,6 +9,8 @@ class Point
         double z;
     
     public:
+        virtual ~Point() = default;
+        
         virtual void setX(const double x) {this->x = x;}
         virtual void setY(const double y) {this->y = y;}
         virtual void setZ(const double z) {this->z = z;}

@@ -9,6 +9,11 @@ class RGBColor
         short int b;
     
     public:
+        RGBColor() = default;
+        RGBColor(const short r, const short g, const short b);
+
+        RGBColor(const RGBColor &color);
+
         virtual void sum(const RGBColor &color);
         virtual void mult(const short int k);
 

@@ -12,9 +12,11 @@ class Vector3d
         Vector3d() = default;
         Vector3d(Point &pos) {this->pos = pos;}
 
-        virtual void sum(Vector3d &vec);
+        virtual ~Vector3d() = default;
+
+        virtual void sum(const Vector3d &vec);
         virtual void mult(const double k);
-        virtual void dot(Vector3d &vec);
+        virtual void dot(const Vector3d &vec);
         virtual void neg();
 
         virtual void getPos() {return pos;}
