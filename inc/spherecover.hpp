@@ -15,7 +15,7 @@ class SphereCover
     
     public:
         SphereCover() = default;
-        SphereCover(const shared_ptr<Point> &pos, double radius);
+        SphereCover(const shared_ptr<Point> &pos, const double radius);
 
         virtual ~SphereCover() = default;
 
