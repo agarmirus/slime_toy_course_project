@@ -15,7 +15,7 @@ class LightSource: public Object
 
     public:
         Point() = default;
-        Point(shared_ptr<Point> &pos) {this->pos = pos};
+        Point(const shared_ptr<Point> &pos) {this->pos = pos};
 
         ~Point() = default;
 
@@ -23,14 +23,9 @@ class LightSource: public Object
             const double dx,
             const double dy,
             const double dz
-        );
-        virtual void rotate(
-            const double xAngle,
-            const double yAngle,
-            const double zAngle
-        );
+        ) {pos->move(dx, dy, dz);}
 
-        virtual void setPos(shared_ptr<Point> &pos) {this->pos = pos;}
+        virtual void setPos(const shared_ptr<Point> &pos) {this->pos = pos;}
         virtual void setRGB(const shared_ptr<RGBColor> &color) {this->color = color;}
         virtual void setIntensity(const double i) {this->i = i;}
         
