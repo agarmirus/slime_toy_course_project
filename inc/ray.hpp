@@ -1,6 +1,9 @@
 #ifndef RAY_H
 #define RAY_H
 
+#include "vector3d.hpp"
+#include "point.hpp"
+
 class Ray
 {
     private:
@@ -9,12 +12,12 @@ class Ray
     
     public:
         Ray() = default;
-        Ray(Vector3d &vec, Point &pos);
+        Ray(const Vector3d &vec, const Point &pos);
 
         ~Ray() = default;
 
-        virtual Point &getPos() {return pos;}
-        virtual Vector3d &getVec() {return vec;}
+        virtual const Point &getPos() {return pos;}
+        virtual const Vector3d &getVec() {return vec;}
 };
 
 #endif
