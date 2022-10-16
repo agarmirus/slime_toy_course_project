@@ -1,7 +1,7 @@
 #ifndef POINT_H
 #define POINT_H
 
-#include <memory>
+#include <cmath>
 
 class Point
 {
@@ -9,6 +9,16 @@ class Point
         double x;
         double y;
         double z;
+    
+    protected:
+        void turnAroundOZ(const double angle);
+        void turnAroundOY(const double angle);
+        void turnAroundOX(const double angle);
+
+        void moveToCenter(const Point &center);
+        void returnFromCenter(const Point &center);
+
+        double toRad(const double deg) {return deg * PI / 180;}
     
     public:
         Point() = default;

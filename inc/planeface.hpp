@@ -1,6 +1,10 @@
 #ifndef PLANEFACE_H
 #define PLANEFACE_H
 
+#include <memory>
+
+using namespace std;
+
 class PlaneFace
 {
     private:

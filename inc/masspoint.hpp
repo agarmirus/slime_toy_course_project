@@ -2,6 +2,7 @@
 #define MASSPOINT_H
 
 #include <list>
+#include <memory>
 
 #include "point.hpp"
 #include "vector3d.hpp"

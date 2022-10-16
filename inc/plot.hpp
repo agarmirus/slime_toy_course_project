@@ -1,9 +1,13 @@
 #ifndef PLOT_H
 #define PLOT_H
 
+#include <memory>
+
 #include <QGraphicsScene>
 
 #include "scene.hpp"
+
+using namespace std;
 
 class Plot
 {
