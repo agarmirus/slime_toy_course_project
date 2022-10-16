@@ -22,7 +22,7 @@ class SphereCover
         virtual void setPos(const shared_ptr<Point> &pos) {this->pos = pos;}
         virtual void setRadius(const double radius) {this->radius = radius;}
 
-        virtual bool isIntersected(const shared_ptr<Ray> &ray);
+        virtual bool isIntersected(const Ray &ray);
 };
 
 #endif

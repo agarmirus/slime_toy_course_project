@@ -2,6 +2,7 @@
 #define OBJECT_H
 
 #include <list>
+#include <cmath>
 
 #include "rgbcolor.hpp"
 #include "point.hpp"
