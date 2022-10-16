@@ -6,7 +6,7 @@
 class Vector3d
 {
     private:
-        shared_ptr<Point> pos;
+        Point pos;
     
     public:
         Vector3d() = default;
@@ -20,7 +20,7 @@ class Vector3d
 
         virtual void sum(const Vector3d &vec);
         virtual void mult(const double k);
-        virtual void dot(const Vector3d &vec);
+        virtual double dot(const Vector3d &vec);
         virtual void neg();
 
         virtual void rotate(
