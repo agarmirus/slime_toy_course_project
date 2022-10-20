@@ -15,9 +15,9 @@ class FloorTexture: public Texture
     public:
         FloorTexture(string &filename);
 
-        virtual ~FloorTexture();
+        virtual ~FloorTexture() = default;
 
-        virtual RGBColor getColor();
+        virtual RGBColor getColor(const Point &pos);
 }
 
 #endif

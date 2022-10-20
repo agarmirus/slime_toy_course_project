@@ -3,6 +3,7 @@
 
 #include <memory>
 
+#include "doubleop.hpp"
 #include "point.hpp"
 #include "ray.hpp"
 

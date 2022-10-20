@@ -37,5 +37,5 @@ bool SphereCover::isIntersected(const Ray &ray)
         rayVecPos.getZ(), radius
     );
 
-    return xDisc >= 0 && yDisc >= 0 && zDisc >= 0;
+    return ge(xDisc, 0) && ge(yDisc, 0) && ge(zDisc, 0);
 }

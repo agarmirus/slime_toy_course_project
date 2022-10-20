@@ -6,6 +6,8 @@
 
 #include <memory>
 
+#include "doubleop.hpp"
+
 using namespace std;
 
 class Floor: public Object
@@ -33,7 +35,7 @@ class Floor: public Object
         virtual void setKt(const double kt) {this->kt = kt;}
 
         virtual pair<Point, RGBColor> getIntersection(const Ray &ray);
-        virtual const shared_ptr<PlaneFace> getIntersectedPlane(const Ray &ray) {return face;}
+        virtual const shared_ptr<PlaneFace> getIntersectedPlane(const Ray &ray);
 
         virtual double getKd() {return kd;}
         virtual double getKs() {return ks;}
