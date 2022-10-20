@@ -3,6 +3,8 @@
 
 #include <memory>
 
+#include "doubleop.hpp"
+
 using namespace std;
 
 class PlaneFace
@@ -22,6 +24,8 @@ class PlaneFace
         virtual ~PlaneFace() = default;
 
         virtual void updateCoefs();
+
+        virtual bool getIntersectionPoint(Point &point, const Ray &ray);
 };
 
 #endif

@@ -9,7 +9,6 @@
 #include <cmath>
 
 #include "texture.hpp"
-#include "myerrors.hpp"
 
 class FloorTexture: public Texture
 {

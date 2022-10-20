@@ -3,6 +3,8 @@
 
 #include <cmath>
 
+#include "doubleop.hpp"
+
 class Point
 {
     private:
@@ -49,6 +51,11 @@ class Point
             const double yAngle,
             const double zAngle
         );
+
+        virtual bool operator==(const Point &p)
+        {
+            return eq(x, p.getX()) && eq(y, p.getY()) && eq(z, p.getZ());
+        }
 };
 
 #endif
