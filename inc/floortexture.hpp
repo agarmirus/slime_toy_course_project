@@ -1,19 +1,25 @@
 #ifndef FLOORTEXTURE_H
 #define FLOORTEXTURE_H
 
+#include <QImage>
+#include <QRgb>
+
 #include <memory>
-#include <tiffio.h>
 #include <string>
+#include <cmath>
 
 #include "texture.hpp"
+#include "myerrors.hpp"
 
 class FloorTexture: public Texture
 {
     private:
-        shared_ptr<TIFF> pic;
-    
+        int width;
+        int height;
+
+        QRgb *line;
     public:
-        FloorTexture(string &filename);
+        FloorTexture(const string &filename);
 
         virtual ~FloorTexture() = default;
 

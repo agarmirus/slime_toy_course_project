@@ -7,11 +7,14 @@
 #include "lightsource.hpp"
 #include "slime.hpp"
 #include "floor.hpp"
+#include "scene.hpp"
 
 using namespace std;
 
 class Scene
 {
+    friend Plot;
+
     private:
         shared_ptr<Object> camera;
         shared_ptr<Object> lightSource;

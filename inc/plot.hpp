@@ -12,11 +12,11 @@ using namespace std;
 class Plot
 {
     private:
-        shared_ptr<QGraphicsScene> scene;
+        shared_ptr<QGraphicsScene> pl;
 
     public:
         Plot() = default;
-        Plot(shared_ptr<QGraphicsScene> &scene) {this->scene = scene;}
+        Plot(shared_ptr<QGraphicsScene> &pl) {this->pl = pl;}
 
         virtual ~Plot() = default;
 
