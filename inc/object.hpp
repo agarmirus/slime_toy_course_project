@@ -39,7 +39,7 @@ class Object
         virtual void setFaces(list<shared_ptr<PlaneFace>> &faces) {return;}
 
         virtual bool getIntersection(Point &pos, RGBColor &color, const Ray &ray) {return false;}
-        virtual bool getIntersectedPlane(shared<PlaneFace> &face, const Ray &ray) {return false;}
+        virtual bool getIntersectedFace(shared<PlaneFace> &face, const Ray &ray) {return false;}
 
         virtual double getKd() {return 0.0;}
         virtual double getKs() {return 0.0;}
