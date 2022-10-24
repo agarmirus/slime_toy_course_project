@@ -29,3 +29,39 @@ void Vector3d::neg()
 {
     this->mult(-1);
 }
+
+Vector3d sum(const Vector3d &v1, const Vector3d &v2)
+{
+    Vector3d newV = v1;
+
+    newV.sum(v2);
+
+    return newV; 
+}
+
+Vector3d mult(const Vector3d &v1, const double k)
+{
+    Vector3d newV = v1;
+
+    newV.mult(k);
+
+    return newV; 
+}
+
+Vector3d dot(const Vector3d &v1, const Vector3d &v2)
+{
+    Vector3d newV = v1;
+
+    newV.dot(v2);
+
+    return newV;
+}
+
+Vector3d neg(const Vector3d &v1)
+{
+    Vector3d newV = v1;
+
+    newV.neg();
+
+    return newV;
+}

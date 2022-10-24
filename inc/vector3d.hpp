@@ -30,4 +30,12 @@ class Vector3d
         ) {pos->rotate(Point(0.0, 0.0, 0.0), xAngle, yAngle, zAngle)}
 };
 
+Vector3d sum(const Vector3d &v1, const Vector3d &v2);
+
+Vector3d mult(const Vector3d &v1, const double k);
+
+Vector3d dot(const Vector3d &v1, const Vector3d &v2);
+
+Vector3d neg(const Vector3d &v1);
+
 #endif

@@ -2,7 +2,19 @@
 
 // распараллелить
 void Slime::update(const size_t ms)
-{}
+{
+    for (auto it: massPoints)
+    {
+        Point pos = it->getPos();
+        Vector3d v = it->getVelocity();
+        Vector3d f = it->getForce();
+        double m = it->getMass();
+        double k = it->getStiffness();
+
+        Vector3d newF;
+        newF.sum();
+    }
+}
 
 // распараллелить
 bool Slime::getIntersection(Point &pos, RGBColor &color, const Ray &ray)
@@ -21,7 +33,7 @@ bool Slime::getIntersection(Point &pos, RGBColor &color, const Ray &ray)
 
     for (auto it: faces)
     {
-        if (face->getIntersectionPoint(tmp, ray))
+        if (it->getIntersectionPoint(tmp, ray))
         {
             if (!isIntersected || \
             (fabs(tmp.getX() - x0) < fabs(newPos.getX() - x0) && \
