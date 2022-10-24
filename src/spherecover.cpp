@@ -20,21 +20,21 @@ static double getDisc(
 bool SphereCover::isIntersected(const Ray &ray)
 {
     Point rayPos = ray.getPos();
-    Vector3d rayVecPos = ray.getVec().getPos();
+    Vector3d rayVec = ray.getVec();
 
     double xDisc = getDisc(
         rayPos.getX(), pos.getX(),
-        rayVecPos.getX(), radius
+        rayVec.getX(), radius
     );
 
     double yDisc = getDisc(
         rayPos.getY(), pos.getY(),
-        rayVecPos.getY(), radius
+        rayVec.getY(), radius
     );
 
     double zDisc = getDisc(
         rayPos.getZ(), pos.getZ(),
-        rayVecPos.getZ(), radius
+        rayVec.getZ(), radius
     );
 
     return ge(xDisc, 0) && ge(yDisc, 0) && ge(zDisc, 0);

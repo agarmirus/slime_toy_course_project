@@ -32,7 +32,7 @@ class Camera: public Object
 
         virtual void setPos(const shared_ptr<Point> &pos) {this->pos = pos;}
 
-        virtual const Point &getPos() {return *pos;}
+        virtual Point getPos() {return *pos;}
 };
 
 #endif

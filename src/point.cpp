@@ -1,5 +1,14 @@
 #include "point.hpp"
 
+double Point::getDistance(cosnt Point &point)
+{
+    double dx = point.x() - x;
+    double dy = point.y() - y;
+    double dz = point.z() - z;
+
+    return sqrt(dx * dx + dy * dy + dz * dz);
+}
+
 Point::Point(
     const double x,
     const double y,

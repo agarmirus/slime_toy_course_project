@@ -9,7 +9,7 @@ class LightSource: public Object
 {
     private:
         shared_ptr<Point> pos;
-        shared_ptr<RGBColor> color;
+        RGBColor color;
 
         double i;
 
@@ -26,11 +26,11 @@ class LightSource: public Object
         ) {pos->move(dx, dy, dz);}
 
         virtual void setPos(const shared_ptr<Point> &pos) {this->pos = pos;}
-        virtual void setRGB(const shared_ptr<RGBColor> &color) {this->color = color;}
+        virtual void setRGB(const RGBColor &color) {this->color = color;}
         virtual void setIntensity(const double i) {this->i = i;}
         
-        virtual const RGBColor &getRGB() {return *color;}
-        virtual const Point &getPos() {return *pos;}
+        virtual RGBColor getRGB() {return color;}
+        virtual const Point getPos() {return *pos;}
         virtual double getIntensity() {return i;}
 };
 

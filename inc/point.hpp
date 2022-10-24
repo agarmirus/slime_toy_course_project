@@ -40,6 +40,8 @@ class Point
         virtual double getY() {return y;}
         virtual double getZ() {return z;}
 
+        virtual double getDistance(cosnt Point &point);
+
         virtual void move(
             const double dx,
             const double dy,

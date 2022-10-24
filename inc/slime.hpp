@@ -2,6 +2,8 @@
 #define SLIME_H
 
 #include "object.hpp"
+#include "doubleop.hpp"
+#include "masspoint.hpp"
 
 using namespace std;
 
@@ -10,7 +12,8 @@ class Slime: public Object
     private:
         list<shared_ptr<MassPoint>> massPoints;
         list<shared_ptr<PlaneFace>> faces;
-        shared_ptr<SphereCover> cover;
+
+        SphereCover cover;
 
         double mass;
         double k;
@@ -20,7 +23,10 @@ class Slime: public Object
         double kt;
         double kl;
 
-        shared_ptr<RGBColor> color;
+        RGBColor color;
+    
+    protected:
+        virtual void updateForces();
     
     public:
         Slime() = default;
@@ -35,7 +41,7 @@ class Slime: public Object
         virtual void setKs(const double ks) {this->ks = ks;}
         virtual void setKt(const double kt) {this->kt = kt;}
         virtual void setKl(const double kl) {this->kl = kl;}
-        virtual void setRGB(const shared_ptr<RGBColor> &color);
+        virtual void setRGB(const RGBColor &color) {this->color = color;}
         virtual void setMassPoints(list<shared_ptr<MassPoint>> &massPoints) {this->massPoints = massPoints;}
         virtual void setFaces(list<shared_ptr<PlaneFace>> &faces) {this->faces = faces;}
 
@@ -46,7 +52,7 @@ class Slime: public Object
         virtual double getKs() {return ks;}
         virtual double getKt() {return kt;}
         virtual double getKl() {return kl;}
-        virtual const RGBColor &getRGB() {return *color;}
+        virtual RGBColor getRGB() {return color;}
 };
 
 #endif

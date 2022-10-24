@@ -7,9 +7,10 @@
 #include "lightsource.hpp"
 #include "slime.hpp"
 #include "floor.hpp"
-#include "scene.hpp"
 
 using namespace std;
+
+class Plot;
 
 class Scene
 {
