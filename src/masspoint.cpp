@@ -11,5 +11,9 @@ void MassPoint::update(const double ms)
 
     pos->setX(pos.getX() + velocity->getX() * ms + a.getX() * p);
     pos->setY(pos.getY() + velocity->getY() * ms + a.getY() * p);
-    pos->setZ(pos.getZ() + velocity->getZ() * ms + a.getZ() * p);
+
+    double newZ = pos.getZ() + velocity->getZ() * ms + a.getZ() * p;
+
+    if (ge(newZ, 0.0))
+        pos->setZ(newZ);
 }

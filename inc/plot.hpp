@@ -2,6 +2,7 @@
 #define PLOT_H
 
 #include <memory>
+#include <stack>
 
 #include <QGraphicsScene>
 
