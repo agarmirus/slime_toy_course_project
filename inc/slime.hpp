@@ -4,6 +4,10 @@
 #include "object.hpp"
 #include "doubleop.hpp"
 #include "masspoint.hpp"
+#include "omp.h"
+
+#define MU 0.3
+#define G 9.81
 
 using namespace std;
 

@@ -4,6 +4,7 @@
 #include <cmath>
 
 #include "point.hpp"
+#include "doubleop.hpp"
 
 class Vector3d
 {
@@ -38,6 +39,12 @@ class Vector3d
         virtual void mult(const double k);
         virtual double dot(const Vector3d &vec);
         virtual void neg();
+
+        virtual bool isNull()
+        {
+            return eq(pos.getX(), 0.0) && \
+            eq(pos.getY(), 0.0) && eq(pos.getZ(), 0.0);
+        }
 
         virtual void rotate(
             const double xAngle,
