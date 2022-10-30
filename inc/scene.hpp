@@ -10,12 +10,8 @@
 
 using namespace std;
 
-class Plot;
-
 class Scene
 {
-    friend Plot;
-
     private:
         shared_ptr<Object> camera;
         shared_ptr<Object> lightSource;

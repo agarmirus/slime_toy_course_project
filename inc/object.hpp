@@ -6,9 +6,6 @@
 #include "rgbcolor.hpp"
 #include "point.hpp"
 
-#define IEPS 1e-7
-#define MAX_TRACE_COUNT 5
-
 using namespace std;
 
 class Object

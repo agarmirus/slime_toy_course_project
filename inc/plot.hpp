@@ -11,6 +11,8 @@
 
 #define FOV PI / 3
 
+#define MAX_TRACE_COUNT 5
+
 using namespace std;
 
 class Plot

@@ -14,16 +14,29 @@ Scene::Scene(
 bool Scene::getIntersection(
     Point &pos,
     RGBColor &color,
-    const Ray &ray)
+    shared_ptr<PlaneFace> &face,
+    double &ks,
+    double &kd,
+    double &kt,
+    double &kl,
+    const Ray &ray
+)
 {
     Point slimeIntersectionPoint, floorIntersectionPoint;
     RGBColor slimeColor, floorColor;
+    shared_ptr<face> slimeFace, floorFace;
+    double slimeKs, floorKs;
+    double slimeKd, floorKd;
+    double slimeKt, floorKt;
+    double slimeKl, floorKl;
 
     bool slimeIsIntersected = slime->getIntersection(
-        slimeIntersectionPoint, slimeColor, ray
+        slimeIntersectionPoint, slimeColor, slimeFace,
+        slimeKs, slimeKd, slimeKt, slimeKl, ray
     );
     bool floorIsIntersected = floor->getIntersection(
-        floorIntersectionPoint, floorColor, ray
+        floorIntersectionPoint, floorColor, floorFace,
+        floorKs, floorKd, floorKt, floorKl, ray
     );
 
     if (!slimeIsIntersected && !floorIsIntersected)
@@ -36,24 +49,44 @@ bool Scene::getIntersection(
         if (rayPos.getDistance(slimeIntersectionPoint) < \
         rayPos.getDistance(floorIntersectionPoint))
         {
-            pos = pos = slimeIntersectionPoint;
+            pos = slimeIntersectionPoint;
             color = slimeColor;
+            face = slimeFace;
+            ks = slimeKs;
+            kd = slimeKd;
+            kt = slimeKt;
+            kl = slimeKl;
         }
         else
         {
             pos = floorIntersectionPoint;
             color = floorColor;
+            face = floorFace;
+            ks = floorKs;
+            kd = floorKd;
+            kt = floorKt;
+            kl = floorKl;
         }
     }
     else if (floorIsIntersected)
     {
         pos = floorIntersectionPoint;
         color = floorColor;
+        face = floorFace;
+        ks = floorKs;
+        kd = floorKd;
+        kt = floorKt;
+        kl = floorKl;
     }
     else
     {
         pos = slimeIntersectionPoint;
         color = slimeColor;
+        face = slimeFace;
+        ks = slimeKs;
+        kd = slimeKd;
+        kt = slimeKt;
+        kl = slimeKl;
     }
 
     return true;

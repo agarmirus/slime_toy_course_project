@@ -17,16 +17,22 @@ static QColor renderTraceRay(
     const Scene &scene,
     const Ray &ray,
     const double n = 1.0,
-    const short rays_count = 1
+    const short raysCount = 1
 )
 {
     Point intersectionPoint;
     RGBColor intersectionColor;
+    shared_ptr<PlaneFace> intersectedFace;
+    double ks, kd, kt, kl;
 
-    if (!scene.getIntersection(intersectionPoint, intersectionColor, ray))
+    if (!scene.getIntersection(
+        intersectionPoint,
+        intersectionColor,
+        intersectedFace,
+        ks, kd, kt, kl,ray))
         return QColor(100, 100, 255);
     
-    // ...
+
 }
 
 // распараллелить
