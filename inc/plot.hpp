@@ -3,25 +3,37 @@
 
 #include <memory>
 #include <stack>
+#include <cmath>
 
 #include <QGraphicsScene>
 
 #include "scene.hpp"
+
+#define FOV PI / 3
 
 using namespace std;
 
 class Plot
 {
     private:
-        shared_ptr<QGraphicsScene> pl;
+        QGraphicsScene* pl;
+
+        QImage img;
+
+        size_t w;
+        size_t h;
 
     public:
         Plot() = default;
-        Plot(shared_ptr<QGraphicsScene> &pl) {this->pl = pl;}
+        Plot(
+            shared_ptr<QGraphicsScene> &pl,
+            const size_t width,
+            const size_t height
+        );
 
         virtual ~Plot() = default;
 
-        virtual drawScene(Scene &scene);
+        virtual void drawScene(const Scene &scene);
 };
 
 #endif

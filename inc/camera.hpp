@@ -19,20 +19,11 @@ class Camera: public Object
 
         virtual ~Camera() = default;
 
-        virtual void move(
-            const double dx,
-            const double dy,
-            const double dz
-        ) {pos->move(dx, dy, dz);}
-        virtual void rotate(
-            const double xAngle,
-            const double yAngle,
-            const double zAngle
-        ) {viewVector->rotate(xAngle, yAngle, zAngle);}
-
         virtual void setPos(const shared_ptr<Point> &pos) {this->pos = pos;}
+        virtual void setVec(const shared_ptr<Vector3d> &vec) {viewVector = vec;}
 
         virtual Point getPos() {return *pos;}
+        virtual Vector3d getVec() {return *vec;}
 };
 
 #endif

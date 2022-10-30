@@ -93,14 +93,24 @@ void Slime::update(const size_t ms)
 }
 
 // распараллелить
-bool Slime::getIntersection(Point &pos, RGBColor &color, const Ray &ray)
+bool Slime::getIntersection(
+    Point &pos,
+    RGBColor &color,
+    shared_ptr<PlaneFace> &face,
+    double &ks,
+    double &kd,
+    double &kt,
+    double &kl,
+    const Ray &ray
+)
 {
     if (cover->isIntersected(ray))
         return false;
 
     bool isIntersected = false;
 
-    Point tmp;
+    Point tmp, newPos;
+    shared_ptr<PlaneFace> interFace = nullptr;
 
     Point rayPos = ray.getPos();
     double x0 = rayPos.getX();
@@ -113,43 +123,24 @@ bool Slime::getIntersection(Point &pos, RGBColor &color, const Ray &ray)
         {
             if (!isIntersected || \
             rayPos.getDistance(tmp) < rayPos.getDistance(newPos))
+            {
                 newPos = tmp;
+                interFace = it;
+            }
             
             isIntersected = true;
         }
     }
 
     if (isIntersected)
-        color = this->color;
-
-    return isIntersected;
-}
-
-// распараллелить
-bool Slime::getIntersectedFace(shared<PlaneFace> &face, const Ray &ray)
-{
-    if (cover->isIntersected(ray))
-        return false;
-
-    bool isIntersected = false;
-
-    Point tmp;
-
-    Point rayPos = ray.getPos();
-    double x0 = rayPos.getX();
-    double y0 = rayPos.getY();
-    double z0 = rayPos.getZ();
-
-    for (auto it: faces)
     {
-        if (it->getIntersectionPoint(tmp, ray))
-        {
-            if (!isIntersected || \
-            rayPos.getDistance(tmp) < rayPos.getDistance(newPos))
-                face = it;
-            
-            isIntersected = true;
-        }
+        pos = newPos;
+        color = this->color;
+        face = interFace;
+        ks = this->ks;
+        kd = this->kd;
+        kt = this->kt;
+        kl = this->kl;
     }
 
     return isIntersected;

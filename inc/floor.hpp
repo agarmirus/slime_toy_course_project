@@ -16,8 +16,6 @@ class Floor: public Object
         shared_ptr<Texture> texture;
 
         double kd;
-        double ks;
-        double kt;
     
     public:
         Floor() = default;
@@ -29,14 +27,19 @@ class Floor: public Object
         virtual ~Floor() = default;
 
         virtual void setKd(const double kd) {this->kd = kd;}
-        virtual void setKs(const double ks) {this->ks = ks;}
-        virtual void setKt(const double kt) {this->kt = kt;}
 
-        virtual bool getIntersection(Point &pos, RGBColor &color, const Ray &ray);
+        virtual bool getIntersection(
+            Point &pos,
+            RGBColor &color,
+            shared_ptr<PlaneFace> &face,
+            double &ks,
+            double &kd,
+            double &kt,
+            double &kl,
+            const Ray &ray
+        );
 
         virtual double getKd() {return kd;}
-        virtual double getKs() {return ks;}
-        virtual double getKt() {return kt;}
 };
 
 #endif

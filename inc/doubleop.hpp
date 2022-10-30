@@ -3,7 +3,7 @@
 
 #include <cmath>
 
-#define EPS 1e7
+#define EPS 1e-7
 
 bool eq(const double a, const double b);
 

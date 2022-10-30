@@ -30,7 +30,7 @@ class LightSource: public Object
         virtual void setIntensity(const double i) {this->i = i;}
         
         virtual RGBColor getRGB() {return color;}
-        virtual const Point getPos() {return *pos;}
+        virtual Point getPos() {return *pos;}
         virtual double getIntensity() {return i;}
 };
 

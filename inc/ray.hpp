@@ -16,8 +16,11 @@ class Ray
 
         ~Ray() = default;
 
-        virtual const Point &getPos() {return pos;}
-        virtual const Vector3d &getVec() {return vec;}
+        virtual void setPos(const Point &pos) {this->pos = pos;}
+        virtual void setVec(const Vector3d &vec) {this->vec = vec;}
+
+        virtual Point &getPos() {return pos;}
+        virtual Vector3d &getVec() {return vec;}
 };
 
 #endif

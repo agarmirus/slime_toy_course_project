@@ -6,6 +6,9 @@
 #include "rgbcolor.hpp"
 #include "point.hpp"
 
+#define IEPS 1e-7
+#define MAX_TRACE_COUNT 5
+
 using namespace std;
 
 class Object
@@ -38,15 +41,25 @@ class Object
         virtual void setMassPoints(list<shared_ptr<MassPoints>> &massPoints) {return;}
         virtual void setFaces(list<shared_ptr<PlaneFace>> &faces) {return;}
 
-        virtual bool getIntersection(Point &pos, RGBColor &color, const Ray &ray) {return false;}
-        virtual bool getIntersectedFace(shared<PlaneFace> &face, const Ray &ray) {return false;}
+        virtual bool getIntersection(
+            Point &pos,
+            RGBColor &color,
+            shared_ptr<PlaneFace> &face,
+            double &ks,
+            double &kd,
+            double &kt,
+            double &kl,
+            const Ray &ray
+        ) {return false;}
+
+        virtual bool getGrabbingPoint(Point &pos, const Ray &ray) {return false;}
 
         virtual double getKd() {return 0.0;}
         virtual double getKs() {return 0.0;}
         virtual double getKt() {return 0.0;}
         virtual double getKl() {return 0.0;}
-        virtual const RGBColor &getRGB();
-        virtual const Point &getPos();
+        virtual RGBColor getRGB();
+        virtual Point getPos();
         virtual double getIntensity() {return 0.0;}
 };
 

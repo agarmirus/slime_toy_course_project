@@ -49,8 +49,16 @@ class Slime: public Object
         virtual void setMassPoints(list<shared_ptr<MassPoint>> &massPoints) {this->massPoints = massPoints;}
         virtual void setFaces(list<shared_ptr<PlaneFace>> &faces) {this->faces = faces;}
 
-        virtual bool getIntersection(Point &pos, RGBColor &color, const Ray &ray);
-        virtual bool getIntersectedFace(shared<PlaneFace> &face, const Ray &ray);
+        virtual bool getIntersection(
+            Point &pos,
+            RGBColor &color,
+            shared_ptr<PlaneFace> &face,
+            double &ks,
+            double &kd,
+            double &kt,
+            double &kl,
+            const Ray &ray
+        );
 
         virtual double getKd() {return kd;}
         virtual double getKs() {return ks;}

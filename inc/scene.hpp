@@ -33,10 +33,21 @@ class Scene
 
         virtual void update(const size_t ms) {slime->update(ms);}
 
-        virtual shared_ptr<Object> getCamera() {return camera;}
-        virtual shared_ptr<Object> getLightSource() {return lightSource;}
-        virtual shared_ptr<Object> getSlime() {return slime;}
-        virtual shared_ptr<Object> getFloor() {return floor;}
+        virtual shared_ptr<Object> getCamera() {return *camera;}
+        virtual shared_ptr<Object> getLightSource() {return *lightSource;}
+        virtual shared_ptr<Object> getSlime() {return *slime;}
+        virtual shared_ptr<Object> getFloor() {return *floor;}
+
+        virtual bool getIntersection(
+            Point &pos,
+            RGBColor &color,
+            shared_ptr<PlaneFace> &face,
+            double &ks,
+            double &kd,
+            double &kt,
+            double &kl,
+            const Ray &ray
+        );
 };
 
 #endif
