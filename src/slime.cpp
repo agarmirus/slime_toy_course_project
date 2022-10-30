@@ -145,3 +145,14 @@ bool Slime::getIntersection(
 
     return isIntersected;
 }
+
+bool Slime::isIntersected(const Ray &ray)
+{
+    Point tmp;
+
+    for (auto it: faces)
+        if (it->getIntersectionPoint(tmp, ray))
+            return true;
+    
+    return false;
+}

@@ -58,6 +58,8 @@ class Object
         virtual RGBColor getRGB();
         virtual Point getPos();
         virtual double getIntensity() {return 0.0;}
+
+        virtual bool isIntersected(const Ray &ray) {return false;}
 };
 
 #endif

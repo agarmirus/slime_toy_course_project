@@ -40,6 +40,8 @@ class Floor: public Object
         );
 
         virtual double getKd() {return kd;}
+
+        virtual bool isIntersected(const Ray &ray);
 };
 
 #endif

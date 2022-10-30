@@ -31,14 +31,22 @@ static QColor renderTraceRay(
         intersectedFace,
         ks, kd, kt, kl,ray))
         return QColor(100, 100, 255);
-    
 
+    // Теневой луч
+    Ray shadowRay(
+        intersectionPoint,
+        Vector3d(
+            scene.lightSource->getX() - intersectionPoint.getX(),
+            scene.lightSource->getY() - intersectionPoint.getY(),
+            scene.lightSource->getZ() - intersectionPoint.getZ()
+        )
+    );
 }
 
 // распараллелить
 void Plot::drawScene(const Scene &scene)
 {
-    Point camPos = scene.getCamera().getPos();
+    Point camPos = scene.getCamera()->getPos();
 
     double cx = camPos.getX();
     double cy = camPos.getY();

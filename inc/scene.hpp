@@ -44,6 +44,8 @@ class Scene
             double &kl,
             const Ray &ray
         );
+        
+        virtual bool isIntersected(const Ray &ray);
 };
 
 #endif

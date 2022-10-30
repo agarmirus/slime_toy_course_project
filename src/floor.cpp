@@ -46,26 +46,27 @@ bool Floor::getIntersection(
 )
 {
     Point rayVec = ray.getVec();
+    Point rayPos = ray.getPos();
 
-    if (!eq(rayVec.getZ(), 0.0))
+    double t = -rayPos.getZ() / rayVec.getZ();
+
+    if (gt(t, 0.0))
     {
-        Point rayPos = ray.getPos();
+        pos.setX(rayPos.getX() - rayVec.getX() * t);
+        pos.setY(rayPos.getY() - rayVec.getY() * t);
+        pos.setZ(0.0);
 
-        double t = -rayPos.getZ() / rayVecPos.getZ();
+        color = texture->getColor(pos);
+        face = nullptr;
 
-        if (ge(t, 0))
-        {
-            pos.setX(rayPos.getX() - rayVec.getX() * t);
-            pos.setY(rayPos.getY() - rayVec.getY() * t);
-            pos.setZ(0);
-
-            color = texture->getColor(pos);
-            face = nullptr;
-
-            ks = kt = kl = 0.0;
-            kd = this->kd;
-        }
+        ks = kt = kl = 0.0;
+        kd = this->kd;
     }
 
     return false;
+}
+
+bool Floor::isIntersected(const Ray &ray)
+{
+    return gt(-ray.getPos().getZ() / ray.getVec().getZ(), 0.0)
 }

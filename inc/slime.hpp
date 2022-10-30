@@ -65,6 +65,8 @@ class Slime: public Object
         virtual double getKt() {return kt;}
         virtual double getKl() {return kl;}
         virtual RGBColor getRGB() {return color;}
+
+        virtual bool isIntersected(const Ray &ray);
 };
 
 #endif

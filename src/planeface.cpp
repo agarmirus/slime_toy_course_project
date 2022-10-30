@@ -27,9 +27,10 @@ void PlaneFace::updateCoefs()
     double y3 = points[2]->getY();
     double z3 = points[2]->getZ();
 
-    points[0]->setX((y2 - y1) * (z3 - z2) - (y3 - y2) * (z2 - z1));
-    points[1]->setY((x2 - x1) * (z3 - z2) - (x3 - x2) * (z2 - z1));
-    points[2]->setZ((x2 - x1) * (y3 - y2) - (x3 - x2) * (y2 - y1));
+    coeffs[0] = (y2 - y1) * (z3 - z2) - (y3 - y2) * (z2 - z1);
+    coeffs[1] = (x2 - x1) * (z3 - z2) - (x3 - x2) * (z2 - z1);
+    coeffs[2] = (x2 - x1) * (y3 - y2) - (x3 - x2) * (y2 - y1);
+    coeffs[3] = -coeffs[0] * x1 - coeffs[1] * y1 - coeffs[2] * z1;
 }
 
 static bool inTriangle(
@@ -98,6 +99,9 @@ bool PlaneFace::getIntersectionPoint(Point &point, const Ray &ray)
     double d = coeffs[3];
 
     double t = -(a * x0 + b * y0 + c * z0 + d) / zn;
+
+    if (le(t, 0.0))
+        return false;
 
     point = Point(x0 + m * t, y0 + n * t, z0 + p * t);
 
