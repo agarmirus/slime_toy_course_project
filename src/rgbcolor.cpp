@@ -38,3 +38,29 @@ void RGBColor::mult(const double k)
     if (b > 255)
         b = 255;
 }
+
+RGBColor RGBColor::operator+(const RGBColor &color)
+{
+    RGBColor res = *this;
+    res.sum(color);
+
+    return res
+}
+
+RGBColor RGBColor::operator*(const double k)
+{
+    RGBColor res = *this;
+    res.mult(k);
+
+    return res
+}
+
+RGBColor sum(const RGBColor &c1, const RGBColor &c2)
+{
+    return *this + k;
+}
+
+RGBColor mult(const RGBColor &c, const double k)
+{
+    return *this * k;
+}

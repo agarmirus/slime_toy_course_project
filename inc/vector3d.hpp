@@ -38,6 +38,7 @@ class Vector3d
         virtual void sub(const Vector3d &vec);
         virtual void mult(const double k);
         virtual double dot(const Vector3d &vec);
+        virtual double cos(const Vector3d &vec);
         virtual void neg();
 
         virtual bool isNull()

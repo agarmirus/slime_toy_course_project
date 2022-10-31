@@ -91,3 +91,8 @@ bool Scene::getIntersection(
 
     return true;
 }
+
+bool Scene::isIntersected(const Ray &ray)
+{
+    return slime->isIntersected(ray) || floor->isIntersected(ray);
+}

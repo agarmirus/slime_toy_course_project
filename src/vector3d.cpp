@@ -39,6 +39,16 @@ double Vector3d::dot(const Vector3d &vec)
            pos.getZ() * vecPos.getZ();
 }
 
+double Vector3d::cos(const Vector3d &vec)
+{
+    double p = this->getModulus() * vec.getModulus();
+
+    if (eq(p, 0.0))
+        return 0.0;
+
+    return vec.dot(this) / p;
+}
+
 void Vector3d::neg()
 {
     this->mult(-1);

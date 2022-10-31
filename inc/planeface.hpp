@@ -25,6 +25,8 @@ class PlaneFace
 
         virtual void updateCoefs();
 
+        virtual Vector3d getNormal() {return Vector3d(coeffs[0], coeffs[1], coeffs[2]);}
+
         virtual bool getIntersectionPoint(Point &point, const Ray &ray);
 };
 

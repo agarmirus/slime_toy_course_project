@@ -24,6 +24,13 @@ class RGBColor
         virtual short int getR() {return r;}
         virtual short int getG() {return g;}
         virtual short int getB() {return b;}
+
+        virtual RGBColor operator+(const RGBColor &color);
+        virtual RGBColor operator*(const double k);
 };
+
+RGBColor sum(const RGBColor &c1, const RGBColor &c2);
+
+RGBColor mult(const RGBColor &c, const double k);
 
 #endif
