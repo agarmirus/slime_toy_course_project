@@ -6,7 +6,6 @@
 
 #include "plot.hpp"
 #include "floor.hpp"
-#include "timer.hpp"
 #include "slime.hpp"
 #include "scene.hpp"
 #include "point.hpp"
@@ -21,6 +20,10 @@
 #define FPS 60
 
 using namespace std;
+
+QT_BEGIN_NAMESPACE
+namespace Ui { class MainWindow; }
+QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
 {

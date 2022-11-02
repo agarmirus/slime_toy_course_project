@@ -58,15 +58,15 @@ class Slime: public Object
             double &kt,
             double &kl,
             const Ray &ray
-        );
+        ) const;
 
-        virtual double getKd() {return kd;}
-        virtual double getKs() {return ks;}
-        virtual double getKt() {return kt;}
-        virtual double getKl() {return kl;}
-        virtual RGBColor getRGB() {return color;}
+        virtual double getKd() const {return kd;}
+        virtual double getKs() const {return ks;}
+        virtual double getKt() const {return kt;}
+        virtual double getKl() const {return kl;}
+        virtual RGBColor getRGB() const {return color;}
 
-        virtual bool isIntersected(const Ray &ray);
+        virtual bool isIntersected(const Ray &ray) const;
 };
 
 #endif

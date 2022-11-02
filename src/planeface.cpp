@@ -68,12 +68,12 @@ static bool inTriangle(
     }
     
     double det = abx * acy - aby * acx;
-    double ks = (apx * acy - apy * acx + abx * apy - aby * apx) / det
+    double ks = (apx * acy - apy * acx + abx * apy - aby * apx) / det;
 
     return ge(ks, 0.0) && le(ks, 1.0);
 }
 
-bool PlaneFace::getIntersectionPoint(Point &point, const Ray &ray)
+bool PlaneFace::getIntersectionPoint(Point &point, const Ray &ray) const
 {
     Point rayVecPos = ray.getVec().getPos();
 

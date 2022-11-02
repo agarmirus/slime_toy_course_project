@@ -7,6 +7,8 @@
 #include "point.hpp"
 #include "ray.hpp"
 
+using namespace std;
+
 class SphereCover
 {
     private:
@@ -23,8 +25,8 @@ class SphereCover
         virtual void setPos(const shared_ptr<Point> &pos) {this->pos = pos;}
         virtual void setRadius(const double radius) {this->radius = radius;}
 
-        virtual void getPos() {return *pos;}
-        virtual void getRadius() {return radius;}
+        virtual Point getPos() {return *pos;}
+        virtual double getRadius() {return radius;}
 
         virtual bool isIntersected(const Ray &ray);
 };

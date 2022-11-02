@@ -2,9 +2,13 @@
 #define OBJECT_H
 
 #include <list>
+#include <memory>
 
+#include "planeface.hpp"
+#include "masspoint.hpp"
 #include "rgbcolor.hpp"
 #include "point.hpp"
+#include "ray.hpp"
 
 using namespace std;
 
@@ -13,7 +17,7 @@ class Object
     public:
         virtual ~Object() = 0;
 
-        virtual void update(const size_t ms) {return};
+        virtual void update(const size_t ms) {return;}
 
         virtual void move(
             const double dx,
@@ -34,7 +38,7 @@ class Object
         virtual void setKl(const double kl) {return;}
         virtual void setPos(const shared_ptr<Point> &pos) {return;}
         virtual void setRGB(const shared_ptr<RGBColor> &color) {return;}
-        virtual void setMassPoints(list<shared_ptr<MassPoints>> &massPoints) {return;}
+        virtual void setMassPoints(list<shared_ptr<MassPoint>> &massPoints) {return;}
         virtual void setFaces(list<shared_ptr<PlaneFace>> &faces) {return;}
 
         virtual bool getIntersection(
@@ -46,18 +50,18 @@ class Object
             double &kt,
             double &kl,
             const Ray &ray
-        ) {return false;}
+        ) const {return false;}
 
-        virtual bool getGrabbingPoint(Point &pos, const Ray &ray) {return false;}
+        virtual bool getGrabbingPoint(Point &pos, const Ray &ray) const {return false;}
 
-        virtual double getKd() {return 0.0;}
-        virtual double getKs() {return 0.0;}
-        virtual double getKt() {return 0.0;}
-        virtual double getKl() {return 0.0;}
-        virtual RGBColor getRGB() {return RGBColor(0, 0, 0);}
-        virtual Point getPos() {return Point(0.0, 0.0, 0.0);}
+        virtual double getKd() const {return 0.0;}
+        virtual double getKs() const {return 0.0;}
+        virtual double getKt() const {return 0.0;}
+        virtual double getKl() const {return 0.0;}
+        virtual RGBColor getRGB() const {return RGBColor(0, 0, 0);}
+        virtual Point getPos() const {return Point(0.0, 0.0, 0.0);}
 
-        virtual bool isIntersected(const Ray &ray) {return false;}
+        virtual bool isIntersected(const Ray &ray) const {return false;}
 };
 
 #endif

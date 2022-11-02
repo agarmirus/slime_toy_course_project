@@ -3,15 +3,21 @@
 
 #include <memory>
 
-#include "camera.hpp"
+#include "spherecover.hpp"
 #include "lightsource.hpp"
+#include "planeface.hpp"
+#include "camera.hpp"
 #include "slime.hpp"
 #include "floor.hpp"
 
 using namespace std;
 
+class Plot;
+
 class Scene
 {
+    friend class Plot;
+
     private:
         shared_ptr<Object> camera;
         shared_ptr<Object> lightSource;
@@ -29,10 +35,10 @@ class Scene
 
         // virtual void update(const size_t ms) {slime->update(ms);}
 
-        virtual shared_ptr<Object> getCamera() {return *camera;}
-        virtual shared_ptr<Object> getLightSource() {return *lightSource;}
-        virtual shared_ptr<Object> getSlime() {return *slime;}
-        virtual shared_ptr<Object> getFloor() {return *floor;}
+        // virtual shared_ptr<Object> getCamera() {return camera;}
+        // virtual shared_ptr<Object> getLightSource() {return lightSource;}
+        // virtual shared_ptr<Object> getSlime() {return slime;}
+        // virtual shared_ptr<Object> getFloor() {return floor;}
 
         virtual bool getIntersection(
             Point &pos,
@@ -43,9 +49,9 @@ class Scene
             double &kt,
             double &kl,
             const Ray &ray
-        );
+        ) const;
         
-        virtual bool isIntersected(const Ray &ray);
+        virtual bool isIntersected(const Ray &ray) const;
 };
 
 #endif

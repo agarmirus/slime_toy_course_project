@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+#include "mainwindow.hpp"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent):
@@ -12,22 +12,22 @@ MainWindow::MainWindow(QWidget *parent):
     scene->setSceneRect(VIEW_X, VIEW_Y, VIEW_W, VIEW_H);
 
     // ------
-    shared_ptr<Texture> texture = new Texture("./textures/floor.jpg");
-    shared_ptr<Floor> floor = new Floor(1.0, 0.0, 0.0, texture);
+    shared_ptr<Texture> texture = make_shared<FloorTexture>("./textures/floor.jpg");
+    auto floor = make_shared<Floor>(1.0, 0.0, 0.0, texture);
 
-    shared_ptr<Point> camPos = new Point(0.0, 0.0, 10.0);
-    shared_ptr<Vector3d> camVec = new Vector3d(0.0, 1.0, 0.0);
-    shared_ptr<Object> camera = new Camera(camPos, camVec);
+    auto camPos = make_shared<Point>(0.0, 0.0, 10.0);
+    auto camVec = make_shared<Vector3d>(0.0, 1.0, 0.0);
+    auto camera = make_shared<Camera>(camPos, camVec);
 
-    shared_ptr<Point> lightPos = new Point(100.0, -100.0, 50.0);
-    shared_ptr<Object> lightSource = new LightSource(lightPos);
+    auto lightPos = make_shared<Point>(100.0, -100.0, 50.0);
+    auto lightSource = make_shared<LightSource>(lightPos);
 
-    this->scene = new Scene(camera, lightSource, nullptr, floor);
+    this->scene = make_shared<Scene>(camera, lightSource, nullptr, floor);
     
     this->timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
 
-    this->plot = Plot(scene, VIEW_W, VIEW_H);
+    this->plot = make_shared<Plot>(scene, VIEW_W, VIEW_H);
     // ------
 
     timer->start(1000 / FPS);
@@ -42,5 +42,5 @@ MainWindow::~MainWindow()
 void MainWindow::update()
 {
     plot->drawScene(scene);
-    scene->update(1000 / FPS);
+    // scene->update(1000 / FPS);
 }

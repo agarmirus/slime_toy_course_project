@@ -1,19 +1,19 @@
 #include "floortexture.hpp"
 
-FloorTexture::FloorTexture(string &filename)
+FloorTexture::FloorTexture(const char *filename)
 {
-    QImage img(filename);
+    img = make_shared<QImage>(filename);
 
-    width = img.width;
-    height = img.height;
+    width = img->width();
+    height = img->height();
 
-    QRgb *line = (QRgb *)img.constBits();
+    QRgb *line = (QRgb *)img->constBits();
 }
 
-RGBColor FloorTexture::getColor(const Point &pos)
+RGBColor FloorTexture::getColor(const Point &pos) const
 {
-    int w = round(pos.getX() + 0.5) % width;
-    int h = round(pos.getY() + 0.5) % height;
+    int w = int(pos.getX() + 0.5) % width;
+    int h = int(pos.getY() + 0.5) % height;
 
     QColor color(*(line + h * width + w));
 

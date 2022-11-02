@@ -1,16 +1,16 @@
 #include "plot.hpp"
 
 Plot::Plot(
-    shared_ptr<QGraphicsScene> &pl,
-    const size_t width,
-    const size_t height
+    QGraphicsScene *pl,
+    const int width,
+    const int height
 )
 {
     this->pl = pl;
     w = width / 2;
     h = height / 2;
 
-    img = QImage(width, height);
+    img = QImage(width, height, QImage::Format_RGB32);
 }
 
 static RGBColor renderTraceRay(
@@ -109,7 +109,7 @@ static RGBColor renderTraceRay(
 // распараллелить
 void Plot::drawScene(const shared_ptr<Scene> &scene)
 {
-    Point camPos = scene->getCamera()->getPos();
+    Point camPos = scene->camera->getPos();
 
     double cx = camPos.getX();
     double cy = camPos.getY();

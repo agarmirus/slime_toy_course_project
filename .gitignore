@@ -4,3 +4,5 @@ makefile
 *.pro
 *.dia~
 *.docx#
+*/ui_mainwindow.h
+*/Makefile

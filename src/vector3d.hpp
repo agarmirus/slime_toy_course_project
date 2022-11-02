@@ -13,7 +13,7 @@ class Vector3d
     
     public:
         Vector3d() = default;
-        Vector3d(Point &pos) {this->pos = pos;}
+        explicit Vector3d(Point &pos) {this->pos = pos;}
         Vector3d(const double x, const double y, const double z)
         {
             pos.setX(x);
@@ -28,11 +28,11 @@ class Vector3d
         virtual void setY(const double y) {pos.setY(y);}
         virtual void setZ(const double z) {pos.setZ(z);}
 
-        virtual Point getPos() {return pos;}
-        virtual double getX() {return pos.getX();}
-        virtual double getY() {return pos.getY();}
-        virtual double getZ() {return pos.getZ();}
-        virtual double getModulus();
+        virtual Point getPos() const {return pos;}
+        virtual double getX() const {return pos.getX();}
+        virtual double getY() const {return pos.getY();}
+        virtual double getZ() const {return pos.getZ();}
+        virtual double getModulus() const;
 
         virtual void sum(const Vector3d &vec);
         virtual void sub(const Vector3d &vec);
@@ -41,7 +41,7 @@ class Vector3d
         virtual double cos(const Vector3d &vec);
         virtual void neg();
 
-        virtual bool isNull()
+        virtual bool isNull() const
         {
             return eq(pos.getX(), 0.0) && \
             eq(pos.getY(), 0.0) && eq(pos.getZ(), 0.0);
@@ -51,7 +51,7 @@ class Vector3d
             const double xAngle,
             const double yAngle,
             const double zAngle
-        ) {pos->rotate(Point(0.0, 0.0, 0.0), xAngle, yAngle, zAngle)}
+        ) {pos.rotate(Point(0.0, 0.0, 0.0), xAngle, yAngle, zAngle);}
 };
 
 Vector3d sum(const Vector3d &v1, const Vector3d &v2);

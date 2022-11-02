@@ -1,11 +1,16 @@
-#include "camera.cpp"
+#include "camera.hpp"
 
-Camera::Camera(const Point &pos, const Vector3d &viewVector)
+Camera::Camera(
+    const shared_ptr<Point> &pos,
+    const shared_ptr<Vector3d> &viewVector
+)
 {
     this->pos = pos;
-    this->viewVector(
-        viewVector.getX() / viewVector.getModulus(),
-        viewVector.getY() / viewVector.getModulus(),
-        viewVector.getZ() / viewVector.getModulus()
-    );
+
+    double m = viewVector->getModulus();
+    
+    this->viewVector = viewVector;
+    this->viewVector->setX(viewVector->getX() / m);
+    this->viewVector->setY(viewVector->getY() / m);
+    this->viewVector->setZ(viewVector->getZ() / m);
 }

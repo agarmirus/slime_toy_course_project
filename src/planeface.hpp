@@ -3,6 +3,9 @@
 
 #include <memory>
 
+#include "ray.hpp"
+#include "point.hpp"
+#include "vector3d.hpp"
 #include "doubleop.hpp"
 
 using namespace std;
@@ -25,9 +28,12 @@ class PlaneFace
 
         virtual void updateCoefs();
 
-        virtual Vector3d getNormal() {return Vector3d(coeffs[0], coeffs[1], coeffs[2]);}
+        virtual Vector3d getNormal() const
+        {
+            return Vector3d(coeffs[0], coeffs[1], coeffs[2]);
+        }
 
-        virtual bool getIntersectionPoint(Point &point, const Ray &ray);
+        virtual bool getIntersectionPoint(Point &point, const Ray &ray) const;
 };
 
 #endif

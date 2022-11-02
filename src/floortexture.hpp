@@ -5,10 +5,11 @@
 #include <QRgb>
 
 #include <memory>
-#include <string>
 #include <cmath>
 
 #include "texture.hpp"
+
+using namespace std;
 
 class FloorTexture: public Texture
 {
@@ -16,13 +17,14 @@ class FloorTexture: public Texture
         int width;
         int height;
 
+        shared_ptr<QImage> img;
         QRgb *line;
     public:
-        FloorTexture(const string &filename);
+        explicit FloorTexture(const char *filename);
 
         virtual ~FloorTexture() = default;
 
-        virtual RGBColor getColor(const Point &pos);
-}
+        virtual RGBColor getColor(const Point &pos) const;
+};
 
 #endif

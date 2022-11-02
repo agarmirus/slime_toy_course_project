@@ -1,6 +1,6 @@
 #include "vector.hpp"
 
-double Vector3d::getModulus()
+double Vector3d::getModulus() const
 {
     double x = pos.getX();
     double y = pos.getY();

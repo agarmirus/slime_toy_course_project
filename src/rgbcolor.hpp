@@ -21,9 +21,9 @@ class RGBColor
         virtual void setG(const short g) {this->g = g;}
         virtual void setB(const short b) {this->b = b;}
 
-        virtual short int getR() {return r;}
-        virtual short int getG() {return g;}
-        virtual short int getB() {return b;}
+        virtual short int getR() const {return r;}
+        virtual short int getG() const {return g;}
+        virtual short int getB() const {return b;}
 
         virtual RGBColor operator+(const RGBColor &color);
         virtual RGBColor operator*(const double k);

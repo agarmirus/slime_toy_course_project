@@ -7,7 +7,7 @@
 class Texture
 {
     public:
-        virtual RGBColor getColor(const Point &pos) = 0;
+        virtual RGBColor getColor(const Point &pos) const = 0;
 };
 
 #endif

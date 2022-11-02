@@ -36,11 +36,11 @@ class MassPoint
         virtual void setVelocity(const Vector3d &velocity) {this->velocity = velocity;}
         virtual void setForce(const Vector3d &force) {this->force = force;}
 
-        virtual Point getPos() {return *pos;}
-        virtual double getMass() {return mass;}
-        virtual double getStiffness() {return k;}
-        virtual Vector3d getVelocity() {return velocity;}
-        virtual Vector3d getForce() {return force;}
+        virtual Point getPos() const {return *pos;}
+        virtual double getMass() const {return mass;}
+        virtual double getStiffness() const {return k;}
+        virtual Vector3d getVelocity() const {return velocity;}
+        virtual Vector3d getForce() const {return force;}
 
         virtual void addSpring(const shared_ptr<MassPoint> &massPoint) {springs.push_back(massPoint);}
 

@@ -15,7 +15,10 @@ class Floor: public Object
     private:
         shared_ptr<Texture> texture;
 
+        double ks;
         double kd;
+        double kt;
+        double kl;
     
     public:
         Floor() = default;
@@ -37,11 +40,11 @@ class Floor: public Object
             double &kt,
             double &kl,
             const Ray &ray
-        );
+        ) const;
 
-        virtual double getKd() {return kd;}
+        virtual double getKd() const {return kd;}
 
-        virtual bool isIntersected(const Ray &ray);
+        virtual bool isIntersected(const Ray &ray) const;
 };
 
 #endif

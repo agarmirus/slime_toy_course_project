@@ -30,15 +30,15 @@ class Plot
 
         QImage img;
 
-        size_t w;
-        size_t h;
+        int w;
+        int h;
 
     public:
         Plot() = default;
         Plot(
             QGraphicsScene *pl,
-            const size_t width,
-            const size_t height
+            const int width,
+            const int height
         );
 
         virtual ~Plot() = default;

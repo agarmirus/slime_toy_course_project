@@ -24,7 +24,7 @@ class LightSource: public Object
 
         virtual void setPos(const shared_ptr<Point> &pos) {this->pos = pos;}
         
-        virtual Point getPos() {return *pos;}
+        virtual Point getPos() const {return *pos;}
 };
 
 #endif

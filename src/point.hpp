@@ -20,7 +20,7 @@ class Point
         void moveToCenter(const Point &center);
         void returnFromCenter(const Point &center);
 
-        double toRad(const double deg) {return deg * PI / 180;}
+        double toRad(const double deg) {return deg * M_PI / 180;}
     
     public:
         Point() = default;
@@ -36,11 +36,11 @@ class Point
         virtual void setY(const double y) {this->y = y;}
         virtual void setZ(const double z) {this->z = z;}
 
-        virtual double getX() {return x;}
-        virtual double getY() {return y;}
-        virtual double getZ() {return z;}
+        virtual double getX() const {return x;}
+        virtual double getY() const {return y;}
+        virtual double getZ() const {return z;}
 
-        virtual double getDistance(cosnt Point &point);
+        virtual double getDistance(const Point &point) const;
 
         virtual void move(
             const double dx,
@@ -54,7 +54,7 @@ class Point
             const double zAngle
         );
 
-        virtual bool operator==(const Point &p)
+        virtual bool operator==(const Point &p) const
         {
             return eq(x, p.getX()) && eq(y, p.getY()) && eq(z, p.getZ());
         }
