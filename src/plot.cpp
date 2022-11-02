@@ -14,19 +14,21 @@ Plot::Plot(
 }
 
 static RGBColor renderTraceRay(
-    const Scene &scene,
+    const shared_ptr<Scene> &scene,
     const Ray &ray,
     const double n = 1.0,
     const short raysCount = 1
 )
 {
-    if (raysCount >= )
+    if (raysCount >= MAX_RAYS_COUNT)
+        return RGBColor(0, 0, 0);
+    
     Point intersectionPoint;
     RGBColor intersectionColor;
     shared_ptr<PlaneFace> intersectedFace;
     double ks, kd, kt, kl;
 
-    if (!scene.getIntersection(
+    if (!scene->getIntersection(
         intersectionPoint,
         intersectionColor,
         intersectedFace,
@@ -35,15 +37,15 @@ static RGBColor renderTraceRay(
 
     // Теневой луч
     Vector3d lightVec(
-        scene.lightSource->getX() - intersectionPoint.getX(),
-        scene.lightSource->getY() - intersectionPoint.getY(),
-        scene.lightSource->getZ() - intersectionPoint.getZ()
+        scene->lightSource->getX() - intersectionPoint.getX(),
+        scene->lightSource->getY() - intersectionPoint.getY(),
+        scene->lightSource->getZ() - intersectionPoint.getZ()
     );
     Ray shadowRay(intersectionPoint, lightVec);
 
     // Проверяем тень, если луч прилетел вне тела
-    if (eq(n, 1.0) && scene.isIntersected(shadowRay))
-        return QColor(0, 0, 0);
+    if (eq(n, 1.0) && scene->isIntersected(shadowRay))
+        return RGBColor(0, 0, 0);
 
     Vector3d normal = intersectedFace.getNormal();
 
@@ -58,7 +60,7 @@ static RGBColor renderTraceRay(
     if (gt(ks, 0.0))
     {
         resColor = resColor + intersectionColor * ks * pow(dot(normal, sub(lightVec, rayVec)), REF_APRROX);
-        resColor = resColor + renderTraceRay(
+        resColor = resColor + ks * renderTraceRay(
             scene,
             sub(rayVec, mult(normal, 2 * dot(normal, ray))),
             n,
@@ -76,8 +78,9 @@ static RGBColor renderTraceRay(
             double cosa = sqrt(1 - (1.0 / SLIME_H / SLIME_H)(1 - pow(dot(normal, ray), 2)));
             Vector3d t = sub(
                 mult(ray, 1.0 / SLIME_H),
-                mult(normal, cosa + 1.0 / SLIME_H * dot(normal, ray)));
-            resColor = resColor + renderTraceRay(
+                mult(normal, cosa + 1.0 / SLIME_H * dot(normal, ray))
+            );
+            resColor = resColor + kd * renderTraceRay(
                 scene,
                 t,
                 SLIME_N,
@@ -89,8 +92,9 @@ static RGBColor renderTraceRay(
             double cosa = sqrt(1 - (SLIME_H * SLIME_H)(1 - pow(dot(normal, ray), 2)));
             Vector3d t = sub(
                 mult(ray, SLIME_H),
-                mult(normal, cosa + SLIME_H * dot(normal, ray)));
-            resColor = resColor + renderTraceRay(
+                mult(normal, cosa + SLIME_H * dot(normal, ray))
+            );
+            resColor = resColor + kd * renderTraceRay(
                 scene,
                 t,
                 1.0,
@@ -103,9 +107,9 @@ static RGBColor renderTraceRay(
 }
 
 // распараллелить
-void Plot::drawScene(const Scene &scene)
+void Plot::drawScene(const shared_ptr<Scene> &scene)
 {
-    Point camPos = scene.getCamera()->getPos();
+    Point camPos = scene->getCamera()->getPos();
 
     double cx = camPos.getX();
     double cy = camPos.getY();

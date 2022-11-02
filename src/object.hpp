@@ -34,7 +34,6 @@ class Object
         virtual void setKl(const double kl) {return;}
         virtual void setPos(const shared_ptr<Point> &pos) {return;}
         virtual void setRGB(const shared_ptr<RGBColor> &color) {return;}
-        virtual void setIntensity(const double i) {return;}
         virtual void setMassPoints(list<shared_ptr<MassPoints>> &massPoints) {return;}
         virtual void setFaces(list<shared_ptr<PlaneFace>> &faces) {return;}
 
@@ -55,9 +54,8 @@ class Object
         virtual double getKs() {return 0.0;}
         virtual double getKt() {return 0.0;}
         virtual double getKl() {return 0.0;}
-        virtual RGBColor getRGB();
-        virtual Point getPos();
-        virtual double getIntensity() {return 0.0;}
+        virtual RGBColor getRGB() {return RGBColor(0, 0, 0);}
+        virtual Point getPos() {return Point(0.0, 0.0, 0.0);}
 
         virtual bool isIntersected(const Ray &ray) {return false;}
 };

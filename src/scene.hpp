@@ -27,7 +27,7 @@ class Scene
 
         virtual ~Scene() = default;
 
-        virtual void update(const size_t ms) {slime->update(ms);}
+        // virtual void update(const size_t ms) {slime->update(ms);}
 
         virtual shared_ptr<Object> getCamera() {return *camera;}
         virtual shared_ptr<Object> getLightSource() {return *lightSource;}
