@@ -19,6 +19,8 @@ class Camera: public Object
 
         virtual ~Camera() = default;
 
+        virtual void update(const size_t ms) {return;}
+
         virtual void setPos(const shared_ptr<Point> &pos) {this->pos = pos;}
         virtual void setVec(const shared_ptr<Vector3d> &vec) {viewVector = vec;}
 

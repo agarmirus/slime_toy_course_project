@@ -13,27 +13,27 @@ static double getDisc(
     const double radius
 )
 {
-    return 4 * ((am - ao) * (am - ao) * (al * al - 1) - \
+    return 4 * ((a - ao) * (a - ao) * (al * al - 1) - \
     al * al + radius * radius);
 }
 
-bool SphereCover::isIntersected(const Ray &ray)
+bool SphereCover::isIntersected(const Ray &ray) const
 {
     Point rayPos = ray.getPos();
     Vector3d rayVec = ray.getVec();
 
     double xDisc = getDisc(
-        rayPos.getX(), pos.getX(),
+        rayPos.getX(), pos->getX(),
         rayVec.getX(), radius
     );
 
     double yDisc = getDisc(
-        rayPos.getY(), pos.getY(),
+        rayPos.getY(), pos->getY(),
         rayVec.getY(), radius
     );
 
     double zDisc = getDisc(
-        rayPos.getZ(), pos.getZ(),
+        rayPos.getZ(), pos->getZ(),
         rayVec.getZ(), radius
     );
 

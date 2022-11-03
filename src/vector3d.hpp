@@ -13,7 +13,7 @@ class Vector3d
     
     public:
         Vector3d() = default;
-        explicit Vector3d(Point &pos) {this->pos = pos;}
+        explicit Vector3d(const Point &pos) {this->pos = pos;}
         Vector3d(const double x, const double y, const double z)
         {
             pos.setX(x);
@@ -37,8 +37,8 @@ class Vector3d
         virtual void sum(const Vector3d &vec);
         virtual void sub(const Vector3d &vec);
         virtual void mult(const double k);
-        virtual double dot(const Vector3d &vec);
-        virtual double cos(const Vector3d &vec);
+        virtual double dot(const Vector3d &vec) const;
+        virtual double cos(const Vector3d &vec) const;
         virtual void neg();
 
         virtual bool isNull() const
@@ -60,7 +60,7 @@ Vector3d sub(const Vector3d &v1, const Vector3d &v2);
 
 Vector3d mult(const Vector3d &v1, const double k);
 
-Vector3d dot(const Vector3d &v1, const Vector3d &v2);
+double dot(const Vector3d &v1, const Vector3d &v2);
 
 Vector3d neg(const Vector3d &v1);
 

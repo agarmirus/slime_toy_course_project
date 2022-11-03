@@ -12,12 +12,8 @@
 
 using namespace std;
 
-class Plot;
-
 class Scene
 {
-    friend class Plot;
-
     private:
         shared_ptr<Object> camera;
         shared_ptr<Object> lightSource;
@@ -35,10 +31,10 @@ class Scene
 
         // virtual void update(const size_t ms) {slime->update(ms);}
 
-        // virtual shared_ptr<Object> getCamera() {return camera;}
-        // virtual shared_ptr<Object> getLightSource() {return lightSource;}
-        // virtual shared_ptr<Object> getSlime() {return slime;}
-        // virtual shared_ptr<Object> getFloor() {return floor;}
+        virtual const Object &getCamera() const {return *camera;}
+        virtual const Object &getLightSource() const {return *lightSource;}
+        virtual const Object &getSlime() const {return *slime;}
+        virtual const Object &getFloor() const {return *floor;}
 
         virtual bool getIntersection(
             Point &pos,

@@ -11,7 +11,7 @@ static Vector3d getForce(
 {
     Vector3d newF;
 
-    static g = Vector3d(0.0, 0.0, G);
+    static Vector3d g = Vector3d(0.0, 0.0, G);
 
     Vector3d xij = sub(Vector3d(sp->getPos()), Vector3d(pos));
 
@@ -41,7 +41,7 @@ static Vector3d getForce(
             }
         }
         else
-            newF.sum(sum(mult(m, g), fstif));
+            newF.sum(sum(mult(g, m), fstif));
     }
 
     return newF;
@@ -102,9 +102,9 @@ bool Slime::getIntersection(
     double &kt,
     double &kl,
     const Ray &ray
-)
+) const
 {
-    if (cover->isIntersected(ray))
+    if (cover.isIntersected(ray))
         return false;
 
     bool isIntersected = false;
@@ -146,7 +146,7 @@ bool Slime::getIntersection(
     return isIntersected;
 }
 
-bool Slime::isIntersected(const Ray &ray)
+bool Slime::isIntersected(const Ray &ray) const
 {
     Point tmp;
 

@@ -10,7 +10,7 @@ Plot::Plot(
     w = width / 2;
     h = height / 2;
 
-    img = QImage(width, height, QImage::Format_RGB32);
+    img = make_shared<QImage>(width, height, QImage::Format_RGB32);
 }
 
 static RGBColor renderTraceRay(
@@ -35,26 +35,27 @@ static RGBColor renderTraceRay(
         ks, kd, kt, kl, ray))
         return RGBColor(100, 100, 255);
 
+    Point lightPos = scene->getLightSource().getPos();
+
     // Теневой луч
     Vector3d lightVec(
-        scene->lightSource->getX() - intersectionPoint.getX(),
-        scene->lightSource->getY() - intersectionPoint.getY(),
-        scene->lightSource->getZ() - intersectionPoint.getZ()
+        lightPos.getX() - intersectionPoint.getX(),
+        lightPos.getY() - intersectionPoint.getY(),
+        lightPos.getZ() - intersectionPoint.getZ()
     );
-    Ray shadowRay(intersectionPoint, lightVec);
+    Ray shadowRay(lightVec, intersectionPoint);
 
     // Проверяем тень, если луч прилетел вне тела
     if (eq(n, 1.0) && scene->isIntersected(shadowRay))
         return RGBColor(0, 0, 0);
 
-    Vector3d normal = intersectedFace.getNormal();
+    Vector3d rayVec = ray.getVec();
+    Vector3d normal = intersectedFace->getNormal();
 
-    if (gt(ray.cos(normal), 0.0))
+    if (gt(rayVec.cos(normal), 0.0))
         normal.neg();
 
-    Vector3d rayVec = ray.getVec();
-
-    RGBColor resColor();
+    RGBColor resColor(0, 0, 0);
 
     // Зеркальное отражение
     if (gt(ks, 0.0))
@@ -62,7 +63,7 @@ static RGBColor renderTraceRay(
         resColor = resColor + intersectionColor * ks * pow(dot(normal, sub(lightVec, rayVec)), REF_APRROX);
         resColor = resColor + ks * renderTraceRay(
             scene,
-            sub(rayVec, mult(normal, 2 * dot(normal, ray))),
+            Ray(sub(rayVec, mult(normal, 2 * dot(normal, rayVec))), intersectionPoint),
             n,
             raysCount + 1
         );
@@ -75,28 +76,28 @@ static RGBColor renderTraceRay(
 
         if (eq(n, 1.0))
         {
-            double cosa = sqrt(1 - (1.0 / SLIME_H / SLIME_H)(1 - pow(dot(normal, ray), 2)));
+            double cosa = sqrt(1.0 - 1.0 / (SLIME_N * SLIME_N) * (1.0 - pow(dot(normal, rayVec), 2)));
             Vector3d t = sub(
-                mult(ray, 1.0 / SLIME_H),
-                mult(normal, cosa + 1.0 / SLIME_H * dot(normal, ray))
+                mult(rayVec, 1.0 / SLIME_N),
+                mult(normal, cosa + 1.0 / SLIME_N * dot(normal, rayVec))
             );
             resColor = resColor + kd * renderTraceRay(
                 scene,
-                t,
+                Ray(t, intersectionPoint),
                 SLIME_N,
                 raysCount + 1
             );
         }
         else if (eq(n, SLIME_N))
         {
-            double cosa = sqrt(1 - (SLIME_H * SLIME_H)(1 - pow(dot(normal, ray), 2)));
+            double cosa = sqrt(1.0 - (SLIME_N * SLIME_N) * (1.0 - pow(dot(normal, rayVec), 2)));
             Vector3d t = sub(
-                mult(ray, SLIME_H),
-                mult(normal, cosa + SLIME_H * dot(normal, ray))
+                mult(rayVec, SLIME_N),
+                mult(normal, cosa + SLIME_N * dot(normal, rayVec))
             );
             resColor = resColor + kd * renderTraceRay(
                 scene,
-                t,
+                Ray(t, intersectionPoint),
                 1.0,
                 raysCount + 1
             );
@@ -109,7 +110,7 @@ static RGBColor renderTraceRay(
 // распараллелить
 void Plot::drawScene(const shared_ptr<Scene> &scene)
 {
-    Point camPos = scene->camera->getPos();
+    Point camPos = scene->getCamera().getPos();
 
     double cx = camPos.getX();
     double cy = camPos.getY();
@@ -117,9 +118,9 @@ void Plot::drawScene(const shared_ptr<Scene> &scene)
 
     double d = h / tan(FOV / 2);
 
-    for (size_t i = 0; i < h << 2; ++i)
+    for (int i = 0; i < h << 2; ++i)
     {
-        for (size_t j = 0; j < w << 2; ++j)
+        for (int j = 0; j < w << 2; ++j)
         {
             Vector3d dij(j - w, i - h, d);
             Point frPos(cx, cy, cz);
@@ -128,10 +129,10 @@ void Plot::drawScene(const shared_ptr<Scene> &scene)
 
             RGBColor c = renderTraceRay(scene, fr);
 
-            img.setPixelColor(QColor(c.getR(), c.getG(), c.getB()));
+            img->setPixelColor(i, j, QColor(c.getR(), c.getG(), c.getB()));
         }
     }
 
     pl->clear();
-    pl->addPixmap(QPixmap::fromImage(img));
+    pl->addPixmap(QPixmap::fromImage(*img));
 }

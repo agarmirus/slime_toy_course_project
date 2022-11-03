@@ -25,10 +25,10 @@ class SphereCover
         virtual void setPos(const shared_ptr<Point> &pos) {this->pos = pos;}
         virtual void setRadius(const double radius) {this->radius = radius;}
 
-        virtual Point getPos() {return *pos;}
-        virtual double getRadius() {return radius;}
+        virtual Point getPos() const {return *pos;}
+        virtual double getRadius() const {return radius;}
 
-        virtual bool isIntersected(const Ray &ray);
+        virtual bool isIntersected(const Ray &ray) const;
 };
 
 #endif

@@ -16,6 +16,8 @@ class LightSource: public Object
 
         ~LightSource() = default;
 
+        virtual void update(const size_t ms) {return;}
+
         virtual void move(
             const double dx,
             const double dy,

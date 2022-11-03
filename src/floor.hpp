@@ -29,6 +29,8 @@ class Floor: public Object
 
         virtual ~Floor() = default;
 
+        virtual void update(const size_t ms) {return;}
+
         virtual void setKd(const double kd) {this->kd = kd;}
 
         virtual bool getIntersection(

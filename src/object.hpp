@@ -15,9 +15,9 @@ using namespace std;
 class Object
 {
     public:
-        virtual ~Object() = 0;
+        virtual ~Object() = default;
 
-        virtual void update(const size_t ms) {return;}
+        virtual void update(const size_t ms) = 0;
 
         virtual void move(
             const double dx,

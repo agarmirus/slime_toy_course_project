@@ -20,7 +20,7 @@ bool Scene::getIntersection(
     double &kt,
     double &kl,
     const Ray &ray
-)
+) const
 {
     // Point slimeIntersectionPoint, floorIntersectionPoint;
     // RGBColor slimeColor, floorColor;
@@ -93,7 +93,7 @@ bool Scene::getIntersection(
 
     Point floorIntersectionPoint;
     RGBColor floorColor;
-    shared_ptr<face> floorFace;
+    shared_ptr<PlaneFace> floorFace;
     double floorKs;
     double floorKd;
     double floorKt;
@@ -118,8 +118,8 @@ bool Scene::getIntersection(
     return true;
 }
 
-bool Scene::isIntersected(const Ray &ray)
+bool Scene::isIntersected(const Ray &ray) const
 {
     // return slime->isIntersected(ray) || floor->isIntersected(ray);
-    return floor->isIntersected;
+    return floor->isIntersected(ray);
 }

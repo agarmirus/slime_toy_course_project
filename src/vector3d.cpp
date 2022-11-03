@@ -1,4 +1,4 @@
-#include "vector.hpp"
+#include "vector3d.hpp"
 
 double Vector3d::getModulus() const
 {
@@ -30,7 +30,7 @@ void Vector3d::mult(const double k)
     pos.setZ(pos.getZ() * k);
 }
 
-double Vector3d::dot(const Vector3d &vec)
+double Vector3d::dot(const Vector3d &vec) const
 {
     const Point &vecPos = vec.getPos();
 
@@ -39,14 +39,14 @@ double Vector3d::dot(const Vector3d &vec)
            pos.getZ() * vecPos.getZ();
 }
 
-double Vector3d::cos(const Vector3d &vec)
+double Vector3d::cos(const Vector3d &vec) const
 {
     double p = this->getModulus() * vec.getModulus();
 
     if (eq(p, 0.0))
         return 0.0;
 
-    return vec.dot(this) / p;
+    return this->dot(vec) / p;
 }
 
 void Vector3d::neg()
@@ -81,13 +81,9 @@ Vector3d mult(const Vector3d &v1, const double k)
     return newV; 
 }
 
-Vector3d dot(const Vector3d &v1, const Vector3d &v2)
+double dot(const Vector3d &v1, const Vector3d &v2)
 {
-    Vector3d newV = v1;
-
-    newV.dot(v2);
-
-    return newV;
+    return v1.dot(v2);
 }
 
 Vector3d neg(const Vector3d &v1)

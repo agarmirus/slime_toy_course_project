@@ -9,7 +9,7 @@
 
 #include "scene.hpp"
 
-#define FOV PI / 3
+#define FOV M_PI / 3
 
 #define MAX_TRACE_COUNT 5
 #define REF_APRROX 2
@@ -28,7 +28,7 @@ class Plot
     private:
         QGraphicsScene* pl;
 
-        QImage img;
+        shared_ptr<QImage> img;
 
         int w;
         int h;
