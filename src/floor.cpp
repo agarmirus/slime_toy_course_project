@@ -9,6 +9,8 @@ Floor::Floor(
     this->kd = kd;
     this->ks = ks;
     this->kt = kt;
+
+    this->face = make_shared<PlaneFace>();
 }
 
 bool Floor::getIntersection(
@@ -34,10 +36,14 @@ bool Floor::getIntersection(
         pos.setZ(0.0);
 
         color = texture->getColor(pos);
-        face = nullptr;
+        face = this->face;
 
-        ks = kt = kl = 0.0;
+        ks = this->ks;
+        kt = this->kt;
+        kl = this->kl;
         kd = this->kd;
+
+        return true;
     }
 
     return false;

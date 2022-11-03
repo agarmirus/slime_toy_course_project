@@ -1,5 +1,11 @@
 #include "planeface.hpp"
 
+PlaneFace::PlaneFace()
+{
+    coeffs[0] = coeffs[1] = 0.0;
+    coeffs[2] = 1.0;
+}
+
 PlaneFace::PlaneFace(
     const shared_ptr<Point> &p1,
     const shared_ptr<Point> &p2,

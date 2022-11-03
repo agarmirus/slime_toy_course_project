@@ -12,10 +12,10 @@ FloorTexture::FloorTexture(const char *filename)
 
 RGBColor FloorTexture::getColor(const Point &pos) const
 {
-    int w = int(pos.getX() + 0.5) % width;
-    int h = int(pos.getY() + 0.5) % height;
+    int w = int(fabs(pos.getX())) % width;
+    int h = int(fabs(pos.getY())) % height;
 
-    QColor color(*(line + h * width + w));
+    QColor color = img->pixel(w, h);
 
     RGBColor res(color.red(), color.green(), color.blue());
 

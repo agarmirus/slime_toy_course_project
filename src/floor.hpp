@@ -3,6 +3,7 @@
 
 #include "object.hpp"
 #include "texture.hpp"
+#include "planeface.hpp"
 
 #include <memory>
 
@@ -14,6 +15,7 @@ class Floor: public Object
 {
     private:
         shared_ptr<Texture> texture;
+        shared_ptr<PlaneFace> face;
 
         double ks;
         double kd;

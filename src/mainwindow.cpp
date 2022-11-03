@@ -1,6 +1,8 @@
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
 
+#include <unistd.h>
+
 MainWindow::MainWindow(QWidget *parent):
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -9,17 +11,17 @@ MainWindow::MainWindow(QWidget *parent):
     
     QGraphicsScene *scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);
-    scene->setSceneRect(VIEW_X, VIEW_Y, VIEW_W, VIEW_H);
+    // scene->setSceneRect(VIEW_X, VIEW_Y, VIEW_W, VIEW_H);
 
     // ------
     shared_ptr<Texture> texture = make_shared<FloorTexture>("./textures/floor.jpg");
     auto floor = make_shared<Floor>(1.0, 0.0, 0.0, texture);
 
-    auto camPos = make_shared<Point>(0.0, 0.0, 10.0);
+    auto camPos = make_shared<Point>(0.0, 0.0, 100.0);
     auto camVec = make_shared<Vector3d>(0.0, 1.0, 0.0);
     auto camera = make_shared<Camera>(camPos, camVec);
 
-    auto lightPos = make_shared<Point>(100.0, -100.0, 50.0);
+    auto lightPos = make_shared<Point>(100.0, -100.0, 1000.0);
     auto lightSource = make_shared<LightSource>(lightPos);
 
     this->scene = make_shared<Scene>(camera, lightSource, nullptr, floor);

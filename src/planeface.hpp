@@ -18,6 +18,7 @@ class PlaneFace
         double coeffs[4];
     
     public:
+        PlaneFace();
         PlaneFace(
             const shared_ptr<Point> &p1,
             const shared_ptr<Point> &p2,

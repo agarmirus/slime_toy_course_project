@@ -1,5 +1,7 @@
 #include "plot.hpp"
 
+#include <stdio.h>
+
 Plot::Plot(
     QGraphicsScene *pl,
     const int width,
@@ -20,8 +22,10 @@ static RGBColor renderTraceRay(
     const short raysCount = 1
 )
 {
+    RGBColor resColor(0, 0, 0);
+
     if (raysCount >= MAX_RAYS_COUNT)
-        return RGBColor(0, 0, 0);
+        return resColor;
     
     Point intersectionPoint;
     RGBColor intersectionColor;
@@ -47,15 +51,13 @@ static RGBColor renderTraceRay(
 
     // Проверяем тень, если луч прилетел вне тела
     if (eq(n, 1.0) && scene->isIntersected(shadowRay))
-        return RGBColor(0, 0, 0);
+        return resColor;
 
     Vector3d rayVec = ray.getVec();
     Vector3d normal = intersectedFace->getNormal();
 
     if (gt(rayVec.cos(normal), 0.0))
         normal.neg();
-
-    RGBColor resColor(0, 0, 0);
 
     // Зеркальное отражение
     if (gt(ks, 0.0))
@@ -69,11 +71,9 @@ static RGBColor renderTraceRay(
         );
     }
 
-    // Диффузное отражение
-    if (gt(kd, 0.0))
+    // Преломление
+    if (gt(kt, 0.0))
     {
-        resColor = resColor + intersectionColor * kd * lightVec.cos(normal);
-
         if (eq(n, 1.0))
         {
             double cosa = sqrt(1.0 - 1.0 / (SLIME_N * SLIME_N) * (1.0 - pow(dot(normal, rayVec), 2)));
@@ -104,6 +104,10 @@ static RGBColor renderTraceRay(
         }
     }
 
+    // Диффузное отражение
+    if (gt(kd, 0.0))
+        resColor = resColor + intersectionColor * kd * lightVec.cos(normal);
+
     return resColor;
 }
 
@@ -118,18 +122,18 @@ void Plot::drawScene(const shared_ptr<Scene> &scene)
 
     double d = h / tan(FOV / 2);
 
-    for (int i = 0; i < h << 2; ++i)
+    for (int i = 0; i < (h << 1); ++i)
     {
-        for (int j = 0; j < w << 2; ++j)
+        for (int j = 0; j < (w << 1); ++j)
         {
-            Vector3d dij(j - w, i - h, d);
+            Vector3d dij(j - w, d, h - i);
             Point frPos(cx, cy, cz);
 
             Ray fr(dij, frPos);
 
             RGBColor c = renderTraceRay(scene, fr);
 
-            img->setPixelColor(i, j, QColor(c.getR(), c.getG(), c.getB()));
+            img->setPixelColor(j, i, QColor(c.getR(), c.getG(), c.getB()));
         }
     }
 
