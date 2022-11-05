@@ -8,6 +8,7 @@
 #include <QGraphicsScene>
 
 #include "scene.hpp"
+#include "omp.h"
 
 #define FOV M_PI / 3
 
@@ -16,10 +17,11 @@
 #define SLIME_N 1.5
 #define MAX_RAYS_COUNT 5
 
-#define VIEW_X 397
-#define VIEW_Y 9
-#define VIEW_W 1144
-#define VIEW_H 817
+// #define VIEW_W 1144
+// #define VIEW_H 817
+
+#define VIEW_W 614
+#define VIEW_H 432
 
 using namespace std;
 

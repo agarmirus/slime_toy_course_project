@@ -1,7 +1,5 @@
 #include "plot.hpp"
 
-#include <stdio.h>
-
 Plot::Plot(
     QGraphicsScene *pl,
     const int width,
@@ -111,7 +109,6 @@ static RGBColor renderTraceRay(
     return resColor;
 }
 
-// распараллелить
 void Plot::drawScene(const shared_ptr<Scene> &scene)
 {
     Point camPos = scene->getCamera().getPos();
@@ -122,6 +119,7 @@ void Plot::drawScene(const shared_ptr<Scene> &scene)
 
     double d = h / tan(FOV / 2);
 
+    #pragma omp parallel for collapse(2)
     for (int i = 0; i < (h << 1); ++i)
     {
         for (int j = 0; j < (w << 1); ++j)
@@ -133,7 +131,10 @@ void Plot::drawScene(const shared_ptr<Scene> &scene)
 
             RGBColor c = renderTraceRay(scene, fr);
 
-            img->setPixelColor(j, i, QColor(c.getR(), c.getG(), c.getB()));
+            #pragma omp critical
+            {
+                img->setPixelColor(j, i, QColor(c.getR(), c.getG(), c.getB()));
+            }
         }
     }
 
