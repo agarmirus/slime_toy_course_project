@@ -29,7 +29,7 @@ class Scene
 
         virtual ~Scene() = default;
 
-        // virtual void update(const size_t ms) {slime->update(ms);}
+        virtual void update(const size_t ms) {slime->update(ms);}
 
         virtual const Object &getCamera() const {return *camera;}
         virtual const Object &getLightSource() const {return *lightSource;}

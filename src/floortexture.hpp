@@ -18,7 +18,6 @@ class FloorTexture: public Texture
         int height;
 
         shared_ptr<QImage> img;
-        QRgb *line;
     public:
         explicit FloorTexture(const char *filename);
 

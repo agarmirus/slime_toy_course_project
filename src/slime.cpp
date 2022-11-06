@@ -92,6 +92,24 @@ void Slime::update(const size_t ms)
     cover.setRadius(coverRadius);
 }
 
+void Slime::setMass(const double mass)
+{
+    this->mass = mass;
+
+    double size = double(massPoints.size());
+    
+    for (auto mp: massPoints)
+        mp->setMass(mass / size);
+}
+
+void Slime::setStiffness(const double k)
+{
+    this->k = k;
+
+    for (auto mp: massPoints)
+        mp->setStiffness(k);
+}
+
 // распараллелить
 bool Slime::getIntersection(
     Point &pos,

@@ -1,6 +1,8 @@
 #ifndef SLIME_H
 #define SLIME_H
 
+#include <stdio.h>
+
 #include "object.hpp"
 #include "doubleop.hpp"
 #include "masspoint.hpp"
@@ -40,8 +42,8 @@ class Slime: public Object
         
         virtual void update(const size_t ms);
 
-        virtual void setMass(const double mass) {this->mass = mass;}
-        virtual void setStiffness(const double k) {this->k = k;}
+        virtual void setMass(const double mass);
+        virtual void setStiffness(const double k);
         virtual void setKd(const double kd) {this->kd = kd;}
         virtual void setKs(const double ks) {this->ks = ks;}
         virtual void setKt(const double kt) {this->kt = kt;}

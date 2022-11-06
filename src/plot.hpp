@@ -20,8 +20,8 @@
 // #define VIEW_W 1144
 // #define VIEW_H 817
 
-#define VIEW_W 614
-#define VIEW_H 432
+#define VIEW_W 600
+#define VIEW_H 370
 
 using namespace std;
 

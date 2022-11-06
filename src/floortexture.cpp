@@ -6,8 +6,6 @@ FloorTexture::FloorTexture(const char *filename)
 
     width = img->width();
     height = img->height();
-
-    QRgb *line = (QRgb *)img->constBits();
 }
 
 RGBColor FloorTexture::getColor(const Point &pos) const
