@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "doubleop.hpp"
+#include "vector3d.hpp"
 #include "point.hpp"
 #include "ray.hpp"
 

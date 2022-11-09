@@ -39,77 +39,32 @@ void PlaneFace::updateCoefs()
     coeffs[3] = -coeffs[0] * x1 - coeffs[1] * y1 - coeffs[2] * z1;
 }
 
-static bool inTriangle(
-    const Point &p,
-    const Point &a,
-    const Point &b,
-    const Point &c
-)
-{
-    double abx = b.getX() - a.getX();
-    double aby = b.getY() - a.getY();
-
-    double acx = c.getX() - a.getX();
-    double acy = c.getY() - a.getY();
-
-    double apx = p.getX() - a.getX();
-    double apy = p.getY() - a.getY();
-
-    bool abIsPoint = eq(abx, 0.0);
-    bool acIsPoint = eq(acx, 0.0);
-
-    if (abIsPoint && acIsPoint)
-        return a == p;
-    else if (abIsPoint)
-    {
-        double m = p.getY() / aby;
-
-        return ge(m, 0.0) && le(m, 1.0);
-    }
-    else if (acIsPoint)
-    {
-        double n = p.getX() / abx;
-
-        return ge(n, 0.0) && le(n, 1.0);
-    }
-    
-    double det = abx * acy - aby * acx;
-    double ks = (apx * acy - apy * acx + abx * apy - aby * apx) / det;
-
-    return ge(ks, 0.0) && le(ks, 1.0);
-}
-
 bool PlaneFace::getIntersectionPoint(Point &point, const Ray &ray) const
 {
-    Point rayVecPos = ray.getVec().getPos();
+    Vector3d rayVec = ray.getVec();
 
-    double m = rayVecPos.getX();
-    double n = rayVecPos.getY();
-    double p = rayVecPos.getZ();
+    Vector3d e1(*points[0], *points[1]);
+    Vector3d e2(*points[0], *points[2]);
+    Vector3d p = cross(rayVec, e2);
 
-    double a = coeffs[0];
-    double b = coeffs[1];
-    double c = coeffs[2];
+    double d1 = dot(p, e1);
 
-    double zn = a * m + b * n + c * p;
-
-    if (eq(zn, 0.0))
+    if (eq(d1, 0.0))
         return false;
-    
+
     Point rayPos = ray.getPos();
-    
-    double x0 = rayPos.getX();
-    double y0 = rayPos.getY();
-    double z0 = rayPos.getZ();
 
-    double d = coeffs[3];
+    Vector3d T(*points[0], rayPos);
+    Vector3d q = cross(T, e1);
 
-    double t = -(a * x0 + b * y0 + c * z0 + d) / zn;
+    double t = 1.0 / d1 * dot(q, e2);
 
-    if (le(t, 0.0))
+    if (lt(t, 0.0))
         return false;
+    
+    point.setX(rayPos.getX() + rayVec.getX() * t);
+    point.setY(rayPos.getY() + rayVec.getY() * t);
+    point.setZ(rayPos.getZ() + rayVec.getZ() * t);
 
-    point = Point(x0 + m * t, y0 + n * t, z0 + p * t);
-
-    return inTriangle(point, *(points[0]), *(points[1]), *(points[2]));
+    return true;
 }

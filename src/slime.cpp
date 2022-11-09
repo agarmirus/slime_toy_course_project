@@ -89,6 +89,9 @@ void Slime::update(const size_t ms)
             coverRadius = newRadius;
     }
 
+    for (auto it: faces)
+        it->updateCoefs();
+
     cover.setRadius(coverRadius);
 }
 
@@ -122,7 +125,7 @@ bool Slime::getIntersection(
     const Ray &ray
 ) const
 {
-    if (cover.isIntersected(ray))
+    if (!cover.isIntersected(ray))
         return false;
 
     bool isIntersected = false;
@@ -162,6 +165,11 @@ bool Slime::getIntersection(
     }
 
     return isIntersected;
+}
+
+bool Slime::getGrabbingPoint(Point &pos, const Ray &ray) const
+{
+    return false;
 }
 
 bool Slime::isIntersected(const Ray &ray) const

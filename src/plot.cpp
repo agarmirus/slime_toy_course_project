@@ -40,11 +40,7 @@ static RGBColor renderTraceRay(
     Point lightPos = scene->getLightSource().getPos();
 
     // Теневой луч
-    Vector3d lightVec(
-        lightPos.getX() - intersectionPoint.getX(),
-        lightPos.getY() - intersectionPoint.getY(),
-        lightPos.getZ() - intersectionPoint.getZ()
-    );
+    Vector3d lightVec(intersectionPoint, lightPos);
     Ray shadowRay(lightVec, intersectionPoint);
 
     // Проверяем тень, если луч прилетел вне тела
@@ -58,49 +54,49 @@ static RGBColor renderTraceRay(
         normal.neg();
 
     // Зеркальное отражение
-    if (gt(ks, 0.0))
-    {
-        resColor = resColor + intersectionColor * ks * pow(dot(normal, sub(lightVec, rayVec)), REF_APRROX);
-        resColor = resColor + ks * renderTraceRay(
-            scene,
-            Ray(sub(rayVec, mult(normal, 2 * dot(normal, rayVec))), intersectionPoint),
-            n,
-            raysCount + 1
-        );
-    }
+    // if (gt(ks, 0.0))
+    // {
+    //     resColor = resColor + intersectionColor * ks * pow(dot(normal, sub(lightVec, rayVec)), REF_APRROX);
+    //     resColor = resColor + ks * renderTraceRay(
+    //         scene,
+    //         Ray(sub(rayVec, mult(normal, 2 * dot(normal, rayVec))), intersectionPoint),
+    //         n,
+    //         raysCount + 1
+    //     );
+    // }
 
     // Преломление
-    if (gt(kt, 0.0))
-    {
-        if (eq(n, 1.0))
-        {
-            double cosa = sqrt(1.0 - 1.0 / (SLIME_N * SLIME_N) * (1.0 - pow(dot(normal, rayVec), 2)));
-            Vector3d t = sub(
-                mult(rayVec, 1.0 / SLIME_N),
-                mult(normal, cosa + 1.0 / SLIME_N * dot(normal, rayVec))
-            );
-            resColor = resColor + kd * renderTraceRay(
-                scene,
-                Ray(t, intersectionPoint),
-                SLIME_N,
-                raysCount + 1
-            );
-        }
-        else if (eq(n, SLIME_N))
-        {
-            double cosa = sqrt(1.0 - (SLIME_N * SLIME_N) * (1.0 - pow(dot(normal, rayVec), 2)));
-            Vector3d t = sub(
-                mult(rayVec, SLIME_N),
-                mult(normal, cosa + SLIME_N * dot(normal, rayVec))
-            );
-            resColor = resColor + kd * renderTraceRay(
-                scene,
-                Ray(t, intersectionPoint),
-                1.0,
-                raysCount + 1
-            );
-        }
-    }
+    // if (gt(kt, 0.0))
+    // {
+    //     if (eq(n, 1.0))
+    //     {
+    //         double cosa = sqrt(1.0 - 1.0 / (SLIME_N * SLIME_N) * (1.0 - pow(dot(normal, rayVec), 2)));
+    //         Vector3d t = sub(
+    //             mult(rayVec, 1.0 / SLIME_N),
+    //             mult(normal, cosa + 1.0 / SLIME_N * dot(normal, rayVec))
+    //         );
+    //         resColor = resColor + kd * renderTraceRay(
+    //             scene,
+    //             Ray(t, intersectionPoint),
+    //             SLIME_N,
+    //             raysCount + 1
+    //         );
+    //     }
+    //     else if (eq(n, SLIME_N))
+    //     {
+    //         double cosa = sqrt(1.0 - (SLIME_N * SLIME_N) * (1.0 - pow(dot(normal, rayVec), 2)));
+    //         Vector3d t = sub(
+    //             mult(rayVec, SLIME_N),
+    //             mult(normal, cosa + SLIME_N * dot(normal, rayVec))
+    //         );
+    //         resColor = resColor + kd * renderTraceRay(
+    //             scene,
+    //             Ray(t, intersectionPoint),
+    //             1.0,
+    //             raysCount + 1
+    //         );
+    //     }
+    // }
 
     // Диффузное отражение
     if (gt(kd, 0.0))

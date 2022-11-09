@@ -51,6 +51,7 @@ class Slime: public Object
         virtual void setRGB(const RGBColor &color) {this->color = color;}
         virtual void setMassPoints(list<shared_ptr<MassPoint>> &massPoints) {this->massPoints = massPoints;}
         virtual void setFaces(list<shared_ptr<PlaneFace>> &faces) {this->faces = faces;}
+        virtual void setSphereCover(const SphereCover &cover) {this->cover = cover;}
 
         virtual bool getIntersection(
             Point &pos,
@@ -62,6 +63,8 @@ class Slime: public Object
             double &kl,
             const Ray &ray
         ) const;
+
+        virtual bool getGrabbingPoint(Point &pos, const Ray &ray) const;
 
         virtual double getKd() const {return kd;}
         virtual double getKs() const {return ks;}
