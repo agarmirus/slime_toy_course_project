@@ -21,7 +21,7 @@ bool Scene::getIntersection(
     double &kl,
     const Ray &ray
 ) const
-{
+{    
     Point slimeIntersectionPoint, floorIntersectionPoint;
     RGBColor slimeColor, floorColor;
     shared_ptr<PlaneFace> slimeFace, floorFace;

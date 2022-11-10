@@ -26,8 +26,8 @@ void Vector3d::sum(const Vector3d &vec)
 void Vector3d::sub(const Vector3d &vec)
 {
     pos.setX(pos.getX() - vec.getX());
-    pos.setY(pos.getY() - vec.getX());
-    pos.setZ(pos.getZ() - vec.getY());
+    pos.setY(pos.getY() - vec.getY());
+    pos.setZ(pos.getZ() - vec.getZ());
 }
 
 void Vector3d::mult(const double k)
