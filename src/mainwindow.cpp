@@ -16,17 +16,17 @@ static shared_ptr<Slime> generate_slime()
     list<shared_ptr<MassPoint>> massPoints;
     list<shared_ptr<PlaneFace>> planeFaces;
 
-    auto p1 = make_shared<Point>(-50, 100, 100);
+    auto p1 = make_shared<Point>(-50, 186.6, 100);
     auto mp1 = make_shared<MassPoint>();
     mp1->setPos(p1);
     massPoints.push_back(mp1);
 
-    auto p2 = make_shared<Point>(50, 100, 100);
+    auto p2 = make_shared<Point>(50, 186.6, 100);
     auto mp2 = make_shared<MassPoint>();
     mp2->setPos(p2);
     massPoints.push_back(mp2);
 
-    auto p3 = make_shared<Point>(0, 186.60, 100);
+    auto p3 = make_shared<Point>(0, 100, 100);
     auto mp3 = make_shared<MassPoint>();
     mp3->setPos(p3);
     massPoints.push_back(mp3);
@@ -75,11 +75,12 @@ static shared_ptr<Slime> generate_slime()
     slime->setFaces(planeFaces);
     slime->setMass(SLIME_MASS);
     slime->setStiffness(SLIME_STIFFNESS);
-    slime->setKd(0.1);
+    slime->setRGB(RGBColor(0, 255, 0));
+    slime->setKd(1.0);
     slime->setKs(0.3);
     slime->setKt(0.4);
 
-    SphereCover cover(pc, 300);
+    SphereCover cover(pc, 50);
     slime->setSphereCover(cover);
 
     return slime;
@@ -98,7 +99,7 @@ MainWindow::MainWindow(QWidget *parent):
     shared_ptr<Texture> texture = make_shared<FloorTexture>("./textures/floor.jpg");
     auto floor = make_shared<Floor>(1.0, 0.0, 0.0, texture);
 
-    auto camPos = make_shared<Point>(0.0, -500.0, 100.0);
+    auto camPos = make_shared<Point>(0.0, -200.0, 100.0);
     auto camVec = make_shared<Vector3d>(0.0, 1.0, 0.0);
     auto camera = make_shared<Camera>(camPos, camVec);
 
@@ -127,5 +128,5 @@ MainWindow::~MainWindow()
 void MainWindow::update()
 {
     plot->drawScene(scene);
-    scene->update(1000 / FPS);
+    // scene->update(1000 / FPS);
 }

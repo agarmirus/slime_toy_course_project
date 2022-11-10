@@ -17,7 +17,7 @@
 #include "lightsource.hpp"
 #include "floortexture.hpp"
 
-#define FPS 30
+#define FPS 1
 
 using namespace std;
 

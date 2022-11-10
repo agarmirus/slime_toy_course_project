@@ -46,8 +46,7 @@ bool Scene::getIntersection(
     {
         Point rayPos = ray.getPos();
 
-        if (rayPos.getDistance(slimeIntersectionPoint) < \
-        rayPos.getDistance(floorIntersectionPoint))
+        if (lt(rayPos.getDistance(slimeIntersectionPoint), rayPos.getDistance(floorIntersectionPoint)))
         {
             pos = slimeIntersectionPoint;
             color = slimeColor;

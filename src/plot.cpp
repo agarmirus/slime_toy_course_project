@@ -41,11 +41,11 @@ static RGBColor renderTraceRay(
 
     // Теневой луч
     Vector3d lightVec(intersectionPoint, lightPos);
-    Ray shadowRay(lightVec, intersectionPoint);
+    // Ray shadowRay(lightVec, intersectionPoint);
 
-    // Проверяем тень, если луч прилетел вне тела
-    if (eq(n, 1.0) && scene->isIntersected(shadowRay))
-        return resColor;
+    // Проверяем тень, если луч прилетел извне
+    // if (ne(n, 1.0) && scene->isIntersected(shadowRay))
+    //     return resColor;
 
     Vector3d rayVec = ray.getVec();
     Vector3d normal = intersectedFace->getNormal();
@@ -54,16 +54,16 @@ static RGBColor renderTraceRay(
         normal.neg();
 
     // Зеркальное отражение
-    // if (gt(ks, 0.0))
-    // {
-    //     resColor = resColor + intersectionColor * ks * pow(dot(normal, sub(lightVec, rayVec)), REF_APRROX);
-    //     resColor = resColor + ks * renderTraceRay(
-    //         scene,
-    //         Ray(sub(rayVec, mult(normal, 2 * dot(normal, rayVec))), intersectionPoint),
-    //         n,
-    //         raysCount + 1
-    //     );
-    // }
+    if (gt(ks, 0.0))
+    {
+        resColor = resColor + intersectionColor * ks * pow(dot(normal, sub(lightVec, rayVec)), REF_APRROX);
+        resColor = resColor + ks * renderTraceRay(
+            scene,
+            Ray(sub(rayVec, mult(normal, 2 * dot(normal, rayVec))), intersectionPoint),
+            n,
+            raysCount + 1
+        );
+    }
 
     // Преломление
     // if (gt(kt, 0.0))

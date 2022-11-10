@@ -125,13 +125,12 @@ bool Slime::getIntersection(
     const Ray &ray
 ) const
 {
-    if (!cover.isIntersected(ray))
-        return false;
+    // if (!cover.isIntersected(ray))
+    //     return false;
 
     bool isIntersected = false;
 
-    Point tmp, newPos;
-    shared_ptr<PlaneFace> interFace = nullptr;
+    Point tmp;
 
     Point rayPos = ray.getPos();
     double x0 = rayPos.getX();
@@ -143,10 +142,10 @@ bool Slime::getIntersection(
         if (it->getIntersectionPoint(tmp, ray))
         {
             if (!isIntersected || \
-            rayPos.getDistance(tmp) < rayPos.getDistance(newPos))
+            lt(rayPos.getDistance(tmp), rayPos.getDistance(pos)))
             {
-                newPos = tmp;
-                interFace = it;
+                pos = tmp;
+                face = it;
             }
             
             isIntersected = true;
@@ -155,9 +154,7 @@ bool Slime::getIntersection(
 
     if (isIntersected)
     {
-        pos = newPos;
         color = this->color;
-        face = interFace;
         ks = this->ks;
         kd = this->kd;
         kt = this->kt;
