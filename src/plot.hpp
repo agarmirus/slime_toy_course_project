@@ -13,7 +13,7 @@
 #define FOV M_PI / 3
 
 #define MAX_TRACE_COUNT 5
-#define REF_APRROX 2
+#define REF_APRROX 5
 #define SLIME_N 1.5
 #define MAX_RAYS_COUNT 5
 

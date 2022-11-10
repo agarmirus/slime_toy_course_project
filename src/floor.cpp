@@ -31,8 +31,8 @@ bool Floor::getIntersection(
 
     if (gt(t, 0.0))
     {
-        pos.setX(rayPos.getX() - rayVec.getX() * t);
-        pos.setY(rayPos.getY() - rayVec.getY() * t);
+        pos.setX(rayPos.getX() + rayVec.getX() * t);
+        pos.setY(rayPos.getY() + rayVec.getY() * t);
         pos.setZ(0.0);
 
         color = texture->getColor(pos);
