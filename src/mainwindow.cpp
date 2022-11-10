@@ -97,13 +97,13 @@ MainWindow::MainWindow(QWidget *parent):
 
     // ------
     shared_ptr<Texture> texture = make_shared<FloorTexture>("./textures/floor.jpg");
-    auto floor = make_shared<Floor>(0.0, 1.0, 0.0, texture);
+    auto floor = make_shared<Floor>(1.0, 0.0, 0.0, texture);
 
     auto camPos = make_shared<Point>(0.0, -100.0, 50.0);
     auto camVec = make_shared<Vector3d>(0.0, 1.0, 0.0);
     auto camera = make_shared<Camera>(camPos, camVec);
 
-    auto lightPos = make_shared<Point>(0.0, -100, 500.0);
+    auto lightPos = make_shared<Point>(100.0, -100, 300.0);
     auto lightSource = make_shared<LightSource>(lightPos);
 
     auto slime = generate_slime();

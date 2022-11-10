@@ -44,7 +44,7 @@ static RGBColor renderTraceRay(
     Ray shadowRay(lightVec, intersectionPoint);
 
     // Проверяем тень, если луч прилетел извне
-    if (ne(n, 1.0) && scene->isIntersected(shadowRay))
+    if (eq(n, 1.0) && scene->isIntersected(shadowRay))
         return resColor;
 
     Vector3d rayVec = ray.getVec();
