@@ -44,8 +44,8 @@ static RGBColor renderTraceRay(
     Ray shadowRay(lightVec, intersectionPoint);
 
     // Проверяем тень, если луч прилетел извне
-    // if (eq(n, 1.0) && scene->isIntersected(shadowRay))
-    //     return resColor;
+    if (eq(n, 1.0) && scene->isIntersected(shadowRay))
+        return resColor;
 
     Vector3d rayVec = ray.getVec();
     Vector3d normal = intersectedFace->getNormal();
@@ -107,7 +107,7 @@ static RGBColor renderTraceRay(
     }
 
     // Диффузное отражение
-    if (gt(kd, 0.0))
+    if (eq(n, 1.0) && gt(kd, 0.0))
         resColor = resColor + intersectionColor * kd * lightVec.cos(normal);
 
     return resColor;
