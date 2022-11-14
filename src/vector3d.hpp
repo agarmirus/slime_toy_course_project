@@ -42,6 +42,7 @@ class Vector3d
         virtual double cos(const Vector3d &vec) const;
         virtual void cross(const Vector3d &vec);
         virtual void neg();
+        virtual void normalize();
 
         virtual bool isNull() const
         {
@@ -76,5 +77,7 @@ double dot(const Vector3d &v1, const Vector3d &v2);
 Vector3d cross(const Vector3d &v1, const Vector3d &v2);
 
 Vector3d neg(const Vector3d &v1);
+
+Vector3d normalize(const Vector3d &vec);
 
 #endif

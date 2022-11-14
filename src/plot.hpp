@@ -14,7 +14,7 @@
 
 #define MAX_TRACE_COUNT 5
 #define REF_APRROX 2
-#define SLIME_N 1.3
+#define SLIME_N 1.0
 #define MAX_RAYS_COUNT 5
 
 // #define VIEW_W 1144

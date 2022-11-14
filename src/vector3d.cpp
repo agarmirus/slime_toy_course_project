@@ -19,8 +19,8 @@ double Vector3d::getModulus() const
 void Vector3d::sum(const Vector3d &vec)
 {
     pos.setX(pos.getX() + vec.getX());
-    pos.setY(pos.getY() + vec.getX());
-    pos.setZ(pos.getZ() + vec.getY());
+    pos.setY(pos.getY() + vec.getY());
+    pos.setZ(pos.getZ() + vec.getZ());
 }
 
 void Vector3d::sub(const Vector3d &vec)
@@ -39,21 +39,17 @@ void Vector3d::mult(const double k)
 
 double Vector3d::dot(const Vector3d &vec) const
 {
-    const Point &vecPos = vec.getPos();
-
-    return pos.getX() * vecPos.getX() + \
-           pos.getY() * vecPos.getY() + \
-           pos.getZ() * vecPos.getZ();
+    return pos.getX() * vec.getX() + \
+           pos.getY() * vec.getY() + \
+           pos.getZ() * vec.getZ();
 }
 
 double Vector3d::cos(const Vector3d &vec) const
 {
-    double p = this->getModulus() * vec.getModulus();
-
-    if (eq(p, 0.0))
-        return 0.0;
-
-    return this->dot(vec) / p;
+    if (!isNull() && !vec.isNull())
+        return dot(vec) / getModulus() / vec.getModulus();
+    
+    return 0.0;
 }
 
 void Vector3d::cross(const Vector3d &vec)
@@ -73,7 +69,19 @@ void Vector3d::cross(const Vector3d &vec)
 
 void Vector3d::neg()
 {
-    this->mult(-1);
+    mult(-1);
+}
+
+void Vector3d::normalize()
+{
+    double m = getModulus();
+
+    if (gt(m, 0.0))
+    {
+        pos.setX(pos.getX() / m);
+        pos.setY(pos.getY() / m);
+        pos.setZ(pos.getZ() / m);
+    }
 }
 
 Vector3d Vector3d::operator+(const Vector3d &vec) const
@@ -105,7 +113,7 @@ Vector3d Vector3d::operator*(const double k) const
 
 double Vector3d::operator*(const Vector3d &vec) const
 {
-    return this->dot(vec);
+    return dot(vec);
 }
 
 Vector3d Vector3d::operator^(const Vector3d &vec) const
@@ -159,4 +167,13 @@ Vector3d cross(const Vector3d &v1, const Vector3d &v2)
 Vector3d neg(const Vector3d &v1)
 {
     return -v1;
+}
+
+Vector3d normalize(const Vector3d &vec)
+{
+    Vector3d newV = vec;
+
+    newV.normalize();
+
+    return newV; 
 }
