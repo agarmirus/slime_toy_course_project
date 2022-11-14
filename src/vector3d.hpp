@@ -54,7 +54,16 @@ class Vector3d
             const double yAngle,
             const double zAngle
         ) {pos.rotate(Point(0.0, 0.0, 0.0), xAngle, yAngle, zAngle);}
+
+        virtual Vector3d operator+(const Vector3d &vec) const;
+        virtual Vector3d operator-(const Vector3d &vec) const;
+        virtual Vector3d operator*(const double k) const;
+        virtual double operator*(const Vector3d &vec) const;
+        virtual Vector3d operator^(const Vector3d &vec) const;
+        virtual Vector3d operator-() const;
 };
+
+Vector3d operator*(const double k, const Vector3d &vec);
 
 Vector3d sum(const Vector3d &v1, const Vector3d &v2);
 

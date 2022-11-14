@@ -76,52 +76,87 @@ void Vector3d::neg()
     this->mult(-1);
 }
 
-Vector3d sum(const Vector3d &v1, const Vector3d &v2)
+Vector3d Vector3d::operator+(const Vector3d &vec) const
 {
-    Vector3d newV = v1;
+    Vector3d newV = *this;
 
-    newV.sum(v2);
+    newV.sum(vec);
 
     return newV; 
+}
+
+Vector3d Vector3d::operator-(const Vector3d &vec) const
+{
+    Vector3d newV = *this;
+
+    newV.sub(vec);
+
+    return newV; 
+}
+
+Vector3d Vector3d::operator*(const double k) const
+{
+    Vector3d newV = *this;
+
+    newV.mult(k);
+
+    return newV;
+}
+
+double Vector3d::operator*(const Vector3d &vec) const
+{
+    return this->dot(vec);
+}
+
+Vector3d Vector3d::operator^(const Vector3d &vec) const
+{
+    Vector3d newV = *this;
+
+    newV.cross(vec);
+
+    return newV;
+}
+
+Vector3d Vector3d::operator-() const
+{
+    Vector3d newV = *this;
+
+    newV.neg();
+
+    return newV; 
+}
+
+Vector3d operator*(const double k, const Vector3d &vec)
+{
+    return vec * k;
+}
+
+Vector3d sum(const Vector3d &v1, const Vector3d &v2)
+{
+    return v1 + v2;
 }
 
 Vector3d sub(const Vector3d &v1, const Vector3d &v2)
 {
-    Vector3d newV = v1;
-
-    newV.sub(v2);
-
-    return newV; 
+    return v1 - v2;
 }
 
 Vector3d mult(const Vector3d &v1, const double k)
 {
-    Vector3d newV = v1;
-
-    newV.mult(k);
-
-    return newV; 
+    return v1 * k;
 }
 
 double dot(const Vector3d &v1, const Vector3d &v2)
 {
-    return v1.dot(v2);
+    return v1 * v2;
 }
 
 Vector3d cross(const Vector3d &v1, const Vector3d &v2)
 {
-    Vector3d newV = v1;
-
-    newV.cross(v2);
-
-    return newV;
+    return v1 ^ v2;
 }
 
 Vector3d neg(const Vector3d &v1)
 {
-    Vector3d newV = v1;
-
-    newV.neg();
-
-    return newV;
+    return -v1;
 }
