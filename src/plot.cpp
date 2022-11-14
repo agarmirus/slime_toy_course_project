@@ -89,12 +89,20 @@ static RGBColor renderTraceRay(
                 mult(rayVec, SLIME_N),
                 mult(normal, cosa + SLIME_N * dot(normal, rayVec))
             );
-            resColor = resColor + kt * renderTraceRay(
-                scene,
-                Ray(t, intersectionPoint),
-                1.0,
-                raysCount + 1
-            );
+            if (gt(kl, 0.0))
+                resColor = resColor + exp(-kl * ray.getPos().getDistance(intersectionPoint)) * kt * renderTraceRay(
+                    scene,
+                    Ray(t, intersectionPoint),
+                    1.0,
+                    raysCount + 1
+                );
+            else
+                resColor = resColor + kt * renderTraceRay(
+                    scene,
+                    Ray(t, intersectionPoint),
+                    1.0,
+                    raysCount + 1
+                );
         }
     }
 

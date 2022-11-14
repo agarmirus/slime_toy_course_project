@@ -79,6 +79,7 @@ static shared_ptr<Slime> generate_slime()
     slime->setKd(1.0);
     slime->setKs(0.0);
     slime->setKt(0.5);
+    slime->setKl(0.2);
 
     SphereCover cover(pc, 500);
     slime->setSphereCover(cover);
