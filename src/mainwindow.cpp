@@ -1,9 +1,6 @@
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
 
-#define SLIME_MASS 0.5
-#define SLIME_STIFFNESS 50
-
 static void gen_icosahedron(
     list<shared_ptr<MassPoint>> &massPoints,
     list<shared_ptr<PlaneFace>> &planeFaces
@@ -178,6 +175,10 @@ MainWindow::MainWindow(QWidget *parent):
     this->scene = make_shared<Scene>(camera, lightSource, slime, floor);
 
     this->plot = make_shared<Plot>(VIEW_W, VIEW_H);
+
+    this->timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(update_scene()));
+    timer->start(1000);
     // ------
 
     data = make_shared<UpdateData>();
@@ -196,5 +197,6 @@ void MainWindow::update_scene()
 MainWindow::~MainWindow()
 {
     pthread_cancel(timer_thread);
+    delete timer;
     delete ui;
 }

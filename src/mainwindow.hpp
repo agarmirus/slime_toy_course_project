@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <pthread.h>
+#include <QTimer>
 #include <QMainWindow>
 
 #include "plot.hpp"
@@ -30,6 +31,11 @@
 
 #define FPS 30
 #define SPLIT_COUNT 2
+
+#define SLIME_MASS 0.5
+#define SLIME_STIFFNESS 50
+
+#define UPDATE_FREQUENCY 120
 
 using namespace std;
 
@@ -65,6 +71,7 @@ private:
     shared_ptr<Plot> plot;
     pthread_t timer_thread;
     shared_ptr<UpdateData> data;
+    QTimer *timer;
 };
 
 #endif

@@ -110,6 +110,8 @@ void Plot::drawScene(const shared_ptr<Scene> &scene)
 
     double d = h / tan(FOV / 2);
 
+    QImage buf(w * 2, h * 2, QImage::Format_RGB32);
+
     for (int i = 0; i < 2 * h; ++i)
     {
         for (int j = 0; j < 2 * w; ++j)
@@ -121,7 +123,9 @@ void Plot::drawScene(const shared_ptr<Scene> &scene)
 
             RGBColor c = renderTraceRay(scene, fr);
 
-            img->setPixelColor(j, i, QColor(c.getR(), c.getG(), c.getB()));
+            buf.setPixelColor(j, i, QColor(c.getR(), c.getG(), c.getB()));
         }
     }
+
+    *img = buf;
 }
