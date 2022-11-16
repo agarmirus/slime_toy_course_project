@@ -1,12 +1,10 @@
 #include "plot.hpp"
 
 Plot::Plot(
-    QGraphicsScene *pl,
     const int width,
     const int height
 )
 {
-    this->pl = pl;
     w = width / 2;
     h = height / 2;
 
@@ -112,9 +110,9 @@ void Plot::drawScene(const shared_ptr<Scene> &scene)
 
     double d = h / tan(FOV / 2);
 
-    for (int i = 0; i < (h << 1); ++i)
+    for (int i = 0; i < 2 * h; ++i)
     {
-        for (int j = 0; j < (w << 1); ++j)
+        for (int j = 0; j < 2 * w; ++j)
         {
             Vector3d dij(j - w, d, h - i);
             Point frPos(cx, cy, cz);
@@ -126,7 +124,4 @@ void Plot::drawScene(const shared_ptr<Scene> &scene)
             img->setPixelColor(j, i, QColor(c.getR(), c.getG(), c.getB()));
         }
     }
-
-    pl->clear();
-    pl->addPixmap(QPixmap::fromImage(*img));
 }

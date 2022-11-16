@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QTimer>
+#include <pthread.h>
 #include <QMainWindow>
 
 #include "plot.hpp"
@@ -17,7 +17,12 @@
 #include "lightsource.hpp"
 #include "floortexture.hpp"
 
-#define IC_SPHERE_R 50
+#include <list>
+#include <chrono>
+#include <thread>
+#include <unistd.h>
+
+#define IC_R 50
 
 #define IC_X 0.0
 #define IC_Y 200.0
@@ -27,6 +32,14 @@
 #define SPLIT_COUNT 2
 
 using namespace std;
+
+struct UpdateData
+{
+    shared_ptr<Scene> scene;
+    shared_ptr<Plot> plot;
+};
+
+using UpdateData = struct UpdateData;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -40,15 +53,18 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    // shared_ptr<UpdateData> &get_update_data() {return data;}
+
 private slots:
     // void on_resetButton_clicked();
-    void update();
+    void update_scene();
 
 private:
     Ui::MainWindow *ui;
     shared_ptr<Scene> scene;
     shared_ptr<Plot> plot;
-    QTimer *timer;
+    pthread_t timer_thread;
+    shared_ptr<UpdateData> data;
 };
 
 #endif

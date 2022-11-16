@@ -28,8 +28,6 @@ using namespace std;
 class Plot
 {
     private:
-        QGraphicsScene* pl;
-
         shared_ptr<QImage> img;
 
         int w;
@@ -38,7 +36,6 @@ class Plot
     public:
         Plot() = default;
         Plot(
-            QGraphicsScene *pl,
             const int width,
             const int height
         );
@@ -46,6 +43,7 @@ class Plot
         virtual ~Plot() = default;
 
         virtual void drawScene(const shared_ptr<Scene> &scene);
+        virtual void *getImage() {return (void *)img.get();}
 };
 
 #endif
