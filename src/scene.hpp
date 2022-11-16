@@ -40,6 +40,7 @@ class Scene
             Point &pos,
             RGBColor &color,
             shared_ptr<PlaneFace> &face,
+            double &ka,
             double &ks,
             double &kd,
             double &kt,

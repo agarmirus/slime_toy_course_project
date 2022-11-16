@@ -9,6 +9,103 @@
 #define SLIME_MASS 0.5
 #define SLIME_STIFFNESS 50
 
+static void gen_icosahedron(
+    list<shared_ptr<MassPoint>> &massPoints,
+    list<shared_ptr<PlaneFace>> &planeFaces)
+{
+    double da = 72.0 / 180.0 * M_PI;
+
+    shared_ptr<MassPoint> upperPoints[5], lowerPoints[5];
+
+    // Верхняя окружность
+    double zu = IC_Z + IC_SPHERE_R / 2;
+
+    int i = 0;
+    for (double alpha = -M_PI / 2; i < 5; alpha += da, ++i)
+    {
+        auto p = make_shared<Point>(
+            IC_X + IC_SPHERE_R * cos(alpha),
+            IC_Y + IC_SPHERE_R * sin(alpha),
+            zu
+        );
+        auto mp = make_shared<MassPoint>();
+        mp->setPos(p);
+
+        massPoints.push_back(mp);
+        upperPoints[i] = mp;
+    }
+
+    // Нижняя окружность
+    double zl = zu - IC_SPHERE_R;
+
+    i = 0;
+    for (double alpha = M_PI / 2; i < 5; alpha += da, ++i)
+    {
+        auto p = make_shared<Point>(
+            IC_X + IC_SPHERE_R * cos(alpha),
+            IC_Y + IC_SPHERE_R * sin(alpha),
+            zl
+        );
+        auto mp = make_shared<MassPoint>();
+        mp->setPos(p);
+
+        massPoints.push_back(mp);
+        lowerPoints[i] = mp;
+    }
+
+    // Добавляем верхнюю и нижнюю вершины
+    auto p = make_shared<Point>(IC_X, IC_Y, zu + 0.66 * IC_SPHERE_R);
+    auto mpu = make_shared<MassPoint>();
+    mpu->setPos(p);
+    massPoints.push_back(mpu);
+
+    p = make_shared<Point>(IC_X, IC_Y, zl - 0.66 * IC_SPHERE_R);
+    auto mpl = make_shared<MassPoint>();
+    mpl->setPos(p);
+    massPoints.push_back(mpl);
+
+    // Соединяем точки и получаем грани
+    for (i = 0; i < 5; ++i)
+    {
+        upperPoints[i]->addSpring(upperPoints[(i + 1) % 5]);
+        upperPoints[i]->addSpring(upperPoints[i - 1 < 0 ? 4 - i : i - 1]);
+        upperPoints[i]->addSpring(mpu);
+        upperPoints[i]->addSpring(lowerPoints[(i + 2) % 5]);
+        upperPoints[i]->addSpring(lowerPoints[(i + 3) % 5]);
+
+        planeFaces.push_back(make_shared<PlaneFace>(
+            upperPoints[i]->getPosPtr(),
+            upperPoints[(i + 1) % 5]->getPosPtr(),
+            mpu->getPosPtr()
+        ));
+        planeFaces.push_back(make_shared<PlaneFace>(
+            upperPoints[i]->getPosPtr(),
+            lowerPoints[(i + 2) % 5]->getPosPtr(),
+            lowerPoints[(i + 3) % 5]->getPosPtr()
+        ));
+
+        lowerPoints[i]->addSpring(lowerPoints[(i + 1) % 5]);
+        lowerPoints[i]->addSpring(lowerPoints[i - 1 < 0 ? 4 - i : i - 1]);
+        lowerPoints[i]->addSpring(mpl);
+        lowerPoints[i]->addSpring(upperPoints[(i + 2) % 5]);
+        lowerPoints[i]->addSpring(upperPoints[(i + 3) % 5]);
+
+        planeFaces.push_back(make_shared<PlaneFace>(
+            lowerPoints[i]->getPosPtr(),
+            lowerPoints[(i + 1) % 5]->getPosPtr(),
+            mpl->getPosPtr()
+        ));
+        planeFaces.push_back(make_shared<PlaneFace>(
+            lowerPoints[i]->getPosPtr(),
+            upperPoints[(i + 2) % 5]->getPosPtr(),
+            upperPoints[(i + 3) % 5]->getPosPtr()
+        ));
+
+        mpu->addSpring(upperPoints[i]);
+        mpl->addSpring(lowerPoints[i]);
+    }
+}
+
 static shared_ptr<Slime> generate_slime()
 {
     auto slime = make_shared<Slime>();
@@ -16,73 +113,16 @@ static shared_ptr<Slime> generate_slime()
     list<shared_ptr<MassPoint>> massPoints;
     list<shared_ptr<PlaneFace>> planeFaces;
 
-    auto p1 = make_shared<Point>(-50, 100, 150);
-    auto mp1 = make_shared<MassPoint>();
-    mp1->setPos(p1);
-    massPoints.push_back(mp1);
-
-    auto p2 = make_shared<Point>(50, 100, 150);
-    auto mp2 = make_shared<MassPoint>();
-    mp2->setPos(p2);
-    massPoints.push_back(mp2);
-
-    auto p3 = make_shared<Point>(0, 186.6, 100);
-    auto mp3 = make_shared<MassPoint>();
-    mp3->setPos(p3);
-    massPoints.push_back(mp3);
-
-    auto p4 = make_shared<Point>(0, 128.87, 200.0);
-    auto mp4 = make_shared<MassPoint>();
-    mp4->setPos(p4);
-    massPoints.push_back(mp4);
-
-    auto pc = make_shared<Point>(0, 128.87, 147.87);
-    auto mpc = make_shared<MassPoint>();
-    mpc->setPos(pc);
-    massPoints.push_back(mpc);
-
-    mp1->addSpring(mp2);
-    mp1->addSpring(mp3);
-    mp1->addSpring(mp4);
-    mp1->addSpring(mpc);
-
-    mp2->addSpring(mp1);
-    mp2->addSpring(mp3);
-    mp2->addSpring(mp4);
-    mp2->addSpring(mpc);
-
-    mp3->addSpring(mp2);
-    mp3->addSpring(mp1);
-    mp3->addSpring(mp4);
-    mp3->addSpring(mpc);
-
-    mp4->addSpring(mp2);
-    mp4->addSpring(mp3);
-    mp4->addSpring(mp1);
-    mp4->addSpring(mpc);
-
-    mpc->addSpring(mp2);
-    mpc->addSpring(mp3);
-    mpc->addSpring(mp4);
-    mpc->addSpring(mp1);
-
-    planeFaces.push_back(make_shared<PlaneFace>(p1, p2, p3));
-    planeFaces.push_back(make_shared<PlaneFace>(p2, p3, p4));
-    planeFaces.push_back(make_shared<PlaneFace>(p1, p2, p4));
-    planeFaces.push_back(make_shared<PlaneFace>(p1, p3, p4));
+    gen_icosahedron(massPoints, planeFaces);
 
     slime->setMassPoints(massPoints);
     slime->setFaces(planeFaces);
-    slime->setMass(SLIME_MASS);
-    slime->setStiffness(SLIME_STIFFNESS);
-    slime->setRGB(RGBColor(0, 255, 0));
-    slime->setKd(1.0);
-    slime->setKs(0.0);
+    slime->setKa(0.0);
+    slime->setKd(0.0);
+    slime->setKs(1.0);
     slime->setKt(0.0);
     slime->setKl(0.0);
-
-    SphereCover cover(pc, 500);
-    slime->setSphereCover(cover);
+    slime->setRGB(RGBColor(255, 0, 255));
 
     return slime;
 }
@@ -98,9 +138,9 @@ MainWindow::MainWindow(QWidget *parent):
 
     // ------
     shared_ptr<Texture> texture = make_shared<FloorTexture>("./textures/floor.jpg");
-    auto floor = make_shared<Floor>(1.0, 0.0, 0.0, texture);
+    auto floor = make_shared<Floor>(0.0, 1.0, 0.0, 0.0, texture);
 
-    auto camPos = make_shared<Point>(100.0, -50.0, 150.0);
+    auto camPos = make_shared<Point>(0.0, 0.0, 100.0);
     auto camVec = make_shared<Vector3d>(0.0, 1.0, 0.0);
     auto camera = make_shared<Camera>(camPos, camVec);
 

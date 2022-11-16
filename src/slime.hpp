@@ -25,6 +25,7 @@ class Slime: public Object
         double mass;
         double k;
         
+        double ka;
         double kd;
         double ks;
         double kt;
@@ -44,6 +45,7 @@ class Slime: public Object
 
         virtual void setMass(const double mass);
         virtual void setStiffness(const double k);
+        virtual void setKa(const double ka) {this->ka = ka;}
         virtual void setKd(const double kd) {this->kd = kd;}
         virtual void setKs(const double ks) {this->ks = ks;}
         virtual void setKt(const double kt) {this->kt = kt;}
@@ -57,6 +59,7 @@ class Slime: public Object
             Point &pos,
             RGBColor &color,
             shared_ptr<PlaneFace> &face,
+            double &ka,
             double &ks,
             double &kd,
             double &kt,
@@ -66,6 +69,7 @@ class Slime: public Object
 
         virtual bool getGrabbingPoint(Point &pos, const Ray &ray) const;
 
+        virtual double getKa() const {return ka;}
         virtual double getKd() const {return kd;}
         virtual double getKs() const {return ks;}
         virtual double getKt() const {return kt;}

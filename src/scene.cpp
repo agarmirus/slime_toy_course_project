@@ -15,80 +15,28 @@ bool Scene::getIntersection(
     Point &pos,
     RGBColor &color,
     shared_ptr<PlaneFace> &face,
+    double &ka,
     double &ks,
     double &kd,
     double &kt,
     double &kl,
     const Ray &ray
 ) const
-{    
-    Point slimeIntersectionPoint, floorIntersectionPoint;
-    RGBColor slimeColor, floorColor;
-    shared_ptr<PlaneFace> slimeFace, floorFace;
-    double slimeKs, floorKs;
-    double slimeKd, floorKd;
-    double slimeKt, floorKt;
-    double slimeKl, floorKl;
-
-    bool slimeIsIntersected = slime->getIntersection(
-        slimeIntersectionPoint, slimeColor, slimeFace,
-        slimeKs, slimeKd, slimeKt, slimeKl, ray
-    );
-    bool floorIsIntersected = floor->getIntersection(
-        floorIntersectionPoint, floorColor, floorFace,
-        floorKs, floorKd, floorKt, floorKl, ray
+{
+    bool isIntersected = slime->getIntersection(
+        pos, color, face,
+        ka, ks, kd, kt, kl, ray
     );
 
-    if (!slimeIsIntersected && !floorIsIntersected)
-        return false;
-
-    if (slimeIsIntersected && floorIsIntersected)
+    if (!isIntersected)
     {
-        Point rayPos = ray.getPos();
-
-        if (lt(rayPos.getDistance(slimeIntersectionPoint), rayPos.getDistance(floorIntersectionPoint)))
-        {
-            pos = slimeIntersectionPoint;
-            color = slimeColor;
-            face = slimeFace;
-            ks = slimeKs;
-            kd = slimeKd;
-            kt = slimeKt;
-            kl = slimeKl;
-        }
-        else
-        {
-            pos = floorIntersectionPoint;
-            color = floorColor;
-            face = floorFace;
-            ks = floorKs;
-            kd = floorKd;
-            kt = floorKt;
-            kl = floorKl;
-        }
-    }
-    else if (floorIsIntersected)
-    {
-        pos = floorIntersectionPoint;
-        color = floorColor;
-        face = floorFace;
-        ks = floorKs;
-        kd = floorKd;
-        kt = floorKt;
-        kl = floorKl;
-    }
-    else
-    {
-        pos = slimeIntersectionPoint;
-        color = slimeColor;
-        face = slimeFace;
-        ks = slimeKs;
-        kd = slimeKd;
-        kt = slimeKt;
-        kl = slimeKl;
+        isIntersected = floor->getIntersection(
+            pos, color, face,
+            ka, ks, kd, kt, kl, ray
+        );
     }
 
-    return true;
+    return isIntersected;
 }
 
 bool Scene::isIntersected(const Ray &ray) const

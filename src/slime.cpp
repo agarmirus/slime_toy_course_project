@@ -118,6 +118,7 @@ bool Slime::getIntersection(
     Point &pos,
     RGBColor &color,
     shared_ptr<PlaneFace> &face,
+    double &ka,
     double &ks,
     double &kd,
     double &kt,
@@ -125,8 +126,8 @@ bool Slime::getIntersection(
     const Ray &ray
 ) const
 {
-    if (!cover.isIntersected(ray))
-        return false;
+    // if (!cover.isIntersected(ray))
+    //     return false;
 
     bool isIntersected = false;
 
@@ -155,6 +156,7 @@ bool Slime::getIntersection(
     if (isIntersected)
     {
         color = this->color;
+        ka = this->ka;
         ks = this->ks;
         kd = this->kd;
         kt = this->kt;

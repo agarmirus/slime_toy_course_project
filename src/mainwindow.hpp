@@ -17,7 +17,14 @@
 #include "lightsource.hpp"
 #include "floortexture.hpp"
 
+#define IC_SPHERE_R 50
+
+#define IC_X 0.0
+#define IC_Y 200.0
+#define IC_Z 100.0
+
 #define FPS 30
+#define SPLIT_COUNT 2
 
 using namespace std;
 

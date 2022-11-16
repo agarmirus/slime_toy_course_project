@@ -29,6 +29,9 @@ class PlaneFace
 
         virtual void updateCoefs();
 
+        virtual Point getA() const {return *points[0];}
+        virtual Point getB() const {return *points[1];}
+        virtual Point getC() const {return *points[2];}
         virtual Vector3d getNormal() const
         {
             return Vector3d(coeffs[0], coeffs[1], coeffs[2]);

@@ -1,11 +1,15 @@
 #include "floor.hpp"
 
 Floor::Floor(
-    const double kd, const double ks, const double kt,
+    const double ka,
+    const double kd,
+    const double ks,
+    const double kt,
     const shared_ptr<Texture> &texture
 )
 {
     this->texture = texture;
+    this->ka = ka;
     this->kd = kd;
     this->ks = ks;
     this->kt = kt;
@@ -17,6 +21,7 @@ bool Floor::getIntersection(
     Point &pos,
     RGBColor &color,
     shared_ptr<PlaneFace> &face,
+    double &ka,
     double &ks,
     double &kd,
     double &kt,
@@ -38,6 +43,7 @@ bool Floor::getIntersection(
         color = texture->getColor(pos);
         face = this->face;
 
+        ka = this->ka;
         ks = this->ks;
         kt = this->kt;
         kl = this->kl;

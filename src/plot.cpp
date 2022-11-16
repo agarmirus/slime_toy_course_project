@@ -28,24 +28,21 @@ static RGBColor renderTraceRay(
     Point intersectionPoint;
     RGBColor intersectionColor;
     shared_ptr<PlaneFace> intersectedFace;
-    double ks, kd, kt, kl;
+    double ka, ks, kd, kt, kl;
 
     if (!scene->getIntersection(
         intersectionPoint,
         intersectionColor,
         intersectedFace,
-        ks, kd, kt, kl, ray))
+        ka, ks, kd, kt, kl, ray))
         return RGBColor(100, 100, 255);
+    
+    if (gt(ka, 0.0))
+        resColor = intersectionColor * ka;
 
     Point lightPos = scene->getLightSource().getPos();
 
-    // Теневой луч
     Vector3d lightVec(intersectionPoint, lightPos);
-    Ray shadowRay(lightVec, intersectionPoint);
-
-    // Проверяем тень, если луч прилетел извне
-    // if (eq(n, 1.0) && scene->isIntersected(shadowRay))
-    //     return resColor;
 
     Vector3d rayVec = normalize(ray.getVec());
     Vector3d normal = normalize(intersectedFace->getNormal());
@@ -94,7 +91,13 @@ static RGBColor renderTraceRay(
 
     // Диффузное отражение
     if (eq(n, 1.0) && gt(kd, 0.0))
-        resColor = resColor + intersectionColor * kd * lightVec.cos(normal);
+    {
+        Ray shadowRay(lightVec, intersectionPoint);
+
+        // Проверяем тень, если луч прилетел извне
+        if (!eq(n, 1.0) || !scene->isIntersected(shadowRay))
+            resColor = resColor + intersectionColor * kd * lightVec.cos(normal);
+    }
 
     return resColor;
 }

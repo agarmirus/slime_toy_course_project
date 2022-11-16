@@ -32,6 +32,7 @@ class Object
 
         virtual void setMass(const double mass) {return;}
         virtual void setStiffness(const double k) {return;}
+        virtual void setKa(const double ka) {return;}
         virtual void setKd(const double kd) {return;}
         virtual void setKs(const double ks) {return;}
         virtual void setKt(const double kt) {return;}
@@ -45,6 +46,7 @@ class Object
             Point &pos,
             RGBColor &color,
             shared_ptr<PlaneFace> &face,
+            double &ka,
             double &ks,
             double &kd,
             double &kt,
@@ -54,6 +56,7 @@ class Object
 
         virtual bool getGrabbingPoint(Point &pos, const Ray &ray) const {return false;}
 
+        virtual double getKa() const {return 0.0;}
         virtual double getKd() const {return 0.0;}
         virtual double getKs() const {return 0.0;}
         virtual double getKt() const {return 0.0;}
