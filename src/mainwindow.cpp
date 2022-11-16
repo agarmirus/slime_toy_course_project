@@ -11,17 +11,22 @@
 
 static void gen_icosahedron(
     list<shared_ptr<MassPoint>> &massPoints,
-    list<shared_ptr<PlaneFace>> &planeFaces)
+    list<shared_ptr<PlaneFace>> &planeFaces
+)
 {
     double da = 72.0 / 180.0 * M_PI;
 
     shared_ptr<MassPoint> upperPoints[5], lowerPoints[5];
 
+    double a = 2.0 * IC_SPHERE_R * sin(da / 2.0);
+    double u = 1 - cos(da / 2.0);
+    double h = sqrt(3.0 * a * a / 4.0 - IC_SPHERE_R * IC_SPHERE_R * u * u);
+
     // Верхняя окружность
-    double zu = IC_Z + IC_SPHERE_R / 2;
+    double zu = IC_Z + h / 2;
 
     int i = 0;
-    for (double alpha = -M_PI / 2; i < 5; alpha += da, ++i)
+    for (double alpha = -M_PI / 2.0; i < 5; alpha += da, ++i)
     {
         auto p = make_shared<Point>(
             IC_X + IC_SPHERE_R * cos(alpha),
@@ -36,10 +41,10 @@ static void gen_icosahedron(
     }
 
     // Нижняя окружность
-    double zl = zu - IC_SPHERE_R;
+    double zl = zu - h;
 
     i = 0;
-    for (double alpha = M_PI / 2; i < 5; alpha += da, ++i)
+    for (double alpha = M_PI / 2.0; i < 5; alpha += da, ++i)
     {
         auto p = make_shared<Point>(
             IC_X + IC_SPHERE_R * cos(alpha),
@@ -54,12 +59,14 @@ static void gen_icosahedron(
     }
 
     // Добавляем верхнюю и нижнюю вершины
-    auto p = make_shared<Point>(IC_X, IC_Y, zu + 0.66 * IC_SPHERE_R);
+    double he = sqrt(a * a - IC_SPHERE_R * IC_SPHERE_R);
+
+    auto p = make_shared<Point>(IC_X, IC_Y, zu + he);
     auto mpu = make_shared<MassPoint>();
     mpu->setPos(p);
     massPoints.push_back(mpu);
 
-    p = make_shared<Point>(IC_X, IC_Y, zl - 0.66 * IC_SPHERE_R);
+    p = make_shared<Point>(IC_X, IC_Y, zl - he);
     auto mpl = make_shared<MassPoint>();
     mpl->setPos(p);
     massPoints.push_back(mpl);
@@ -106,6 +113,12 @@ static void gen_icosahedron(
     }
 }
 
+static void get_sphere(
+    list<shared_ptr<MassPoint>> &massPoints,
+    list<shared_ptr<PlaneFace>> &planeFaces
+)
+{}
+
 static shared_ptr<Slime> generate_slime()
 {
     auto slime = make_shared<Slime>();
@@ -114,14 +127,15 @@ static shared_ptr<Slime> generate_slime()
     list<shared_ptr<PlaneFace>> planeFaces;
 
     gen_icosahedron(massPoints, planeFaces);
+    get_sphere(massPoints, planeFaces);
 
     slime->setMassPoints(massPoints);
     slime->setFaces(planeFaces);
-    slime->setKa(0.0);
-    slime->setKd(0.0);
-    slime->setKs(1.0);
-    slime->setKt(0.0);
-    slime->setKl(0.0);
+    slime->setKa(0.15);
+    slime->setKd(1.0);
+    slime->setKs(0.0);
+    slime->setKt(0.5);
+    slime->setKl(0.005);
     slime->setRGB(RGBColor(255, 0, 255));
 
     return slime;
@@ -138,7 +152,7 @@ MainWindow::MainWindow(QWidget *parent):
 
     // ------
     shared_ptr<Texture> texture = make_shared<FloorTexture>("./textures/floor.jpg");
-    auto floor = make_shared<Floor>(0.0, 1.0, 0.0, 0.0, texture);
+    auto floor = make_shared<Floor>(0.15, 1.0, 0.0, 0.0, texture);
 
     auto camPos = make_shared<Point>(0.0, 0.0, 100.0);
     auto camVec = make_shared<Vector3d>(0.0, 1.0, 0.0);
