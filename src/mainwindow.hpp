@@ -1,7 +1,12 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <list>
+#include <chrono>
+#include <thread>
+#include <unistd.h>
 #include <pthread.h>
+
 #include <QTimer>
 #include <QMainWindow>
 
@@ -17,11 +22,6 @@
 #include "planeface.hpp"
 #include "lightsource.hpp"
 #include "floortexture.hpp"
-
-#include <list>
-#include <chrono>
-#include <thread>
-#include <unistd.h>
 
 #define IC_R 50
 

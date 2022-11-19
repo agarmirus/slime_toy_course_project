@@ -7,7 +7,6 @@
 #include "doubleop.hpp"
 #include "masspoint.hpp"
 #include "spherecover.hpp"
-#include "omp.h"
 
 #define MU 0.3
 #define G 9.81

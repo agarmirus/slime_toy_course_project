@@ -142,9 +142,8 @@ static void *perform_updating(void *data)
 
     while (1)
     {
-        // std::this_thread::sleep_for(std::chrono::milliseconds(1000 / FPS));
         plot->drawScene(scene);
-        sleep(1);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000 / FPS));
     }
 
     return nullptr;
@@ -190,8 +189,7 @@ MainWindow::MainWindow(QWidget *parent):
 
 void MainWindow::update_scene()
 {
-    ui->graphicsView->scene()->clear();
-    ui->graphicsView->scene()->addPixmap(QPixmap::fromImage(*((QImage *)plot->getImage())));
+    plot->updateGraphicsScene(ui->graphicsView->scene());
 }
 
 MainWindow::~MainWindow()

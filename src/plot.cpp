@@ -100,8 +100,14 @@ static RGBColor renderTraceRay(
     return resColor;
 }
 
-void Plot::drawScene(const shared_ptr<Scene> &scene)
+static void *render(void *data)
 {
+    shared_ptr<Scene> scene = ((RanderData *)data)->scene;
+    int w = ((RanderData *)data)->w;
+    int h = ((RanderData *)data)->h;
+    int hn = ((RanderData *)data)->hn;
+    shared_ptr<QImage> buf = ((RanderData *)data)->buf;
+
     Point camPos = scene->getCamera().getPos();
 
     double cx = camPos.getX();
@@ -110,22 +116,48 @@ void Plot::drawScene(const shared_ptr<Scene> &scene)
 
     double d = h / tan(FOV / 2);
 
-    QImage buf(w * 2, h * 2, QImage::Format_RGB32);
-
-    for (int i = 0; i < 2 * h; ++i)
+    for (int i = 0; i < 2 * w; ++i)
     {
-        for (int j = 0; j < 2 * w; ++j)
-        {
-            Vector3d dij(j - w, d, h - i);
-            Point frPos(cx, cy, cz);
+        Vector3d dij(i - w, d, h - hn);
+        Point frPos(cx, cy, cz);
 
-            Ray fr(dij, frPos);
+        Ray fr(dij, frPos);
 
-            RGBColor c = renderTraceRay(scene, fr);
+        RGBColor c = renderTraceRay(scene, fr);
 
-            buf.setPixelColor(j, i, QColor(c.getR(), c.getG(), c.getB()));
-        }
+        buf->setPixelColor(i, hn, QColor(c.getR(), c.getG(), c.getB()));
     }
 
-    *img = buf;
+    return nullptr;
+}
+
+void Plot::drawScene(const shared_ptr<Scene> &scene)
+{
+    auto buf = make_shared<QImage>(w * 2, h * 2, QImage::Format_RGB32);
+
+    RanderData data[VIEW_H];
+    pthread_t threads[VIEW_H];
+
+    for (int i = 0; i < VIEW_H; ++i)
+    {
+        data[i].w = w;
+        data[i].h = h;
+        data[i].hn = i;
+        data[i].scene = scene;
+        data[i].buf = buf;
+
+        pthread_create(threads + i, NULL, render, data + i);
+    }
+
+    for (int i = 0; i < VIEW_H; ++i)
+        pthread_join(threads[i], nullptr);
+    
+    *img = *buf;
+}
+
+void Plot::updateGraphicsScene(void *const scene)
+{
+    auto qtscene = (QGraphicsScene *)scene;
+    qtscene->clear();
+    qtscene->addPixmap(QPixmap::fromImage(*img));
 }

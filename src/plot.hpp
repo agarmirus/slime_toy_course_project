@@ -1,14 +1,14 @@
 #ifndef PLOT_H
 #define PLOT_H
 
+#include <pthread.h>
 #include <memory>
-#include <stack>
 #include <cmath>
 
+#include <QPixmap>
 #include <QGraphicsScene>
 
 #include "scene.hpp"
-#include "omp.h"
 
 #define FOV M_PI / 3
 
@@ -24,6 +24,17 @@
 #define VIEW_H 370
 
 using namespace std;
+
+struct RanderData
+{
+    int w;
+    int h;
+    int hn;
+    shared_ptr<Scene> scene;
+    shared_ptr<QImage> buf;
+};
+
+using RanderData = struct RanderData;
 
 class Plot
 {
@@ -43,7 +54,8 @@ class Plot
         virtual ~Plot() = default;
 
         virtual void drawScene(const shared_ptr<Scene> &scene);
-        virtual void *getImage() {return (void *)img.get();}
+
+        virtual void updateGraphicsScene(void *const scene);
 };
 
 #endif
