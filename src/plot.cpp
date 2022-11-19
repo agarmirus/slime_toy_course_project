@@ -106,7 +106,7 @@ static void *render(void *data)
     int w = ((RanderData *)data)->w;
     int h = ((RanderData *)data)->h;
     int hn = ((RanderData *)data)->hn;
-    shared_ptr<QImage> buf = ((RanderData *)data)->buf;
+    QImage *buf = ((RanderData *)data)->buf;
 
     Point camPos = scene->getCamera().getPos();
 
@@ -133,7 +133,7 @@ static void *render(void *data)
 
 void Plot::drawScene(const shared_ptr<Scene> &scene)
 {
-    auto buf = make_shared<QImage>(w * 2, h * 2, QImage::Format_RGB32);
+    QImage buf(w * 2, h * 2, QImage::Format_RGB32);
 
     RanderData data[VIEW_H];
     pthread_t threads[VIEW_H];
@@ -144,7 +144,7 @@ void Plot::drawScene(const shared_ptr<Scene> &scene)
         data[i].h = h;
         data[i].hn = i;
         data[i].scene = scene;
-        data[i].buf = buf;
+        data[i].buf = &buf;
 
         pthread_create(threads + i, NULL, render, data + i);
     }
@@ -152,7 +152,7 @@ void Plot::drawScene(const shared_ptr<Scene> &scene)
     for (int i = 0; i < VIEW_H; ++i)
         pthread_join(threads[i], nullptr);
     
-    *img = *buf;
+    *img = buf;
 }
 
 void Plot::updateGraphicsScene(void *const scene)

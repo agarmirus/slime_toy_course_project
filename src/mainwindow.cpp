@@ -130,7 +130,7 @@ static shared_ptr<Slime> generate_slime()
     slime->setKs(0.0);
     slime->setKt(0.5);
     slime->setKl(0.005);
-    slime->setRGB(RGBColor(255, 0, 255));
+    slime->setRGB(RGBColor(255, 0, 0));
 
     return slime;
 }

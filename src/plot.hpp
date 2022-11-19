@@ -2,6 +2,7 @@
 #define PLOT_H
 
 #include <pthread.h>
+#include <time.h>
 #include <memory>
 #include <cmath>
 
@@ -31,7 +32,7 @@ struct RanderData
     int h;
     int hn;
     shared_ptr<Scene> scene;
-    shared_ptr<QImage> buf;
+    QImage *buf;
 };
 
 using RanderData = struct RanderData;
