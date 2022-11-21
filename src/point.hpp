@@ -60,4 +60,6 @@ class Point
         }
 };
 
+Point getMiddle(const Point &p1, const Point &p2);
+
 #endif

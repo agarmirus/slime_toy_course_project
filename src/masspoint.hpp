@@ -41,7 +41,7 @@ class MassPoint
         virtual double getStiffness() const {return k;}
         virtual Vector3d getVelocity() const {return velocity;}
         virtual Vector3d getForce() const {return force;}
-        virtual shared_ptr<Point> getPosPtr() {return pos;}
+        virtual shared_ptr<Point> &getPosPtr() {return pos;}
 
         virtual void addSpring(const shared_ptr<MassPoint> &massPoint) {springs.push_back(massPoint);}
 

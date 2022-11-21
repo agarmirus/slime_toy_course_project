@@ -93,3 +93,12 @@ void Point::rotate(
 
     returnFromCenter(center);
 }
+
+Point getMiddle(const Point &p1, const Point &p2)
+{
+    return Point(
+        (p1.getX() + p2.getX()) / 2,
+        (p1.getY() + p2.getY()) / 2,
+        (p1.getZ() + p2.getZ()) / 2
+    );
+}

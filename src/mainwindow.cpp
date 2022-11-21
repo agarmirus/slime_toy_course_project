@@ -1,7 +1,9 @@
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
 
-static void gen_icosahedron(
+
+// Генерация внешних точек слайма с помощью построение икосаэдра
+static void genIcosahedron(
     list<shared_ptr<MassPoint>> &massPoints,
     list<shared_ptr<PlaneFace>> &planeFaces
 )
@@ -105,11 +107,146 @@ static void gen_icosahedron(
     }
 }
 
-static void get_sphere(
+static shared_ptr<MassPoint> searchMassPoint(
+    const list<shared_ptr<MassPoint>> &massPoints,
+    const Point &p
+)
+{
+    shared_ptr<MassPoint> res = nullptr;
+
+    for (auto mp: massPoints)
+        if (mp->getPos() == p)
+            res = mp;
+
+    return res;
+}
+
+static void moveToRadius(shared_ptr<Point> &p)
+{
+    Point c(IC_X, IC_Y, IC_Z);
+    Vector3d dir(c, *p);
+
+    dir.normalize();
+    dir.mult(IC_R);
+
+    p->setX(IC_X + dir.getX());
+    p->setY(IC_Y + dir.getY());
+    p->setZ(IC_Z + dir.getZ());
+}
+
+static void changeSpring(
+    shared_ptr<MassPoint> &mp,
+    const shared_ptr<MassPoint> &oldMp,
+    const shared_ptr<MassPoint> &newMp
+)
+{
+    bool found = false;
+
+    for (auto sp = mp->begin(); !found && sp != mp->end(); ++sp)
+    {
+        if (*sp == oldMp)
+        {
+            *sp = newMp;
+            found = true;
+        }
+    }
+}
+
+// Получение точек сферы на основе полученного икосаэдра
+static void getSphere(
     list<shared_ptr<MassPoint>> &massPoints,
     list<shared_ptr<PlaneFace>> &planeFaces
 )
 {
+    for (size_t i = 0; i < SPLIT_COUNT; ++i)
+    {
+        size_t facesCount = planeFaces.size();
+
+        size_t fi = 0;
+        for (auto face = planeFaces.begin(); fi < facesCount; ++face, ++fi)
+        {
+            // Ищем точки масс, соответствующие текущей грани
+            auto mp1 = searchMassPoint(massPoints, (*face)->getFirstPoint());
+            auto mp2 = searchMassPoint(massPoints, (*face)->getSecondPoint());
+            auto mp3 = searchMassPoint(massPoints, (*face)->getThirdPoint());
+
+            auto p1 = mp1->getPosPtr();
+            auto p2 = mp2->getPosPtr();
+            auto p3 = mp3->getPosPtr();
+            
+            auto m12 = getMiddle(*p1, *p2);
+            auto m13 = getMiddle(*p1, *p3);
+            auto m23 = getMiddle(*p2, *p3);
+
+            // Получаем срединные точки масс
+            auto mid12 = searchMassPoint(massPoints, m12);
+            auto mid13 = searchMassPoint(massPoints, m13);
+            auto mid23 = searchMassPoint(massPoints, m23);
+            if (!mid12)
+            {
+                mid12.reset(new MassPoint);
+                mid12->setPos(make_shared<Point>(m12));
+            }
+            if (!mid13)
+            {
+                mid13.reset(new MassPoint);
+                mid13->setPos(make_shared<Point>(m13));
+            }
+            if (!mid23)
+            {
+                mid23.reset(new MassPoint);
+                mid23->setPos(make_shared<Point>(m23));
+            }
+
+            // Смещаем новые точки до радиуса
+            moveToRadius(mid12->getPosPtr());
+            moveToRadius(mid13->getPosPtr());
+            moveToRadius(mid23->getPosPtr());
+
+            // Создаем новые грани и помещаем их в список граней
+            auto face1 = make_shared<PlaneFace>(mid12->getPosPtr(), mid13->getPosPtr(), mid23->getPosPtr());
+            auto face2 = make_shared<PlaneFace>(p1, mid12->getPosPtr(), mid13->getPosPtr());
+            auto face3 = make_shared<PlaneFace>(p2, mid12->getPosPtr(), mid23->getPosPtr());
+            auto face4 = make_shared<PlaneFace>(p3, mid23->getPosPtr(), mid13->getPosPtr());
+
+            *face = face1;
+            planeFaces.push_back(face2);
+            planeFaces.push_back(face3);
+            planeFaces.push_back(face4);
+
+            // Разбираемся с пружинами
+            changeSpring(mp1, mp2, mid12);
+            changeSpring(mp1, mp3, mid13);
+            changeSpring(mp2, mp1, mid12);
+            changeSpring(mp2, mp3, mid23);
+            changeSpring(mp3, mp1, mid13);
+            changeSpring(mp3, mp2, mid23);
+            mid12->addSpring(mp1);
+            mid12->addSpring(mp2);
+            mid12->addSpring(mid13);
+            mid12->addSpring(mid23);
+            mid13->addSpring(mp1);
+            mid13->addSpring(mp3);
+            mid13->addSpring(mid12);
+            mid13->addSpring(mid23);
+            mid23->addSpring(mp3);
+            mid23->addSpring(mp2);
+            mid23->addSpring(mid12);
+            mid23->addSpring(mid13);
+        }
+    }
+}
+
+// Получение внутренных точек слайма
+static void genInternalPoints(list<shared_ptr<MassPoint>> &massPoints)
+{
+    /*
+     * Получить точку центра масс. Соединить центр масс с внешними точками
+     * сферы. Разбить каждый полученный отрезок на N равных частей (желательно,
+     * чтобы расстояние между двумя соседними точками на отрезке было развно
+     * длине внешнего ребра). Соединить новые полученные точки (как именно - вопрос).
+     */
+
     return;
 }
 
@@ -120,8 +257,9 @@ static shared_ptr<Slime> generate_slime()
     list<shared_ptr<MassPoint>> massPoints;
     list<shared_ptr<PlaneFace>> planeFaces;
 
-    gen_icosahedron(massPoints, planeFaces);
-    get_sphere(massPoints, planeFaces);
+    genIcosahedron(massPoints, planeFaces);
+    getSphere(massPoints, planeFaces);
+    genInternalPoints(massPoints);
 
     slime->setMassPoints(massPoints);
     slime->setFaces(planeFaces);
