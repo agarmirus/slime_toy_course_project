@@ -121,13 +121,13 @@ static shared_ptr<MassPoint> searchMassPoint(
     return res;
 }
 
-static void moveToRadius(shared_ptr<Point> &p)
+static void moveToRadius(shared_ptr<Point> &p, const double r)
 {
     Point c(IC_X, IC_Y, IC_Z);
     Vector3d dir(c, *p);
 
     dir.normalize();
-    dir.mult(IC_R);
+    dir.mult(r);
 
     p->setX(IC_X + dir.getX());
     p->setY(IC_Y + dir.getY());
@@ -158,25 +158,34 @@ static void getSphere(
     list<shared_ptr<PlaneFace>> &planeFaces
 )
 {
+    const double r = (*massPoints.begin())->getPos().getDistance(Point(IC_X, IC_Y, IC_Z));
     for (size_t i = 0; i < SPLIT_COUNT; ++i)
     {
+        printf("%zu\n", i);
         size_t facesCount = planeFaces.size();
 
         size_t fi = 0;
         for (auto face = planeFaces.begin(); fi < facesCount; ++face, ++fi)
         {
+            printf("%zu\n", fi);
             // Ищем точки масс, соответствующие текущей грани
             auto mp1 = searchMassPoint(massPoints, (*face)->getFirstPoint());
             auto mp2 = searchMassPoint(massPoints, (*face)->getSecondPoint());
+            printf("bruh\n");
             auto mp3 = searchMassPoint(massPoints, (*face)->getThirdPoint());
 
             auto p1 = mp1->getPosPtr();
             auto p2 = mp2->getPosPtr();
             auto p3 = mp3->getPosPtr();
+
+            printf("Found MPs\n");
             
+            // Получаем срединные точки
             auto m12 = getMiddle(*p1, *p2);
             auto m13 = getMiddle(*p1, *p3);
             auto m23 = getMiddle(*p2, *p3);
+
+            printf("Calculated mid points\n");
 
             // Получаем срединные точки масс
             auto mid12 = searchMassPoint(massPoints, m12);
@@ -198,10 +207,14 @@ static void getSphere(
                 mid23->setPos(make_shared<Point>(m23));
             }
 
+            printf("Got mid MPs\n");
+
             // Смещаем новые точки до радиуса
-            moveToRadius(mid12->getPosPtr());
-            moveToRadius(mid13->getPosPtr());
-            moveToRadius(mid23->getPosPtr());
+            moveToRadius(mid12->getPosPtr(), r);
+            moveToRadius(mid13->getPosPtr(), r);
+            moveToRadius(mid23->getPosPtr(), r);
+
+            printf("Moved mid MPs to radius\n");
 
             // Создаем новые грани и помещаем их в список граней
             auto face1 = make_shared<PlaneFace>(mid12->getPosPtr(), mid13->getPosPtr(), mid23->getPosPtr());
@@ -213,6 +226,8 @@ static void getSphere(
             planeFaces.push_back(face2);
             planeFaces.push_back(face3);
             planeFaces.push_back(face4);
+
+            printf("Created new faces\n");
 
             // Разбираемся с пружинами
             changeSpring(mp1, mp2, mid12);
@@ -233,6 +248,8 @@ static void getSphere(
             mid23->addSpring(mp2);
             mid23->addSpring(mid12);
             mid23->addSpring(mid13);
+
+            printf("Corrected springs\n");
         }
     }
 }
@@ -315,7 +332,7 @@ MainWindow::MainWindow(QWidget *parent):
 
     this->timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(update_scene()));
-    timer->start(1000);
+    timer->start(1000 / FPS / 2);
     // ------
 
     data = make_shared<UpdateData>();
@@ -332,7 +349,6 @@ void MainWindow::update_scene()
 
 MainWindow::~MainWindow()
 {
-    pthread_cancel(timer_thread);
     delete timer;
     delete ui;
 }
