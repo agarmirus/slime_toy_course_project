@@ -1,7 +1,6 @@
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
 
-
 // Генерация внешних точек слайма с помощью построение икосаэдра
 static void genIcosahedron(
     list<shared_ptr<MassPoint>> &massPoints,
@@ -161,31 +160,24 @@ static void getSphere(
     const double r = (*massPoints.begin())->getPos().getDistance(Point(IC_X, IC_Y, IC_Z));
     for (size_t i = 0; i < SPLIT_COUNT; ++i)
     {
-        printf("%zu\n", i);
         size_t facesCount = planeFaces.size();
 
         size_t fi = 0;
         for (auto face = planeFaces.begin(); fi < facesCount; ++face, ++fi)
         {
-            printf("%zu\n", fi);
             // Ищем точки масс, соответствующие текущей грани
             auto mp1 = searchMassPoint(massPoints, (*face)->getFirstPoint());
             auto mp2 = searchMassPoint(massPoints, (*face)->getSecondPoint());
-            printf("bruh\n");
             auto mp3 = searchMassPoint(massPoints, (*face)->getThirdPoint());
 
             auto p1 = mp1->getPosPtr();
             auto p2 = mp2->getPosPtr();
             auto p3 = mp3->getPosPtr();
-
-            printf("Found MPs\n");
             
             // Получаем срединные точки
             auto m12 = getMiddle(*p1, *p2);
             auto m13 = getMiddle(*p1, *p3);
             auto m23 = getMiddle(*p2, *p3);
-
-            printf("Calculated mid points\n");
 
             // Получаем срединные точки масс
             auto mid12 = searchMassPoint(massPoints, m12);
@@ -207,14 +199,10 @@ static void getSphere(
                 mid23->setPos(make_shared<Point>(m23));
             }
 
-            printf("Got mid MPs\n");
-
             // Смещаем новые точки до радиуса
             moveToRadius(mid12->getPosPtr(), r);
             moveToRadius(mid13->getPosPtr(), r);
             moveToRadius(mid23->getPosPtr(), r);
-
-            printf("Moved mid MPs to radius\n");
 
             // Создаем новые грани и помещаем их в список граней
             auto face1 = make_shared<PlaneFace>(mid12->getPosPtr(), mid13->getPosPtr(), mid23->getPosPtr());
@@ -226,8 +214,6 @@ static void getSphere(
             planeFaces.push_back(face2);
             planeFaces.push_back(face3);
             planeFaces.push_back(face4);
-
-            printf("Created new faces\n");
 
             // Разбираемся с пружинами
             changeSpring(mp1, mp2, mid12);
@@ -248,8 +234,9 @@ static void getSphere(
             mid23->addSpring(mp2);
             mid23->addSpring(mid12);
             mid23->addSpring(mid13);
-
-            printf("Corrected springs\n");
+            massPoints.push_back(mid12);
+            massPoints.push_back(mid13);
+            massPoints.push_back(mid23);
         }
     }
 }
@@ -283,9 +270,18 @@ static shared_ptr<Slime> generate_slime()
     slime->setKa(0.15);
     slime->setKd(1.0);
     slime->setKs(0.0);
-    slime->setKt(0.5);
-    slime->setKl(0.005);
-    slime->setRGB(RGBColor(255, 0, 0));
+    slime->setKt(0.0);
+    slime->setKl(0.0);
+    slime->setRGB(RGBColor(0, 0, 0));
+
+    auto c = make_shared<Point>(IC_X, IC_Y, IC_Z);
+    double da = 72.0 / 180.0 * M_PI;
+    double a = 2.0 * IC_R * sin(da / 2.0);
+    double u = 1 - cos(da / 2.0);
+    double h = sqrt(3.0 * a * a / 4.0 - IC_R * IC_R * u * u);
+    double he = sqrt(a * a - IC_R * IC_R);
+    SphereCover cover(c, h + he);
+    slime->setSphereCover(cover);
 
     return slime;
 }
@@ -331,8 +327,12 @@ MainWindow::MainWindow(QWidget *parent):
     this->plot = make_shared<Plot>(VIEW_W, VIEW_H);
 
     this->timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), this, SLOT(update_scene()));
-    timer->start(1000 / FPS / 2);
+    connect(timer, SIGNAL(timeout()), this, SLOT(updateScene()));
+    timer->start(1000 / FPS);
+
+    connect(ui->rHorSlide, SIGNAL(valueChanged(int)), this, SLOT(updateSlimeR(int)));
+    connect(ui->gHorSlide, SIGNAL(valueChanged(int)), this, SLOT(updateSlimeG(int)));
+    connect(ui->bHorSlide, SIGNAL(valueChanged(int)), this, SLOT(updateSlimeB(int)));
     // ------
 
     data = make_shared<UpdateData>();
@@ -342,13 +342,52 @@ MainWindow::MainWindow(QWidget *parent):
     pthread_create(&timer_thread, NULL, perform_updating, &data);
 }
 
-void MainWindow::update_scene()
-{
-    plot->updateGraphicsScene(ui->graphicsView->scene());
-}
-
 MainWindow::~MainWindow()
 {
     delete timer;
     delete ui;
 }
+
+void MainWindow::updateScene()
+{
+    plot->updateGraphicsScene(ui->graphicsView->scene());
+}
+
+void MainWindow::updateSlimeR(int value)
+{
+    auto slime = this->scene->getSlime();
+    RGBColor newColor = slime->getRGB();
+    newColor.setR(value);
+    slime->setRGB(newColor);
+    char labelText[4] = {'\0'};
+    sprintf(labelText, "%d", value);
+    ui->rValueLabel->setText(labelText);
+}
+
+void MainWindow::updateSlimeG(int value)
+{
+    auto slime = this->scene->getSlime();
+    RGBColor newColor = slime->getRGB();
+    newColor.setG(value);
+    slime->setRGB(newColor);
+    char labelText[4] = {'\0'};
+    sprintf(labelText, "%d", value);
+    ui->gValueLabel->setText(labelText);
+}
+
+void MainWindow::updateSlimeB(int value)
+{
+    auto slime = this->scene->getSlime();
+    RGBColor newColor = slime->getRGB();
+    newColor.setB(value);
+    slime->setRGB(newColor);
+    char labelText[4] = {'\0'};
+    sprintf(labelText, "%d", value);
+    ui->bValueLabel->setText(labelText);
+}
+
+void MainWindow::updateSlimeKt()
+{}
+
+void MainWindow::updateSlimeKl()
+{}

@@ -126,17 +126,14 @@ bool Slime::getIntersection(
     const Ray &ray
 ) const
 {
-    // if (!cover.isIntersected(ray))
-    //     return false;
+    if (!cover.isIntersected(ray))
+        return false;
 
     bool isIntersected = false;
 
     Point tmp;
 
     Point rayPos = ray.getPos();
-    double x0 = rayPos.getX();
-    double y0 = rayPos.getY();
-    double z0 = rayPos.getZ();
 
     for (auto it: faces)
     {

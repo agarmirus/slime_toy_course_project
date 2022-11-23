@@ -38,7 +38,7 @@ static RGBColor renderTraceRay(
     if (gt(ka, 0.0))
         resColor = intersectionColor * ka;
 
-    Point lightPos = scene->getLightSource().getPos();
+    Point lightPos = scene->getLightSource()->getPos();
 
     Vector3d lightVec(intersectionPoint, lightPos);
 
@@ -108,7 +108,7 @@ static void *render(void *data)
     int hn = ((RanderData *)data)->hn;
     QImage *buf = ((RanderData *)data)->buf;
 
-    Point camPos = scene->getCamera().getPos();
+    Point camPos = scene->getCamera()->getPos();
 
     double cx = camPos.getX();
     double cy = camPos.getY();

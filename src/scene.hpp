@@ -31,10 +31,10 @@ class Scene
 
         virtual void update(const size_t ms) {slime->update(ms);}
 
-        virtual const Object &getCamera() const {return *camera;}
-        virtual const Object &getLightSource() const {return *lightSource;}
-        virtual const Object &getSlime() const {return *slime;}
-        virtual const Object &getFloor() const {return *floor;}
+        virtual shared_ptr<Object> getCamera() const {return camera;}
+        virtual shared_ptr<Object> getLightSource() const {return lightSource;}
+        virtual shared_ptr<Object> getSlime() const {return slime;}
+        virtual shared_ptr<Object> getFloor() const {return floor;}
 
         virtual bool getIntersection(
             Point &pos,

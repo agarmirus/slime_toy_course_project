@@ -40,6 +40,12 @@
            </item>
            <item>
             <widget class="QSlider" name="rHorSlide">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="maximum">
               <number>255</number>
              </property>
@@ -51,7 +57,7 @@
            <item>
             <widget class="QLabel" name="rValueLabel">
              <property name="text">
-              <string>    0</string>
+              <string>0</string>
              </property>
             </widget>
            </item>
@@ -79,7 +85,7 @@
            <item>
             <widget class="QLabel" name="gValueLabel">
              <property name="text">
-              <string>    0</string>
+              <string>0</string>
              </property>
             </widget>
            </item>
@@ -107,7 +113,7 @@
            <item>
             <widget class="QLabel" name="bValueLabel">
              <property name="text">
-              <string>    0</string>
+              <string>0</string>
              </property>
             </widget>
            </item>
@@ -145,7 +151,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="doubleSpinBox">
+               <widget class="QDoubleSpinBox" name="ktBox">
                 <property name="maximum">
                  <double>1.000000000000000</double>
                 </property>
@@ -166,7 +172,7 @@
                </widget>
               </item>
               <item>
-               <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
+               <widget class="QDoubleSpinBox" name="klBox">
                 <property name="maximum">
                  <double>1.000000000000000</double>
                 </property>

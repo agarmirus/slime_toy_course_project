@@ -30,7 +30,7 @@
 #define IC_Z 100.0
 
 #define FPS 30
-#define SPLIT_COUNT 2
+#define SPLIT_COUNT 0
 
 #define SLIME_MASS 0.5
 #define SLIME_STIFFNESS 50
@@ -63,7 +63,12 @@ public:
 
 private slots:
     // void on_resetButton_clicked();
-    void update_scene();
+    void updateScene();
+    void updateSlimeR(int value);
+    void updateSlimeG(int value);
+    void updateSlimeB(int value);
+    void updateSlimeKt();
+    void updateSlimeKl();
 
 private:
     Ui::MainWindow *ui;

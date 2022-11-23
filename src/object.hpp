@@ -38,7 +38,7 @@ class Object
         virtual void setKt(const double kt) {return;}
         virtual void setKl(const double kl) {return;}
         virtual void setPos(const shared_ptr<Point> &pos) {return;}
-        virtual void setRGB(const shared_ptr<RGBColor> &color) {return;}
+        virtual void setRGB(const RGBColor &color) {return;}
         virtual void setMassPoints(list<shared_ptr<MassPoint>> &massPoints) {return;}
         virtual void setFaces(list<shared_ptr<PlaneFace>> &faces) {return;}
 
