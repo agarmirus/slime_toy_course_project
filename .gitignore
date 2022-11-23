@@ -3,9 +3,14 @@
 makefile
 *.pro
 *.dia~
+*.aux
+*.log
+*.gz
 *.docx#
 */ui_mainwindow.h
 */Makefile
 */moc_mainwindow.cpp
 */moc_predefs.h
 */src/src
+*.vscode
+src

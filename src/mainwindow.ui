@@ -40,6 +40,9 @@
            </item>
            <item>
             <widget class="QSlider" name="rHorSlide">
+             <property name="maximum">
+              <number>255</number>
+             </property>
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -65,6 +68,9 @@
            </item>
            <item>
             <widget class="QSlider" name="gHorSlide">
+             <property name="maximum">
+              <number>255</number>
+             </property>
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -90,6 +96,9 @@
            </item>
            <item>
             <widget class="QSlider" name="bHorSlide">
+             <property name="maximum">
+              <number>255</number>
+             </property>
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -136,16 +145,12 @@
                </widget>
               </item>
               <item>
-               <widget class="QSlider" name="kpSlide">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
+               <widget class="QDoubleSpinBox" name="doubleSpinBox">
+                <property name="maximum">
+                 <double>1.000000000000000</double>
                 </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="kpLabel">
-                <property name="text">
-                 <string> 0.0</string>
+                <property name="singleStep">
+                 <double>0.100000000000000</double>
                 </property>
                </widget>
               </item>
@@ -161,16 +166,12 @@
                </widget>
               </item>
               <item>
-               <widget class="QSlider" name="ppSlide">
-                <property name="orientation">
-                 <enum>Qt::Horizontal</enum>
+               <widget class="QDoubleSpinBox" name="doubleSpinBox_2">
+                <property name="maximum">
+                 <double>1.000000000000000</double>
                 </property>
-               </widget>
-              </item>
-              <item>
-               <widget class="QLabel" name="ppLabel">
-                <property name="text">
-                 <string> 0.0</string>
+                <property name="singleStep">
+                 <double>0.100000000000000</double>
                 </property>
                </widget>
               </item>
