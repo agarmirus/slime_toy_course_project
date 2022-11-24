@@ -244,14 +244,90 @@ static void getSphere(
 // Получение внутренных точек слайма
 static void genInternalPoints(list<shared_ptr<MassPoint>> &massPoints)
 {
-    /*
-     * Получить точку центра масс. Соединить центр масс с внешними точками
-     * сферы. Разбить каждый полученный отрезок на N равных частей (желательно,
-     * чтобы расстояние между двумя соседними точками на отрезке было развно
-     * длине внешнего ребра). Соединить новые полученные точки (как именно - вопрос).
-     */
+    // Центр масс
+    auto pc = make_shared<Point>(IC_X, IC_Y, IC_Z);
+    auto mpc = make_shared<MassPoint>();
+    mpc->setPos(pc);
 
-    return;
+    // Расчитываем интервал между внутренними точками, лежащими на одном радиусе
+    auto tmp = *massPoints.begin();
+    double r = tmp->getPosPtr()->getDistance(*pc);
+    double d = r / R_MP_COUNT;
+    
+    vector<shared_ptr<MassPoint>> prevMassPoints;
+    vector<shared_ptr<MassPoint>> curMassPoints;
+
+    size_t extPointsCount = massPoints.size();
+
+    double curR = d;
+
+    // Расчитываем центральный угол, опирающийся на внешнее ребро
+    double p = curMassPoints.at(0)->getPos().getDistance(
+        curMassPoints.at(1)->getPos()
+    );
+    double alpha = 2 * asin(p / 2 / r);
+
+    while (lt(curR, r))
+    {
+        // Создаем внутренние точки на сфере радиусом curR
+        size_t i = 0;
+        for (auto it = massPoints.begin(); i < extPointsCount; ++i, ++it)
+        {
+            auto p = make_shared<Point>();
+            *p = (*it)->getPos();
+            moveToRadius(p, curR);
+            auto mp = make_shared<MassPoint>();
+            mp->setPos(p);
+            curMassPoints.push_back(mp);
+            massPoints.push_back(mp);
+        }
+        
+        size_t prevMassPointsCount = prevMassPoints.size();
+        size_t curMassPointsCount = curMassPoints.size();
+
+        // Соединяем точки с предыдущими и друг с другом
+        for (size_t i = 0; i < curMassPointsCount; ++i)
+        {
+            auto m1 = curMassPoints.at(i);
+            
+            if (prevMassPointsCount == 0)
+            {
+                m1->addSpring(mpc);
+                mpc->addSpring(m1);
+            }
+            else
+            {
+                m1->addSpring(prevMassPoints.at(i));
+                prevMassPoints.at(i)->addSpring(m1);
+            }
+
+            Vector3d mvec1(m1->getPos());
+
+            for (size_t j = i + 1; j < curMassPointsCount; ++j)
+            {
+                auto m2 = curMassPoints.at(j);
+                Vector3d mvec2(m2->getPos());
+
+                if (eq(alpha, mvec1.cos(mvec2)))
+                {
+                    m1->addSpring(m2);
+                    m2->addSpring(m1);
+                }
+            }
+        }
+        
+        prevMassPoints = curMassPoints;
+        curMassPoints.clear();
+        curR += d;
+    }
+
+    // Соединяем внешние точки с ближайшими внутренними
+    size_t k = 0;
+    for (auto it = massPoints.begin(); k < extPointsCount; ++k, ++it)
+    {
+        (*it)->addSpring(prevMassPoints.at(k));
+        prevMassPoints.at(k)->addSpring(*it);
+    }
 }
 
 static shared_ptr<Slime> generate_slime()
@@ -273,15 +349,6 @@ static shared_ptr<Slime> generate_slime()
     slime->setKt(0.0);
     slime->setKl(0.0);
     slime->setRGB(RGBColor(0, 0, 0));
-
-    auto c = make_shared<Point>(IC_X, IC_Y, IC_Z);
-    double da = 72.0 / 180.0 * M_PI;
-    double a = 2.0 * IC_R * sin(da / 2.0);
-    double u = 1 - cos(da / 2.0);
-    double h = sqrt(3.0 * a * a / 4.0 - IC_R * IC_R * u * u);
-    double he = sqrt(a * a - IC_R * IC_R);
-    SphereCover cover(c, h + he);
-    slime->setSphereCover(cover);
 
     return slime;
 }

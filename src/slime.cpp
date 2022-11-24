@@ -126,8 +126,8 @@ bool Slime::getIntersection(
     const Ray &ray
 ) const
 {
-    if (!cover.isIntersected(ray))
-        return false;
+    // if (!cover.isIntersected(ray))
+    //     return false;
 
     bool isIntersected = false;
 
