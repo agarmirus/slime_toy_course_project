@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>961</width>
-    <height>450</height>
+    <height>452</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -49,6 +49,9 @@
              <property name="maximum">
               <number>255</number>
              </property>
+             <property name="value">
+              <number>255</number>
+             </property>
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -57,7 +60,7 @@
            <item>
             <widget class="QLabel" name="rValueLabel">
              <property name="text">
-              <string>0</string>
+              <string>255</string>
              </property>
             </widget>
            </item>
@@ -77,6 +80,9 @@
              <property name="maximum">
               <number>255</number>
              </property>
+             <property name="value">
+              <number>255</number>
+             </property>
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -85,7 +91,7 @@
            <item>
             <widget class="QLabel" name="gValueLabel">
              <property name="text">
-              <string>0</string>
+              <string>255</string>
              </property>
             </widget>
            </item>
@@ -105,6 +111,9 @@
              <property name="maximum">
               <number>255</number>
              </property>
+             <property name="value">
+              <number>255</number>
+             </property>
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
@@ -113,7 +122,7 @@
            <item>
             <widget class="QLabel" name="bValueLabel">
              <property name="text">
-              <string>0</string>
+              <string>255</string>
              </property>
             </widget>
            </item>

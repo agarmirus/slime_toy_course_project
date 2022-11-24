@@ -27,7 +27,7 @@ class MassPoint
         list<shared_ptr<MassPoint>> springs;
 
     public:
-        MassPoint() = default;
+        MassPoint();
         ~MassPoint() = default;
 
         virtual void setPos(const shared_ptr<Point> &pos) {this->pos = pos;}
@@ -45,7 +45,7 @@ class MassPoint
 
         virtual void addSpring(const shared_ptr<MassPoint> &massPoint) {springs.push_back(massPoint);}
 
-        virtual void update(const double ms);
+        virtual void update(const size_t ms);
 
         auto begin() {return springs.begin();}
         auto end() {return springs.end();}

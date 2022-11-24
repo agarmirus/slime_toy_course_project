@@ -30,13 +30,13 @@
 #define IC_Y 200.0
 #define IC_Z 100.0
 
-#define R_MP_COUNT 10
+#define R_MP_COUNT 5
 
 #define FPS 30
-#define SPLIT_COUNT 0
+#define SPLIT_COUNT 1
 
-#define SLIME_MASS 0.5
-#define SLIME_STIFFNESS 50
+#define SLIME_MASS 10
+#define SLIME_STIFFNESS 0.004
 
 #define UPDATE_FREQUENCY 120
 

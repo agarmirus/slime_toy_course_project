@@ -16,7 +16,7 @@ PlaneFace::PlaneFace(
     points[1] = p2;
     points[2] = p3;
 
-    this->updateCoefs();
+    PlaneFace::updateCoefs();
 }
 
 void PlaneFace::updateCoefs()

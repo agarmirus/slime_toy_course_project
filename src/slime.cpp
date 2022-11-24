@@ -1,67 +1,31 @@
 #include "slime.hpp"
 
-static Vector3d getForce(
-    const Vector3d &pos,
-    const Vector3d &v,
-    const double m,
-    const double k,
-    const bool pointIsOnTheFloor,
-    const shared_ptr<MassPoint> &sp
-)
-{
-    Vector3d newF;
-
-    static Vector3d g = Vector3d(0.0, 0.0, G);
-
-    Vector3d xij = sub(Vector3d(sp->getPos()), Vector3d(pos));
-
-    if (!xij.isNull())
-    {
-        Vector3d vij = sub(sp->getVelocity(), v);
-        Vector3d fstif = mult(mult(xij, dot(vij, xij) / dot(xij, xij)), k);
-
-        if (pointIsOnTheFloor)
-        {
-            Vector3d fstifz = fstif;
-            fstifz.setX(0.0);
-            fstifz.setY(0.0);
-
-            newF.sum(fstifz);
-            
-            if (!v.isNull())
-            {
-                double vm = v.getModulus();
-                
-                Vector3d vdir(v.getX() / vm, v.getY() / vm, v.getZ() / vm);
-
-                Vector3d fstifxy = fstif;
-                fstifxy.setZ(0.0);
-
-                newF.sub(mult(vdir, MU * (m * G + fstifxy.getModulus())));
-            }
-        }
-        else
-            newF.sum(sum(mult(g, m), fstif));
-    }
-
-    return newF;
-}
-
 void Slime::updateForces()
 {
     for (auto it: massPoints)
     {
-        Vector3d pos = Vector3d(it->getPos());
+        Point pos = it->getPos();
         Vector3d v = it->getVelocity();
         double m = it->getMass();
         double k = it->getStiffness();
 
-        bool pointIsOnTheFloor = eq(pos.getZ(), 0.0);
-
-        Vector3d newF;
+        static Vector3d newF = m * Vector3d(0.0, 0.0, -G / 1000.0);
 
         for (auto sp: it->springs)
-            newF.sum(getForce(pos, v, m, k, pointIsOnTheFloor, sp));
+        {
+            Vector3d xij = Vector3d(sp->getPos(), pos);
+
+            if (!xij.isNull())
+            {
+                Vector3d vij = sp->getVelocity() - v;
+                Vector3d fstif = k * (dot(vij, xij) / dot(xij, xij)) * xij;
+
+                newF = newF + fstif;
+            }
+        }
+
+        if (le(pos.getZ(), 0.0) && lt(newF.getZ(), 0.0))
+            newF.setZ(0.0);
 
         it->setForce(newF);
     }
@@ -70,8 +34,6 @@ void Slime::updateForces()
 // распараллелить
 void Slime::update(const size_t ms)
 {
-    static Vector3d g(0, 0, G);
-
     updateForces();
 
     double coverRadius = 0.0;

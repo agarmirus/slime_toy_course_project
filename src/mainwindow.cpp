@@ -111,13 +111,11 @@ static shared_ptr<MassPoint> searchMassPoint(
     const Point &p
 )
 {
-    shared_ptr<MassPoint> res = nullptr;
-
     for (auto mp: massPoints)
         if (mp->getPos() == p)
-            res = mp;
+            return mp;
 
-    return res;
+    return nullptr;
 }
 
 static void moveToRadius(shared_ptr<Point> &p, const double r)
@@ -175,34 +173,40 @@ static void getSphere(
             auto p3 = mp3->getPosPtr();
             
             // Получаем срединные точки
-            auto m12 = getMiddle(*p1, *p2);
-            auto m13 = getMiddle(*p1, *p3);
-            auto m23 = getMiddle(*p2, *p3);
+            auto m12 = make_shared<Point>(getMiddle(*p1, *p2));
+            auto m13 = make_shared<Point>(getMiddle(*p1, *p3));
+            auto m23 = make_shared<Point>(getMiddle(*p2, *p3));
+
+            // Смещаем новые точки до радиуса
+            moveToRadius(m12, r);
+            moveToRadius(m13, r);
+            moveToRadius(m23, r);
 
             // Получаем срединные точки масс
-            auto mid12 = searchMassPoint(massPoints, m12);
-            auto mid13 = searchMassPoint(massPoints, m13);
-            auto mid23 = searchMassPoint(massPoints, m23);
+            auto mid12 = searchMassPoint(massPoints, *m12);
+            auto mid13 = searchMassPoint(massPoints, *m13);
+            auto mid23 = searchMassPoint(massPoints, *m23);
+            bool mid12IsNew = false;
+            bool mid13IsNew = false;
+            bool mid23IsNew = false;
             if (!mid12)
             {
+                mid12IsNew = true;
                 mid12.reset(new MassPoint);
-                mid12->setPos(make_shared<Point>(m12));
+                mid12->setPos(m12);
             }
             if (!mid13)
             {
+                mid13IsNew = true;
                 mid13.reset(new MassPoint);
-                mid13->setPos(make_shared<Point>(m13));
+                mid13->setPos(m13);
             }
             if (!mid23)
             {
+                mid23IsNew = true;
                 mid23.reset(new MassPoint);
-                mid23->setPos(make_shared<Point>(m23));
+                mid23->setPos(m23);
             }
-
-            // Смещаем новые точки до радиуса
-            moveToRadius(mid12->getPosPtr(), r);
-            moveToRadius(mid13->getPosPtr(), r);
-            moveToRadius(mid23->getPosPtr(), r);
 
             // Создаем новые грани и помещаем их в список граней
             auto face1 = make_shared<PlaneFace>(mid12->getPosPtr(), mid13->getPosPtr(), mid23->getPosPtr());
@@ -234,9 +238,13 @@ static void getSphere(
             mid23->addSpring(mp2);
             mid23->addSpring(mid12);
             mid23->addSpring(mid13);
-            massPoints.push_back(mid12);
-            massPoints.push_back(mid13);
-            massPoints.push_back(mid23);
+
+            if (mid12IsNew)
+                massPoints.push_back(mid12);
+            if (mid13IsNew)
+                massPoints.push_back(mid13);
+            if (mid23IsNew)
+                massPoints.push_back(mid23);
         }
     }
 }
@@ -354,7 +362,10 @@ static shared_ptr<Slime> generate_slime()
     slime->setKs(0.0);
     slime->setKt(0.0);
     slime->setKl(0.0);
-    slime->setRGB(RGBColor(0, 0, 0));
+    slime->setRGB(RGBColor(255, 255, 255));
+
+    slime->setMass(SLIME_MASS);
+    slime->setStiffness(SLIME_STIFFNESS);
 
     return slime;
 }
@@ -366,8 +377,10 @@ static void *perform_updating(void *data)
 
     while (1)
     {
+        // scene->update(1000 / FPS);
         plot->drawScene(scene);
         std::this_thread::sleep_for(std::chrono::milliseconds(1000 / FPS));
+        scene->update(1);
     }
 
     return nullptr;
@@ -385,7 +398,7 @@ MainWindow::MainWindow(QWidget *parent):
     shared_ptr<Texture> texture = make_shared<FloorTexture>("./textures/floor.jpg");
     auto floor = make_shared<Floor>(0.15, 1.0, 0.0, 0.0, texture);
 
-    auto camPos = make_shared<Point>(0.0, 0.0, 100.0);
+    auto camPos = make_shared<Point>(0.0, 0.0, 50.0);
     auto camVec = make_shared<Vector3d>(0.0, 1.0, 0.0);
     auto camera = make_shared<Camera>(camPos, camVec);
 
