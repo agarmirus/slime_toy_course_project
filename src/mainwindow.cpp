@@ -242,12 +242,16 @@ static void getSphere(
 }
 
 // Получение внутренных точек слайма
-static void genInternalPoints(list<shared_ptr<MassPoint>> &massPoints)
+static pair<shared_ptr<Point>, double> genInternalPoints(list<shared_ptr<MassPoint>> &massPoints)
 {
     // Центр масс
     auto pc = make_shared<Point>(IC_X, IC_Y, IC_Z);
     auto mpc = make_shared<MassPoint>();
     mpc->setPos(pc);
+
+    size_t extPointsCount = massPoints.size();
+
+    massPoints.push_back(mpc);
 
     // Расчитываем интервал между внутренними точками, лежащими на одном радиусе
     auto tmp = *massPoints.begin();
@@ -257,15 +261,12 @@ static void genInternalPoints(list<shared_ptr<MassPoint>> &massPoints)
     vector<shared_ptr<MassPoint>> prevMassPoints;
     vector<shared_ptr<MassPoint>> curMassPoints;
 
-    size_t extPointsCount = massPoints.size();
-
     double curR = d;
 
     // Расчитываем центральный угол, опирающийся на внешнее ребро
-    double p = curMassPoints.at(0)->getPos().getDistance(
-        curMassPoints.at(1)->getPos()
-    );
-    double alpha = 2 * asin(p / 2 / r);
+    Vector3d v1(*pc, (*massPoints.begin())->getPos());
+    Vector3d v2(*pc, (*(++massPoints.begin()))->getPos());
+    double alpha = acos(v1.cos(v2));
 
     while (lt(curR, r))
     {
@@ -328,6 +329,8 @@ static void genInternalPoints(list<shared_ptr<MassPoint>> &massPoints)
         (*it)->addSpring(prevMassPoints.at(k));
         prevMassPoints.at(k)->addSpring(*it);
     }
+
+    return pair<shared_ptr<Point>, double>(pc, r);
 }
 
 static shared_ptr<Slime> generate_slime()
@@ -339,7 +342,10 @@ static shared_ptr<Slime> generate_slime()
 
     genIcosahedron(massPoints, planeFaces);
     getSphere(massPoints, planeFaces);
-    genInternalPoints(massPoints);
+    auto pair = genInternalPoints(massPoints);
+
+    SphereCover cover(pair.first, pair.second);
+    slime->setSphereCover(cover);
 
     slime->setMassPoints(massPoints);
     slime->setFaces(planeFaces);
@@ -376,7 +382,6 @@ MainWindow::MainWindow(QWidget *parent):
     QGraphicsScene *scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);
 
-    // ------
     shared_ptr<Texture> texture = make_shared<FloorTexture>("./textures/floor.jpg");
     auto floor = make_shared<Floor>(0.15, 1.0, 0.0, 0.0, texture);
 
@@ -400,7 +405,6 @@ MainWindow::MainWindow(QWidget *parent):
     connect(ui->rHorSlide, SIGNAL(valueChanged(int)), this, SLOT(updateSlimeR(int)));
     connect(ui->gHorSlide, SIGNAL(valueChanged(int)), this, SLOT(updateSlimeG(int)));
     connect(ui->bHorSlide, SIGNAL(valueChanged(int)), this, SLOT(updateSlimeB(int)));
-    // ------
 
     data = make_shared<UpdateData>();
     data->scene = this->scene;
