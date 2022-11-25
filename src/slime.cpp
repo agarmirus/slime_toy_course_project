@@ -13,10 +13,15 @@ void Slime::updateForces()
         for (auto sp: *it)
         {
             Vector3d xij = Vector3d(sp.first->getPos(), pos);
+            double d = xij.getModulus();
 
-            if (!xij.isNull())
+            if (!xij.isNull() && ne(d, sp.second))
             {
-                Vector3d fstif = k * (xij.getModulus() - sp.second) * normalize(xij);
+                double vm = v.getModulus();
+                xij.normalize();
+
+                Vector3d vp = (vm * v.cos(xij)) * xij;
+                Vector3d fstif = (-k * (d - sp.second) * xij) - 0.2e-3 * vp;
 
                 newF = newF + fstif;
             }
@@ -32,27 +37,63 @@ void Slime::updateForces()
 // распараллелить
 void Slime::update(const size_t ms)
 {
-    updateForces();
-
-    double coverRadius = 0.0;
-    Point coverCenter = cover.getPos();
-    
-    for (auto it: massPoints)
+    for (size_t i = 0; i < ms; ++ i)
     {
-        it->update(ms);
+        updateForces();
 
-        Point mpPos = it->getPos();
+        double coverRadius = 0.0;
 
-        double newRadius = mpPos.getDistance(coverCenter);
+        double minX, maxX;
+        double minY, maxY;
+        double minZ, maxZ;
 
-        if (gt(newRadius, coverRadius))
-            coverRadius = newRadius;
+        Point fst = (*massPoints.begin())->getPos();
+        minX = maxX = fst.getX();
+        minY = maxY = fst.getY();
+        minZ = maxZ = fst.getZ();
+        (*massPoints.begin())->update(1);
+
+        for (auto it = ++(massPoints.begin()); it != massPoints.end(); ++it)
+        {
+            (*it)->update(1);
+
+            Point mpPos = (*it)->getPos();
+
+            double x = mpPos.getX();
+            double y = mpPos.getY();
+            double z = mpPos.getZ();
+
+            if (gt(x, maxX))
+                maxX = x;
+            if (lt(x, minX))
+                minX = x;
+            if (gt(y, maxY))
+                maxY = y;
+            if (lt(y, minY))
+                minY = y;
+            if (gt(z, maxZ))
+                maxZ = z;
+            if (lt(z, minZ))
+                minZ = z;
+        }
+
+        Point coverCenter((minX + maxX) / 2.0, (minY + maxY) / 2.0, (minZ + maxZ) / 2.0);
+        double radius = 0.0;
+
+        for (auto mp: massPoints)
+        {
+            double dist = coverCenter.getDistance(mp->getPos());
+
+            if (gt(dist, radius))
+                radius = dist;
+        }
+
+        cover.setPos(coverCenter);
+        cover.setRadius(radius);
+
+        for (auto it: faces)
+            it->updateCoefs();
     }
-
-    for (auto it: faces)
-        it->updateCoefs();
-
-    cover.setRadius(coverRadius);
 }
 
 void Slime::setMass(const double mass)

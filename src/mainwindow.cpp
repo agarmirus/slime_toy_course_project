@@ -250,72 +250,17 @@ static void getSphere(
     }
 }
 
-// Получение внутренных точек слайма
-static pair<shared_ptr<Point>, double> genInternalPoints(list<shared_ptr<MassPoint>> &massPoints)
+static void connectMassPoints(
+    list<shared_ptr<MassPoint>> &massPoints
+)
 {
-    vector<shared_ptr<MassPoint>> prevMassPoints;
-    vector<shared_ptr<MassPoint>> curMassPoints;
-
-    for (auto mp: massPoints)
-        prevMassPoints.push_back(mp);
-
-    // Центр масс
-    auto pc = make_shared<Point>(IC_X, IC_Y, IC_Z);
-    auto mpc = make_shared<MassPoint>();
-    mpc->setPos(pc);
-    massPoints.push_back(mpc);
-
-    // Расчитываем интервал между внутренними точками, лежащими на одном радиусе
-    auto tmp = *massPoints.begin();
-    double r = tmp->getPosPtr()->getDistance(*pc);
-    double d = r / R_MP_COUNT;
-
-    double curR = r - d;
-
-    while (gt(curR, 0.0))
-    {
-        // Создаем внутренние точки на сфере радиусом curR
-        size_t massPointsCount = prevMassPoints.size();
-
-        for (size_t i = 0; i < massPointsCount; ++i)
-        {
-            auto p = make_shared<Point>();
-            *p = prevMassPoints.at(i)->getPos();
-            moveToRadius(p, curR);
-            auto mp = make_shared<MassPoint>();
-            mp->setPos(p);
-            curMassPoints.push_back(mp);
-            massPoints.push_back(mp);
-        }
-
-        // Соединяем точки с предыдущими и друг с другом
-        for (size_t j = 0; j < massPointsCount; ++j)
-        {
-            auto m1 = curMassPoints.at(j);
-
-            m1->addSpring(prevMassPoints.at(j));
-            prevMassPoints.at(j)->addSpring(m1);
-
-            for (size_t m = 0; m < massPointsCount; ++m)
-                if (j != m && prevMassPoints.at(j)->isConnected(prevMassPoints.at(m)))
-                    curMassPoints.at(j)->addSpring(curMassPoints.at(m));
-        }
-        
-        prevMassPoints = curMassPoints;
-        curMassPoints.clear();
-        curR -= d;
-    }
-
-    for (size_t k = 0; k < prevMassPoints.size(); ++k)
-    {
-        prevMassPoints.at(k)->addSpring(mpc);
-        mpc->addSpring(prevMassPoints.at(k));
-    }
-
-    return pair<shared_ptr<Point>, double>(pc, r);
+    for (auto mp1: massPoints)
+        for (auto mp2: massPoints)
+            if (mp1 != mp2)
+                mp1->addSpring(mp2);
 }
 
-static shared_ptr<Slime> generate_slime()
+static shared_ptr<Slime> generateSlime()
 {
     auto slime = make_shared<Slime>();
 
@@ -324,10 +269,7 @@ static shared_ptr<Slime> generate_slime()
 
     genIcosahedron(massPoints, planeFaces);
     getSphere(massPoints, planeFaces);
-    auto pair = genInternalPoints(massPoints);
-
-    SphereCover cover(pair.first, pair.second);
-    slime->setSphereCover(cover);
+    connectMassPoints(massPoints);
 
     slime->setMassPoints(massPoints);
     slime->setFaces(planeFaces);
@@ -378,7 +320,7 @@ MainWindow::MainWindow(QWidget *parent):
     auto lightPos = make_shared<Point>(100.0, -100.0, 1000.0);
     auto lightSource = make_shared<LightSource>(lightPos);
 
-    auto slime = generate_slime();
+    auto slime = generateSlime();
 
     this->scene = make_shared<Scene>(camera, lightSource, slime, floor);
 

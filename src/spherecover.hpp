@@ -13,20 +13,20 @@ using namespace std;
 class SphereCover
 {
     private:
-        shared_ptr<Point> pos;
+        Point pos;
 
         double radius;
     
     public:
         SphereCover() = default;
-        SphereCover(const shared_ptr<Point> &pos, const double radius);
+        SphereCover(const Point &pos, const double radius);
 
         virtual ~SphereCover() = default;
 
-        virtual void setPos(const shared_ptr<Point> &pos) {this->pos = pos;}
+        virtual void setPos(const Point &pos) {this->pos = pos;}
         virtual void setRadius(const double radius) {this->radius = radius;}
 
-        virtual Point getPos() const {return *pos;}
+        virtual Point getPos() const {return pos;}
         virtual double getRadius() const {return radius;}
 
         virtual bool isIntersected(const Ray &ray) const;

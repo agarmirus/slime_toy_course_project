@@ -30,13 +30,13 @@
 
 #define IC_X 0.0
 #define IC_Y 200.0
-#define IC_Z 100.0
+#define IC_Z 200.0
 
-#define SPLIT_COUNT 1
+#define SPLIT_COUNT 2
 #define R_MP_COUNT 1
 
-#define SLIME_MASS 10
-#define SLIME_STIFFNESS 20
+#define SLIME_MASS 100
+#define SLIME_STIFFNESS 0.2e-4
 
 using namespace std;
 
