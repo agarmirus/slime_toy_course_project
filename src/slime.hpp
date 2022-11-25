@@ -8,7 +8,7 @@
 #include "masspoint.hpp"
 #include "spherecover.hpp"
 
-#define G 9.81
+#define G 9.81e-3
 
 using namespace std;
 

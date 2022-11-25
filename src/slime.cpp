@@ -8,18 +8,15 @@ void Slime::updateForces()
         Vector3d v = it->getVelocity();
         double m = it->getMass();
 
-        static Vector3d newF = m * Vector3d(0.0, 0.0, -G / 1000.0);
+        Vector3d newF = -m * Vector3d(0.0, 0.0, G);
 
         for (auto sp: *it)
         {
-            Vector3d xij = Vector3d(sp->getPos(), pos);
+            Vector3d xij = Vector3d(sp.first->getPos(), pos);
 
             if (!xij.isNull())
             {
-                // Vector3d vij = sp->getVelocity() - v;
-                // Vector3d fstif = k * (dot(vij, xij) / dot(xij, xij)) * xij;
-                Vector3d fstif = -k * (xij.getModulus() - L) * normalize(xij);
-                // printf("%lf\n", xij.getModulus());
+                Vector3d fstif = k * (xij.getModulus() - sp.second) * normalize(xij);
 
                 newF = newF + fstif;
             }

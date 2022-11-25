@@ -141,9 +141,10 @@ static void changeSpring(
 
     for (auto sp = mp->begin(); !found && sp != mp->end(); ++sp)
     {
-        if (*sp == oldMp)
+        if ((*sp).first == oldMp)
         {
-            *sp = newMp;
+            (*sp).first = newMp;
+            (*sp).second = mp->getPos().getDistance(newMp->getPos());
             found = true;
         }
     }
@@ -325,9 +326,6 @@ static shared_ptr<Slime> generate_slime()
     getSphere(massPoints, planeFaces);
     auto pair = genInternalPoints(massPoints);
 
-    for (auto mp: massPoints)
-        printf("%lf %lf %lf\n", mp->getPos().getX(), mp->getPos().getY(), mp->getPos().getZ());
-
     SphereCover cover(pair.first, pair.second);
     slime->setSphereCover(cover);
 
@@ -354,7 +352,7 @@ static void *perform_updating(void *data)
     while (1)
     {
         plot->drawScene(scene);
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000 / FPS));
         scene->update(1000 / FPS);
     }
 

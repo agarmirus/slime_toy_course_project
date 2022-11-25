@@ -19,7 +19,7 @@ class MassPoint
         Vector3d velocity;
         Vector3d force;
 
-        list<shared_ptr<MassPoint>> springs;
+        list<pair<shared_ptr<MassPoint>, double>> springs;
 
     public:
         MassPoint();
@@ -36,7 +36,7 @@ class MassPoint
         virtual Vector3d getForce() const {return force;}
         virtual shared_ptr<Point> &getPosPtr() {return pos;}
 
-        virtual void addSpring(const shared_ptr<MassPoint> &massPoint) {springs.push_back(massPoint);}
+        virtual void addSpring(const shared_ptr<MassPoint> &massPoint);
 
         virtual void update(const size_t ms);
 
