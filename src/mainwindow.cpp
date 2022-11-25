@@ -282,6 +282,7 @@ static shared_ptr<Slime> generateSlime()
 
     slime->setMass(SLIME_MASS);
     slime->setStiffness(SLIME_STIFFNESS);
+    slime->setDamp(SLIME_DAMP);
 
     return slime;
 }
@@ -320,6 +321,8 @@ MainWindow::MainWindow(QWidget *parent):
     auto lightPos = make_shared<Point>(100.0, -100.0, 1000.0);
     auto lightSource = make_shared<LightSource>(lightPos);
 
+    auto grabber = make_shared<Grabber>();
+
     auto slime = generateSlime();
 
     this->scene = make_shared<Scene>(camera, lightSource, slime, floor);
@@ -337,6 +340,7 @@ MainWindow::MainWindow(QWidget *parent):
     data = make_shared<UpdateData>();
     data->scene = this->scene;
     data->plot = this->plot;
+    data->grabber = this->grabber;
 
     pthread_create(&timer_thread, NULL, perform_updating, &data);
 }
@@ -390,3 +394,9 @@ void MainWindow::updateSlimeKt()
 
 void MainWindow::updateSlimeKl()
 {}
+
+// void MainWindow::grabPoint()
+// {}
+
+// void MainWindow::releasePoint()
+// {}

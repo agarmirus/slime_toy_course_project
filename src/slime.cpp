@@ -21,7 +21,7 @@ void Slime::updateForces()
                 xij.normalize();
 
                 Vector3d vp = (vm * v.cos(xij)) * xij;
-                Vector3d fstif = (-k * (d - sp.second) * xij) - 0.2e-3 * vp;
+                Vector3d fstif = (-k * (d - sp.second) * xij) - kdmp * vp;
 
                 newF = newF + fstif;
             }

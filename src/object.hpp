@@ -32,6 +32,7 @@ class Object
 
         virtual void setMass(const double mass) {return;}
         virtual void setStiffness(const double k) {return;}
+        virtual void setDamp(const double kdmp) {return;}
         virtual void setKa(const double ka) {return;}
         virtual void setKd(const double kd) {return;}
         virtual void setKs(const double ks) {return;}

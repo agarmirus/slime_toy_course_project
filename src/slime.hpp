@@ -22,6 +22,7 @@ class Slime: public Object
 
         double mass;
         double k;
+        double kdmp;
         
         double ka;
         double kd;
@@ -43,6 +44,7 @@ class Slime: public Object
 
         virtual void setMass(const double mass);
         virtual void setStiffness(const double k) {this->k = k;}
+        virtual void setDamp(const double kdmp) {this->kdmp = kdmp;}
         virtual void setKa(const double ka) {this->ka = ka;}
         virtual void setKd(const double kd) {this->kd = kd;}
         virtual void setKs(const double ks) {this->ks = ks;}

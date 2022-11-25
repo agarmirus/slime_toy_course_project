@@ -17,6 +17,7 @@
 #include "scene.hpp"
 #include "point.hpp"
 #include "camera.hpp"
+#include "grabber.hpp"
 #include "rgbcolor.hpp"
 #include "vector3d.hpp"
 #include "masspoint.hpp"
@@ -32,11 +33,12 @@
 #define IC_Y 200.0
 #define IC_Z 100.0
 
-#define SPLIT_COUNT 2
+#define SPLIT_COUNT 1
 #define R_MP_COUNT 1
 
-#define SLIME_MASS 100
-#define SLIME_STIFFNESS 0.2e-4
+#define SLIME_MASS 10
+#define SLIME_DAMP 2e-4
+#define SLIME_STIFFNESS 2e-5
 
 using namespace std;
 
@@ -44,6 +46,7 @@ struct UpdateData
 {
     shared_ptr<Scene> scene;
     shared_ptr<Plot> plot;
+    shared_ptr<Grabber> grabber;
 };
 
 using UpdateData = struct UpdateData;
@@ -70,6 +73,8 @@ private slots:
     void updateSlimeB(int value);
     void updateSlimeKt();
     void updateSlimeKl();
+    // void grabPoint();
+    // void releasePoint();
 
 private:
     Ui::MainWindow *ui;
@@ -77,6 +82,7 @@ private:
     shared_ptr<Plot> plot;
     pthread_t timer_thread;
     shared_ptr<UpdateData> data;
+    shared_ptr<Grabber> grabber;
     QTimer *timer;
 };
 
