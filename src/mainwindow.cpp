@@ -252,90 +252,63 @@ static void getSphere(
 // Получение внутренных точек слайма
 static pair<shared_ptr<Point>, double> genInternalPoints(list<shared_ptr<MassPoint>> &massPoints)
 {
+    vector<shared_ptr<MassPoint>> prevMassPoints;
+    vector<shared_ptr<MassPoint>> curMassPoints;
+
+    for (auto mp: massPoints)
+        prevMassPoints.push_back(mp);
+
     // Центр масс
     auto pc = make_shared<Point>(IC_X, IC_Y, IC_Z);
     auto mpc = make_shared<MassPoint>();
     mpc->setPos(pc);
-
-    size_t extPointsCount = massPoints.size();
-
     massPoints.push_back(mpc);
 
     // Расчитываем интервал между внутренними точками, лежащими на одном радиусе
     auto tmp = *massPoints.begin();
     double r = tmp->getPosPtr()->getDistance(*pc);
     double d = r / R_MP_COUNT;
-    
-    vector<shared_ptr<MassPoint>> prevMassPoints;
-    vector<shared_ptr<MassPoint>> curMassPoints;
 
-    double curR = d;
+    double curR = r - d;
 
-    // Расчитываем центральный угол, опирающийся на внешнее ребро
-    Vector3d v1(*pc, (*massPoints.begin())->getPos());
-    Vector3d v2(*pc, (*(++massPoints.begin()))->getPos());
-    double alpha = acos(v1.cos(v2));
-
-    while (lt(curR, r))
+    while (gt(curR, 0.0))
     {
         // Создаем внутренние точки на сфере радиусом curR
-        size_t i = 0;
-        for (auto it = massPoints.begin(); i < extPointsCount; ++i, ++it)
+        size_t massPointsCount = prevMassPoints.size();
+
+        for (size_t i = 0; i < massPointsCount; ++i)
         {
             auto p = make_shared<Point>();
-            *p = (*it)->getPos();
+            *p = prevMassPoints.at(i)->getPos();
             moveToRadius(p, curR);
             auto mp = make_shared<MassPoint>();
             mp->setPos(p);
             curMassPoints.push_back(mp);
             massPoints.push_back(mp);
         }
-        
-        size_t prevMassPointsCount = prevMassPoints.size();
-        size_t curMassPointsCount = curMassPoints.size();
 
         // Соединяем точки с предыдущими и друг с другом
-        for (size_t i = 0; i < curMassPointsCount; ++i)
+        for (size_t j = 0; j < massPointsCount; ++j)
         {
-            auto m1 = curMassPoints.at(i);
-            
-            if (prevMassPointsCount == 0)
-            {
-                m1->addSpring(mpc);
-                mpc->addSpring(m1);
-            }
-            else
-            {
-                m1->addSpring(prevMassPoints.at(i));
-                prevMassPoints.at(i)->addSpring(m1);
-            }
+            auto m1 = curMassPoints.at(j);
 
-            Vector3d mvec1(m1->getPos());
+            m1->addSpring(prevMassPoints.at(j));
+            prevMassPoints.at(j)->addSpring(m1);
 
-            for (size_t j = i + 1; j < curMassPointsCount; ++j)
-            {
-                auto m2 = curMassPoints.at(j);
-                Vector3d mvec2(m2->getPos());
-
-                if (eq(alpha, mvec1.cos(mvec2)))
-                {
-                    m1->addSpring(m2);
-                    m2->addSpring(m1);
-                }
-            }
+            for (size_t m = 0; m < massPointsCount; ++m)
+                if (j != m && prevMassPoints.at(j)->isConnected(prevMassPoints.at(m)))
+                    curMassPoints.at(j)->addSpring(curMassPoints.at(m));
         }
         
         prevMassPoints = curMassPoints;
         curMassPoints.clear();
-        curR += d;
+        curR -= d;
     }
 
-    // Соединяем внешние точки с ближайшими внутренними
-    size_t k = 0;
-    for (auto it = massPoints.begin(); k < extPointsCount; ++k, ++it)
+    for (size_t k = 0; k < prevMassPoints.size(); ++k)
     {
-        (*it)->addSpring(prevMassPoints.at(k));
-        prevMassPoints.at(k)->addSpring(*it);
+        prevMassPoints.at(k)->addSpring(mpc);
+        mpc->addSpring(prevMassPoints.at(k));
     }
 
     return pair<shared_ptr<Point>, double>(pc, r);
@@ -351,6 +324,9 @@ static shared_ptr<Slime> generate_slime()
     genIcosahedron(massPoints, planeFaces);
     getSphere(massPoints, planeFaces);
     auto pair = genInternalPoints(massPoints);
+
+    for (auto mp: massPoints)
+        printf("%lf %lf %lf\n", mp->getPos().getX(), mp->getPos().getY(), mp->getPos().getZ());
 
     SphereCover cover(pair.first, pair.second);
     slime->setSphereCover(cover);
@@ -377,10 +353,9 @@ static void *perform_updating(void *data)
 
     while (1)
     {
-        // scene->update(1000 / FPS);
         plot->drawScene(scene);
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000 / FPS));
-        scene->update(1);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        scene->update(1000 / FPS);
     }
 
     return nullptr;
@@ -402,7 +377,7 @@ MainWindow::MainWindow(QWidget *parent):
     auto camVec = make_shared<Vector3d>(0.0, 1.0, 0.0);
     auto camera = make_shared<Camera>(camPos, camVec);
 
-    auto lightPos = make_shared<Point>(100.0, -100.0, 200.0);
+    auto lightPos = make_shared<Point>(100.0, -100.0, 1000.0);
     auto lightSource = make_shared<LightSource>(lightPos);
 
     auto slime = generate_slime();

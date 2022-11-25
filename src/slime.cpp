@@ -7,18 +7,19 @@ void Slime::updateForces()
         Point pos = it->getPos();
         Vector3d v = it->getVelocity();
         double m = it->getMass();
-        double k = it->getStiffness();
 
         static Vector3d newF = m * Vector3d(0.0, 0.0, -G / 1000.0);
 
-        for (auto sp: it->springs)
+        for (auto sp: *it)
         {
             Vector3d xij = Vector3d(sp->getPos(), pos);
 
             if (!xij.isNull())
             {
-                Vector3d vij = sp->getVelocity() - v;
-                Vector3d fstif = k * (dot(vij, xij) / dot(xij, xij)) * xij;
+                // Vector3d vij = sp->getVelocity() - v;
+                // Vector3d fstif = k * (dot(vij, xij) / dot(xij, xij)) * xij;
+                Vector3d fstif = -k * (xij.getModulus() - L) * normalize(xij);
+                // printf("%lf\n", xij.getModulus());
 
                 newF = newF + fstif;
             }
@@ -65,14 +66,6 @@ void Slime::setMass(const double mass)
     
     for (auto mp: massPoints)
         mp->setMass(mass / size);
-}
-
-void Slime::setStiffness(const double k)
-{
-    this->k = k;
-
-    for (auto mp: massPoints)
-        mp->setStiffness(k);
 }
 
 // распараллелить

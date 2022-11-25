@@ -24,21 +24,19 @@
 #include "lightsource.hpp"
 #include "floortexture.hpp"
 
+#define FPS 30
+
 #define IC_R 50
 
 #define IC_X 0.0
 #define IC_Y 200.0
 #define IC_Z 100.0
 
-#define R_MP_COUNT 5
-
-#define FPS 30
 #define SPLIT_COUNT 1
+#define R_MP_COUNT 10
 
 #define SLIME_MASS 10
-#define SLIME_STIFFNESS 0.004
-
-#define UPDATE_FREQUENCY 120
+#define SLIME_STIFFNESS 1e-6
 
 using namespace std;
 

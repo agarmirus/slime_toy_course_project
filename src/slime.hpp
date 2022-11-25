@@ -8,7 +8,6 @@
 #include "masspoint.hpp"
 #include "spherecover.hpp"
 
-#define MU 0.3
 #define G 9.81
 
 using namespace std;
@@ -43,7 +42,7 @@ class Slime: public Object
         virtual void update(const size_t ms);
 
         virtual void setMass(const double mass);
-        virtual void setStiffness(const double k);
+        virtual void setStiffness(const double k) {this->k = k;}
         virtual void setKa(const double ka) {this->ka = ka;}
         virtual void setKd(const double kd) {this->kd = kd;}
         virtual void setKs(const double ks) {this->ks = ks;}

@@ -9,15 +9,10 @@
 
 using namespace std;
 
-class Slime;
-
 class MassPoint
 {
-    friend Slime;
-
     private:
         double mass;
-        double k;
 
         shared_ptr<Point> pos;
 
@@ -32,13 +27,11 @@ class MassPoint
 
         virtual void setPos(const shared_ptr<Point> &pos) {this->pos = pos;}
         virtual void setMass(const double mass) {this->mass = mass;}
-        virtual void setStiffness(const double k) {this->k = k;}
         virtual void setVelocity(const Vector3d &velocity) {this->velocity = velocity;}
         virtual void setForce(const Vector3d &force) {this->force = force;}
 
         virtual Point getPos() const {return *pos;}
         virtual double getMass() const {return mass;}
-        virtual double getStiffness() const {return k;}
         virtual Vector3d getVelocity() const {return velocity;}
         virtual Vector3d getForce() const {return force;}
         virtual shared_ptr<Point> &getPosPtr() {return pos;}
@@ -46,6 +39,8 @@ class MassPoint
         virtual void addSpring(const shared_ptr<MassPoint> &massPoint) {springs.push_back(massPoint);}
 
         virtual void update(const size_t ms);
+
+        virtual bool isConnected(const shared_ptr<MassPoint> &mp);
 
         auto begin() {return springs.begin();}
         auto end() {return springs.end();}
