@@ -291,12 +291,21 @@ static void *perform_updating(void *data)
 {
     auto scene = (*((shared_ptr<UpdateData> *)data))->scene;
     auto plot = (*((shared_ptr<UpdateData> *)data))->plot;
+    auto grabber = (*((shared_ptr<UpdateData> *)data))->grabber;
 
     while (1)
     {
         plot->drawScene(scene);
         std::this_thread::sleep_for(std::chrono::milliseconds(1000 / FPS));
+
+        // Point pos;
+        // if (grabber->isGrabbed())
+        //     Point pos = grabber->getPos();
+
         scene->update(1000 / FPS);
+
+        // if (grabber->isGrabbed())
+        //     grabber->setPos(pos);
     }
 
     return nullptr;
@@ -321,7 +330,7 @@ MainWindow::MainWindow(QWidget *parent):
     auto lightPos = make_shared<Point>(100.0, -100.0, 1000.0);
     auto lightSource = make_shared<LightSource>(lightPos);
 
-    auto grabber = make_shared<Grabber>();
+    this->grabber = make_shared<Grabber>();
 
     auto slime = generateSlime();
 
@@ -395,8 +404,38 @@ void MainWindow::updateSlimeKt()
 void MainWindow::updateSlimeKl()
 {}
 
-// void MainWindow::grabPoint()
-// {}
+void MainWindow::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton)
+    {
+        QPoint pos = event->pos();
+        QPoint scenePos = ui->graphicsView->pos();
 
-// void MainWindow::releasePoint()
-// {}
+        if (pos.x() >= scenePos.x() && pos.y() >= scenePos.y() && \
+        pos.x() <= scenePos.x() + VIEW_W && pos.y() <= scenePos.y() + VIEW_H)
+        {
+            if (!grabber->isGrabbed())
+            {
+                {
+                    double x = pos.x() - scenePos.x();
+                    double y = pos.y() - scenePos.y();
+    
+                    Point camPos = scene->getCamera()->getPos();
+                    double cx = camPos.getX();
+                    double cy = camPos.getY();
+                    double cz = camPos.getZ();
+
+                    double d = VIEW_H / 2.0 / tan(FOV / 2);
+
+                    Vector3d dij(x - VIEW_W / 2, d, VIEW_H / 2 - y);
+                    Point frPos(cx, cy, cz);
+                    Ray fr(dij, frPos);
+                    auto gp = scene->getSlime()->getGrabbingPoint(fr);
+                    grabber->grab(gp);
+                }
+            }
+            else
+                grabber->release();
+        }
+    }
+}

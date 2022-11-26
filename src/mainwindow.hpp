@@ -10,6 +10,7 @@
 
 #include <QTimer>
 #include <QMainWindow>
+ #include <QMouseEvent>
 
 #include "plot.hpp"
 #include "floor.hpp"
@@ -66,6 +67,7 @@ public:
     // shared_ptr<UpdateData> &get_update_data() {return data;}
 
 private slots:
+    void mousePressEvent(QMouseEvent *event);
     // void on_resetButton_clicked();
     void updateScene();
     void updateSlimeR(int value);
@@ -73,8 +75,6 @@ private slots:
     void updateSlimeB(int value);
     void updateSlimeKt();
     void updateSlimeKl();
-    // void grabPoint();
-    // void releasePoint();
 
 private:
     Ui::MainWindow *ui;

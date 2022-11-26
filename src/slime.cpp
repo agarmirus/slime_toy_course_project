@@ -156,9 +156,42 @@ bool Slime::getIntersection(
     return isIntersected;
 }
 
-bool Slime::getGrabbingPoint(Point &pos, const Ray &ray) const
+shared_ptr<Point> Slime::getGrabbingPoint(const Ray &ray) const
 {
-    return false;
+    Point pos;
+    RGBColor color;
+    shared_ptr<PlaneFace> face;
+    double ka;
+    double ks;
+    double kd;
+    double kt;
+    double kl;
+
+    if (getIntersection(pos, color, face, ka, ks, kd, kt, kl, ray))
+    {
+        Point p1 = face->getFirstPoint();
+        Point p2 = face->getSecondPoint();
+        Point p3 = face->getThirdPoint();
+
+        double d1 = pos.getDistance(p1);
+        double d2 = pos.getDistance(p2);
+        double d3 = pos.getDistance(p3);
+
+        Point p;
+
+        if (le(d1, d2) && le(d1, d3))
+            p = p1;
+        else if (le(d2, d1) && le(d2, d3))
+            p = p2;
+        else
+            p = p3;
+
+        for (auto mp: massPoints)
+            if (mp->getPos() == p)
+                return mp->getPosPtr();
+    }
+
+    return nullptr;
 }
 
 bool Slime::isIntersected(const Ray &ray) const
