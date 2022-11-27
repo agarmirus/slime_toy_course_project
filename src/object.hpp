@@ -18,6 +18,7 @@ class Object
         virtual ~Object() = default;
 
         virtual void update(const size_t ms) = 0;
+        virtual void updateCover() {return;}
 
         virtual void move(
             const double dx,
@@ -38,7 +39,8 @@ class Object
         virtual void setKs(const double ks) {return;}
         virtual void setKt(const double kt) {return;}
         virtual void setKl(const double kl) {return;}
-        virtual void setPos(const shared_ptr<Point> &pos) {return;}
+        virtual void setPos(const Point &pos) {return;}
+        virtual void setVec(const Vector3d &vec) {return;}
         virtual void setRGB(const RGBColor &color) {return;}
         virtual void setMassPoints(list<shared_ptr<MassPoint>> &massPoints) {return;}
         virtual void setFaces(list<shared_ptr<PlaneFace>> &faces) {return;}
@@ -64,6 +66,7 @@ class Object
         virtual double getKl() const {return 0.0;}
         virtual RGBColor getRGB() const {return RGBColor(0, 0, 0);}
         virtual Point getPos() const {return Point(0.0, 0.0, 0.0);}
+        virtual Vector3d getVec() const {return Vector3d();}
 
         virtual bool isIntersected(const Ray &ray) const {return false;}
 };

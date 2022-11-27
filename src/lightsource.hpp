@@ -8,11 +8,11 @@ using namespace std;
 class LightSource: public Object
 {
     private:
-        shared_ptr<Point> pos;
+        Point pos;
 
     public:
         LightSource() = default;
-        LightSource(const shared_ptr<Point> &pos) {this->pos = pos;}
+        LightSource(const Point &pos) {this->pos = pos;}
 
         ~LightSource() = default;
 
@@ -22,11 +22,11 @@ class LightSource: public Object
             const double dx,
             const double dy,
             const double dz
-        ) {pos->move(dx, dy, dz);}
+        ) {pos.move(dx, dy, dz);}
 
-        virtual void setPos(const shared_ptr<Point> &pos) {this->pos = pos;}
-        
-        virtual Point getPos() const {return *pos;}
+        virtual void setPos(const Point &pos) {this->pos = pos;}
+
+        virtual Point getPos() const {return pos;}
 };
 
 #endif

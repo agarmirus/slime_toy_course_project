@@ -41,6 +41,7 @@ class Slime: public Object
         virtual ~Slime() = default;
         
         virtual void update(const size_t ms);
+        virtual void updateCover();
 
         virtual void setMass(const double mass);
         virtual void setStiffness(const double k) {this->k = k;}

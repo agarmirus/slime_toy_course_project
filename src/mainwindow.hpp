@@ -34,10 +34,14 @@
 #define IC_Y 200.0
 #define IC_Z 100.0
 
-#define SPLIT_COUNT 1
+#define SPLIT_COUNT 0
 #define R_MP_COUNT 1
 
-#define SLIME_MASS 10
+#define SLIME_KD 1.0
+#define SLIME_KS 0.0
+#define SLIME_KT 0.3
+#define SLIME_KL 0.0
+#define SLIME_MASS 0.5
 #define SLIME_DAMP 2e-4
 #define SLIME_STIFFNESS 2e-5
 
@@ -48,6 +52,7 @@ struct UpdateData
     shared_ptr<Scene> scene;
     shared_ptr<Plot> plot;
     shared_ptr<Grabber> grabber;
+    QGraphicsView *graphicsView;
 };
 
 using UpdateData = struct UpdateData;
@@ -64,10 +69,12 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    // shared_ptr<UpdateData> &get_update_data() {return data;}
+    bool eventFilter(QObject *obj, QEvent *event);
+
+protected:
+    void grabPoint(const QPoint &mousePos);
 
 private slots:
-    void mousePressEvent(QMouseEvent *event);
     // void on_resetButton_clicked();
     void updateScene();
     void updateSlimeR(int value);
