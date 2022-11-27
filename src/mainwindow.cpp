@@ -323,7 +323,8 @@ static void *perform_updating(void *data)
             double d = -a * pos.getX() - b * pos.getY() - c * pos.getZ();
 
             double t = -(a * cx + b * cy + c * cz + d) / (a * lx + b * ly + c * lz);
-            grabber->setPos(Point(cx + t * lx, cy + t * ly, cz + t * lz));
+            double newZ = cz + t * lz;
+            grabber->setPos(Point(cx + t * lx, cy + t * ly, le(newZ, 0.0) ? 0.0 : newZ));
         }
 
         scene->getSlime()->updateCover();

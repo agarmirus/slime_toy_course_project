@@ -45,6 +45,8 @@
 #define SLIME_DAMP 2e-4
 #define SLIME_STIFFNESS 2e-5
 
+#define SCROLL_STEP 1
+
 using namespace std;
 
 struct UpdateData
