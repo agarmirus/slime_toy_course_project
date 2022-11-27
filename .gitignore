@@ -13,4 +13,14 @@ makefile
 */moc_predefs.h
 */src/src
 *.vscode
+*.aux
+*.gz
+*.toc
+*.bcf
+*.xml
+*.log
+*.cls
+*.bbl
+*.blg
+*.out
 src
