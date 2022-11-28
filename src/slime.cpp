@@ -54,10 +54,9 @@ static void *updateCoors(void *data)
     return nullptr;
 }
 
-// распараллелить
 void Slime::update(const size_t ms)
 {
-    // Вывделяем память под массивы потоков и данных
+    // Выделяем память под массивы потоков и данных
     size_t threadsCount = round(double(massPoints.size()) / double(THREAD_POINTS_COUNT) + 0.5);
     PhysData *data = new PhysData[threadsCount];
     pthread_t *threads = new pthread_t[threadsCount];

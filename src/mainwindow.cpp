@@ -260,7 +260,7 @@ static void connectMassPoints(
                 mp1->addSpring(mp2);
 }
 
-static shared_ptr<Slime> generateSlime()
+static shared_ptr<Object> generateSlime()
 {
     auto slime = make_shared<Slime>();
 
@@ -289,24 +289,21 @@ static shared_ptr<Slime> generateSlime()
 
 static void *perform_updating(void *data)
 {
-    auto scene = (*((shared_ptr<UpdateData> *)data))->scene;
-    auto plot = (*((shared_ptr<UpdateData> *)data))->plot;
-    auto grabber = (*((shared_ptr<UpdateData> *)data))->grabber;
-    auto graphicsView = (*((shared_ptr<UpdateData> *)data))->graphicsView;
+    auto updata = *(static_cast<shared_ptr<UpdateData> *>(data));
 
     while (1)
     {
-        plot->drawScene(scene);
-        scene->update(1000 / FPS);
+        updata->plot->drawScene(updata->scene);
+        updata->scene->update(1000 / FPS);
 
-        if (grabber->isGrabbed())
+        if (updata->grabber->isGrabbed())
         {
-            QPoint mousePos = graphicsView->mapFromGlobal(QCursor::pos());
+            QPoint mousePos = updata->graphicsView->mapFromGlobal(QCursor::pos());
 
             double x = mousePos.x();
             double y = mousePos.y();
 
-            Point camPos = scene->getCamera()->getPos();
+            Point camPos = updata->scene->getCamera()->getPos();
             double cx = camPos.getX();
             double cy = camPos.getY();
             double cz = camPos.getZ();
@@ -315,8 +312,8 @@ static void *perform_updating(void *data)
             double ly = VIEW_H / 2.0 / tan(FOV / 2.0);
             double lz = VIEW_H / 2 - y;
 
-            Vector3d n = scene->getCamera()->getVec();
-            Point pos = grabber->getPos();
+            Vector3d n = updata->scene->getCamera()->getVec();
+            Point pos = updata->grabber->getPos();
             double a = n.getX();
             double b = n.getY();
             double c = n.getZ();
@@ -324,10 +321,10 @@ static void *perform_updating(void *data)
 
             double t = -(a * cx + b * cy + c * cz + d) / (a * lx + b * ly + c * lz);
             double newZ = cz + t * lz;
-            grabber->setPos(Point(cx + t * lx, cy + t * ly, le(newZ, 0.0) ? 0.0 : newZ));
+            updata->grabber->setPos(Point(cx + t * lx, cy + t * ly, le(newZ, 0.0) ? 0.0 : newZ));
         }
 
-        scene->getSlime()->updateCover();
+        updata->scene->getSlime()->updateCover();
 
         std::this_thread::sleep_for(std::chrono::milliseconds(1000 / FPS));
     }
@@ -341,8 +338,8 @@ MainWindow::MainWindow(QWidget *parent):
 {
     ui->setupUi(this);
 
-    QGraphicsScene *scene = new QGraphicsScene(this);
-    ui->graphicsView->setScene(scene);
+    QGraphicsScene *sc = new QGraphicsScene(this);
+    ui->graphicsView->setScene(sc);
 
     shared_ptr<Texture> texture = make_shared<FloorTexture>("./textures/floor.jpg");
     auto floor = make_shared<Floor>(0.15, 1.0, 0.0, 0.0, texture);
@@ -383,6 +380,8 @@ MainWindow::MainWindow(QWidget *parent):
 
     connect(ui->ktBox, SIGNAL(valueChanged(double)), this, SLOT(updateSlimeKt(double)));
     connect(ui->klBox, SIGNAL(valueChanged(double)), this, SLOT(updateSlimeKl(double)));
+
+    connect(ui->resetButton, SIGNAL(clicked()), this, SLOT(resetSlime()));
 }
 
 MainWindow::~MainWindow()
@@ -437,6 +436,20 @@ void MainWindow::updateSlimeKt(double value)
 void MainWindow::updateSlimeKl(double value)
 {
     scene->getSlime()->setKl(value);
+}
+
+void MainWindow::resetSlime()
+{
+    grabber->release();
+
+    scene = make_shared<Scene>(
+        scene->getCamera(),
+        scene->getLightSource(),
+        generateSlime(),
+        scene->getFloor()
+    );
+
+    data->scene = scene;
 }
 
 static bool mouseInScene(const QPoint &pos, const QPoint &scenePos)

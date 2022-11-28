@@ -82,6 +82,7 @@ private slots:
     void updateSlimeB(int value);
     void updateSlimeKt(double value);
     void updateSlimeKl(double value);
+    void resetSlime();
 
 private:
     Ui::MainWindow *ui;
