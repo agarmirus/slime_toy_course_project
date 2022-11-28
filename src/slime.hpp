@@ -2,6 +2,7 @@
 #define SLIME_H
 
 #include <stdio.h>
+#include <pthread.h>
 
 #include "object.hpp"
 #include "doubleop.hpp"
@@ -10,7 +11,20 @@
 
 #define G 9.81e-3
 
+#define THREAD_POINTS_COUNT 50
+
 using namespace std;
+
+#define MP_LIST_ITERATOR_TYPE std::__cxx11::list<std::shared_ptr<MassPoint>>::iterator
+
+struct PhysData
+{
+    MP_LIST_ITERATOR_TYPE b;
+    MP_LIST_ITERATOR_TYPE e;
+
+    double k;
+    double kdmp;
+};
 
 class Slime: public Object
 {
@@ -31,9 +45,6 @@ class Slime: public Object
         double kl;
 
         RGBColor color;
-    
-    protected:
-        virtual void updateForces();
     
     public:
         Slime() = default;

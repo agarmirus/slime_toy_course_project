@@ -1,16 +1,22 @@
 #include "slime.hpp"
 
-void Slime::updateForces()
+static void *updateForces(void *data)
 {
-    for (auto it: massPoints)
+    auto pdata = static_cast<PhysData *>(data);
+    auto b = pdata->b;
+    auto e = pdata->e;
+    double k = pdata->k;
+    double kdmp = pdata->kdmp;
+
+    for (; b != e; ++b)
     {
-        Point pos = it->getPos();
-        Vector3d v = it->getVelocity();
-        double m = it->getMass();
+        Point pos = (*b)->getPos();
+        Vector3d v = (*b)->getVelocity();
+        double m = (*b)->getMass();
 
         Vector3d newF = -m * Vector3d(0.0, 0.0, G);
 
-        for (auto sp: *it)
+        for (auto sp: **b)
         {
             Vector3d xij = Vector3d(sp.first->getPos(), pos);
             double d = xij.getModulus();
@@ -30,23 +36,70 @@ void Slime::updateForces()
         if (le(pos.getZ(), 0.0) && lt(newF.getZ(), 0.0))
             newF.setZ(0.0);
 
-        it->setForce(newF);
+        (*b)->setForce(newF);
     }
+
+    return nullptr;
+}
+
+static void *updateCoors(void *data)
+{
+    auto pdata = static_cast<PhysData *>(data);
+    auto b = pdata->b;
+    auto e = pdata->e;
+
+    for (; b != e; ++b)
+        (*b)->update(1);
+    
+    return nullptr;
 }
 
 // распараллелить
 void Slime::update(const size_t ms)
 {
-    for (size_t i = 0; i < ms; ++ i)
-    {
-        updateForces();
+    // Вывделяем память под массивы потоков и данных
+    size_t threadsCount = round(double(massPoints.size()) / double(THREAD_POINTS_COUNT) + 0.5);
+    PhysData *data = new PhysData[threadsCount];
+    pthread_t *threads = new pthread_t[threadsCount];
 
-        for (auto mp: massPoints)
-            mp->update(1);
+    // Инициализируем потоки и данные для них
+    auto it = massPoints.begin();
+    for (size_t i = 0; i < threadsCount; ++i)
+    {
+        data[i].k = k;
+        data[i].kdmp = kdmp;
+        data[i].b = it;
+        
+        for (size_t j = 0; it != massPoints.end() && j < THREAD_POINTS_COUNT; ++j, ++it);
+
+        data[i].e = it;
     }
 
+    for (size_t t = 0; t < ms; ++t)
+    {
+        // Запускаем многопоточное вычисление координат сил
+        for (size_t i = 0; i < threadsCount; ++i)
+            pthread_create(threads + i, NULL, updateForces, data + i);
+
+        // Ждем завершения вычислений сил
+        for (size_t i = 0; i < threadsCount; ++i)
+            pthread_join(threads[i], NULL);
+    
+        // Запускаем многопоточное вычисление координат точек
+        for (size_t i = 0; i < threadsCount; ++i)
+            pthread_create(threads + i, NULL, updateCoors, data + i);
+        
+        // Ждем завершения вычислений координат точек
+        for (size_t i = 0; i < threadsCount; ++i)
+            pthread_join(threads[i], NULL);
+    }
+
+    // Обновляем коэффициенты уравнений плоскостей граней
     for (auto it: faces)
-            it->updateCoefs();
+        it->updateCoefs();
+    
+    delete[] data;
+    delete[] threads;
 }
 
 void Slime::updateCover()

@@ -102,11 +102,12 @@ static RGBColor renderTraceRay(
 
 static void *render(void *data)
 {
-    shared_ptr<Scene> scene = ((RanderData *)data)->scene;
-    int w = ((RanderData *)data)->w;
-    int h = ((RanderData *)data)->h;
-    int hn = ((RanderData *)data)->hn;
-    QImage *buf = ((RanderData *)data)->buf;
+    auto rdata = static_cast<RanderData *>(data);
+    shared_ptr<Scene> scene = rdata->scene;
+    int w = rdata->w;
+    int h = rdata->h;
+    int hn = rdata->hn;
+    QImage *buf = rdata->buf;
 
     Point camPos = scene->getCamera()->getPos();
 
@@ -135,8 +136,8 @@ void Plot::drawScene(const shared_ptr<Scene> &scene)
 {
     QImage buf(w * 2, h * 2, QImage::Format_RGB32);
 
-    RanderData data[VIEW_H];
-    pthread_t threads[VIEW_H];
+    RanderData *data = new RanderData[VIEW_H];
+    pthread_t *threads = new pthread_t[VIEW_H];
 
     for (int i = 0; i < VIEW_H; ++i)
     {
@@ -151,6 +152,9 @@ void Plot::drawScene(const shared_ptr<Scene> &scene)
 
     for (int i = 0; i < VIEW_H; ++i)
         pthread_join(threads[i], nullptr);
+    
+    delete[] data;
+    delete[] threads;
     
     *img = buf;
 }
