@@ -380,6 +380,9 @@ MainWindow::MainWindow(QWidget *parent):
     connect(ui->rHorSlide, SIGNAL(valueChanged(int)), this, SLOT(updateSlimeR(int)));
     connect(ui->gHorSlide, SIGNAL(valueChanged(int)), this, SLOT(updateSlimeG(int)));
     connect(ui->bHorSlide, SIGNAL(valueChanged(int)), this, SLOT(updateSlimeB(int)));
+
+    connect(ui->ktBox, SIGNAL(valueChanged(double)), this, SLOT(updateSlimeKt(double)));
+    connect(ui->klBox, SIGNAL(valueChanged(double)), this, SLOT(updateSlimeKl(double)));
 }
 
 MainWindow::~MainWindow()
@@ -426,11 +429,15 @@ void MainWindow::updateSlimeB(int value)
     ui->bValueLabel->setText(labelText);
 }
 
-void MainWindow::updateSlimeKt()
-{}
+void MainWindow::updateSlimeKt(double value)
+{
+    scene->getSlime()->setKt(value);
+}
 
-void MainWindow::updateSlimeKl()
-{}
+void MainWindow::updateSlimeKl(double value)
+{
+    scene->getSlime()->setKl(value);
+}
 
 static bool mouseInScene(const QPoint &pos, const QPoint &scenePos)
 {

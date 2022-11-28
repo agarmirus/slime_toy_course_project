@@ -34,18 +34,16 @@
 #define IC_Y 200.0
 #define IC_Z 100.0
 
-#define SPLIT_COUNT 0
+#define SPLIT_COUNT 1
 #define R_MP_COUNT 1
 
 #define SLIME_KD 1.0
 #define SLIME_KS 0.0
-#define SLIME_KT 0.3
+#define SLIME_KT 0.0
 #define SLIME_KL 0.0
-#define SLIME_MASS 0.5
+#define SLIME_MASS 5
 #define SLIME_DAMP 2e-4
 #define SLIME_STIFFNESS 2e-5
-
-#define SCROLL_STEP 1
 
 using namespace std;
 
@@ -82,8 +80,8 @@ private slots:
     void updateSlimeR(int value);
     void updateSlimeG(int value);
     void updateSlimeB(int value);
-    void updateSlimeKt();
-    void updateSlimeKl();
+    void updateSlimeKt(double value);
+    void updateSlimeKl(double value);
 
 private:
     Ui::MainWindow *ui;
