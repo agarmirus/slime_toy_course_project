@@ -3,11 +3,10 @@
 
 #include "object.hpp"
 #include "texture.hpp"
+#include "doubleop.hpp"
 #include "planeface.hpp"
 
 #include <memory>
-
-#include "doubleop.hpp"
 
 using namespace std;
 

@@ -1,5 +1,4 @@
 #include "masspoint.hpp"
-#include <stdio.h>
 
 MassPoint::MassPoint()
 {

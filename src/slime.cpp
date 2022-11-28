@@ -161,7 +161,6 @@ void Slime::setMass(const double mass)
         mp->setMass(mass / size);
 }
 
-// распараллелить
 bool Slime::getIntersection(
     Point &pos,
     RGBColor &color,

@@ -1,11 +1,11 @@
 #ifndef FLOORTEXTURE_H
 #define FLOORTEXTURE_H
 
-#include <QImage>
-#include <QRgb>
-
-#include <memory>
 #include <cmath>
+#include <memory>
+
+#include <QRgb>
+#include <QImage>
 
 #include "texture.hpp"
 

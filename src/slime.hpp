@@ -1,7 +1,6 @@
 #ifndef SLIME_H
 #define SLIME_H
 
-#include <stdio.h>
 #include <pthread.h>
 
 #include "object.hpp"
