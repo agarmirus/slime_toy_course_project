@@ -1,32 +1,43 @@
-\documentclass[a4paper, 12pt]{report}
+\documentclass[a4paper, 14pt]{extreport}
 
 \usepackage[T2A]{fontenc}
-\usepackage[utf8x]{inputenc}
+\usepackage[utf8]{inputenc}
 \usepackage[english,russian]{babel}
 \usepackage{amssymb,amsfonts,amsmath,mathtext,cite,enumerate,float}
 \usepackage{pgfplots}
 \usepackage{graphicx}
 \usepackage{tocloft}
 \usepackage{listings}
-\usepackage[labelsep=period]{caption}
+\usepackage{caption}
+\usepackage{tempora}
+\usepackage{titlesec}
+\usepackage{setspace}
+\usepackage{geometry}
+\usepackage{indentfirst}
+\usepackage{pdfpages}
+
+\newcommand{\ssr}[1]{\begin{center}
+		\LARGE\bfseries{#1}
+	\end{center} \addcontentsline{toc}{chapter}{#1}  }
 
 \makeatletter
 \renewcommand{\@biblabel}[1]{#1.}
 \makeatother
 
-\usepackage{titlesec}
+\titleformat{\chapter}[hang]{\LARGE\bfseries}{\hspace{1.25cm}\thechapter}{1ex}{\LARGE\bfseries}
+\titleformat{\section}[hang]{\Large\bfseries}{\hspace{1.25cm}\thesection}{1ex}{\Large\bfseries}
+\titleformat{name=\section,numberless}[hang]{\Large\bfseries}{\hspace{1.25cm}}{0pt}{\Large\bfseries}
+\titleformat{\subsection}[hang]{\large\bfseries}{\hspace{1.25cm}\thesubsection}{1ex}{\large\bfseries}
 \titlespacing{\chapter}{0pt}{-\baselineskip}{\baselineskip}
-\titleformat{\section}{\bfseries}{\thesection}{0.5 em}{}
-\titlespacing*{\section}{0 pt}{\baselineskip}{\baselineskip}
-\titlespacing*{\subsection}{0 pt}{\baselineskip}{\baselineskip}
+\titlespacing*{\section}{0pt}{\baselineskip}{\baselineskip}
+\titlespacing*{\subsection}{0pt}{\baselineskip}{\baselineskip}
 
-\usepackage{geometry}
-\geometry{left=2cm}
-\geometry{right=1cm}
+\geometry{left=3cm}
+\geometry{right=15mm}
 \geometry{top=2cm}
 \geometry{bottom=2cm}
 
-\usepackage{setspace}
+
 \onehalfspacing
 
 \renewcommand{\theenumi}{\arabic{enumi}}
@@ -36,17 +47,13 @@
 \renewcommand{\theenumiii}{.\arabic{enumiii}}
 \renewcommand{\labelenumiii}{\arabic{enumi}.\arabic{enumii}.\arabic{enumiii}.}
 
-\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}} % for chapters
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
 
-\renewcommand\bibname{Список использованных источников}
+\captionsetup[figure]{justification=centering,labelsep=endash}
+\captionsetup[table]{labelsep=endash,justification=raggedright,singlelinecheck=off}
 
-\captionsetup[table]{justification=raggedright} \captionsetup[figure]{justification=centering,labelsep=endash}
 \DeclareCaptionLabelSeparator{dash}{~---~}
 \captionsetup{labelsep=dash}
-
-\usepackage{indentfirst}
-
-\titleformat{\chapter}[hang]{\Huge\bfseries}{\thechapter}{1ex}{\Huge\bfseries}
 
 \graphicspath{{images/}}%путь к рисункам
 
@@ -71,5 +78,9 @@
 }
 
 \pgfplotsset{width=0.85\linewidth, height=0.5\columnwidth}
+
+\linespread{1.3}
+
+\parindent=1.25cm
 
 \frenchspacing

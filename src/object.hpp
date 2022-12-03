@@ -20,17 +20,6 @@ class Object
         virtual void update(const size_t ms) = 0;
         virtual void updateCover() {return;}
 
-        virtual void move(
-            const double dx,
-            const double dy,
-            const double dz
-        ) {return;}
-        virtual void rotate(
-            const double xAngle,
-            const double yAngle,
-            const double zAngle
-        ) {return;}
-
         virtual void setMass(const double mass) {return;}
         virtual void setStiffness(const double k) {return;}
         virtual void setDamp(const double kdmp) {return;}

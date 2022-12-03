@@ -49,13 +49,13 @@ static RGBColor renderTraceRay(
         normal.neg();
     
     // Диффузное отражение
-    if (eq(n, 1.0) && gt(kd, 0.0))
+    if (gt(kd, 0.0))
     {
         Ray shadowRay(lightVec, intersectionPoint);
 
         // Проверяем тень, если луч прилетел извне
-        if (!eq(n, 1.0) || !scene->isIntersected(shadowRay))
-            resColor = resColor + intersectionColor * kd * lightVec.cos(normal);
+        if (!scene->isIntersected(shadowRay))
+            resColor = resColor + intersectionColor * kd * fabs(lightVec.cos(normal));
     }
 
     // Зеркальное отражение

@@ -33,9 +33,9 @@ class PlaneFace
         virtual double getB() const {return coeffs[1];}
         virtual double getC() const {return coeffs[2];}
         virtual double getD() const {return coeffs[3];}
-        virtual Point getFirstPoint() const {return *points[0];}
-        virtual Point getSecondPoint() const {return *points[1];}
-        virtual Point getThirdPoint() const {return *points[2];}
+        virtual Point getFirstPoint() const {return points[0] ? *points[0] : Point(0.0, 0.0, 0.0);}
+        virtual Point getSecondPoint() const {return points[1] ? *points[1] : Point(0.0, 0.0, 0.0);}
+        virtual Point getThirdPoint() const {return points[2] ? *points[2] : Point(0.0, 0.0, 0.0);}
         
         virtual Vector3d getNormal() const
         {

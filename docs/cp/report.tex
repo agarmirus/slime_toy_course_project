@@ -1,12 +1,13 @@
-\documentclass{bmstu}
-
-\graphicspath{{images/}}
+\include{preambula}
 
 \begin{document}
-	\makecourseworktitle{Информатика и системы управления}{Программное обеспечение ЭВМ и информационные технологии}{Классификация известных методов и алгоритмов сжатия изображений}{ИУ7-53Б}{А.А. Царев}{Н.В. Новик}{}{}
+%	\thispagestyle{empty}
+%	\includepdf[pages={1}]{title.pdf}
+%	\clearpage
 	
-	\thispagestyle{empty}
+	\def\contentsname{Содержание}
 	\tableofcontents
+	\thispagestyle{empty}
 	
 	\include{intro}
 	\include{analytic_part}
@@ -14,5 +15,7 @@
 	\include{tech_part}
 	\include{experimental_part}
 	\include{conclusion}
+	
+	\def\bibname{\begin{center}Список использованных источников\end{center}}
 	\include{links}
 \end{document}

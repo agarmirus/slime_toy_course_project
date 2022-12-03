@@ -50,12 +50,6 @@ class Vector3d
             eq(pos.getY(), 0.0) && eq(pos.getZ(), 0.0);
         }
 
-        virtual void rotate(
-            const double xAngle,
-            const double yAngle,
-            const double zAngle
-        ) {pos.rotate(Point(0.0, 0.0, 0.0), xAngle, yAngle, zAngle);}
-
         virtual Vector3d operator+(const Vector3d &vec) const;
         virtual Vector3d operator-(const Vector3d &vec) const;
         virtual Vector3d operator*(const double k) const;

@@ -18,12 +18,6 @@ class LightSource: public Object
 
         virtual void update(const size_t ms) {return;}
 
-        virtual void move(
-            const double dx,
-            const double dy,
-            const double dz
-        ) {pos.move(dx, dy, dz);}
-
         virtual void setPos(const Point &pos) {this->pos = pos;}
 
         virtual Point getPos() const {return pos;}
