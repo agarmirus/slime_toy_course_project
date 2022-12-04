@@ -1,5 +1,8 @@
 #include "plot.hpp"
 
+// #include <chrono>
+// #include <stdio.h>
+
 Plot::Plot(
     const int width,
     const int height
@@ -139,6 +142,7 @@ void Plot::drawScene(const shared_ptr<Scene> &scene)
     RanderData *data = new RanderData[VIEW_H];
     pthread_t *threads = new pthread_t[VIEW_H];
 
+    // auto start = chrono::steady_clock::now();
     for (int i = 0; i < VIEW_H; ++i)
     {
         data[i].w = w;
@@ -149,6 +153,9 @@ void Plot::drawScene(const shared_ptr<Scene> &scene)
 
         pthread_create(threads + i, NULL, render, data + i);
     }
+    // auto end = chrono::steady_clock::now();
+
+    // printf("%ld\n", chrono::duration_cast<chrono::milliseconds>(end - start).count());
 
     for (int i = 0; i < VIEW_H; ++i)
         pthread_join(threads[i], nullptr);

@@ -18,9 +18,6 @@
 #define SLIME_N 1.1
 #define MAX_RAYS_COUNT 5
 
-// #define VIEW_W 1144
-// #define VIEW_H 817
-
 #define VIEW_W 600
 #define VIEW_H 370
 

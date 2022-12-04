@@ -16,6 +16,8 @@
 \usepackage{indentfirst}
 \usepackage{pdfpages}
 
+\def\labelitemi{-}
+
 \newcommand{\ssr}[1]{\begin{center}
 		\LARGE\bfseries{#1}
 	\end{center} \addcontentsline{toc}{chapter}{#1}  }
@@ -37,13 +39,12 @@
 \geometry{top=2cm}
 \geometry{bottom=2cm}
 
-
 \onehalfspacing
 
 \renewcommand{\theenumi}{\arabic{enumi}}
-\renewcommand{\labelenumi}{\arabic{enumi}}
+\renewcommand{\labelenumi}{\arabic{enumi}\text{)}}
 \renewcommand{\theenumii}{.\arabic{enumii}}
-\renewcommand{\labelenumii}{\arabic{enumi}.\arabic{enumii}.}
+\renewcommand{\labelenumii}{\asbuk{enumii}\text{)}}
 \renewcommand{\theenumiii}{.\arabic{enumiii}}
 \renewcommand{\labelenumiii}{\arabic{enumi}.\arabic{enumii}.\arabic{enumiii}.}
 

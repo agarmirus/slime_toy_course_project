@@ -34,15 +34,15 @@
 #define IC_Y 200.0
 #define IC_Z 100.0
 
-#define SPLIT_COUNT 5
+#define SPLIT_COUNT 1
 
 #define SLIME_KD 1.0
 #define SLIME_KS 0.0
-#define SLIME_KT 0.3
-#define SLIME_KL 0.001
-#define SLIME_MASS 7
+#define SLIME_KT 0.0
+#define SLIME_KL 0.0
+#define SLIME_MASS 5
 #define SLIME_DAMP 1e-4
-#define SLIME_STIFFNESS 1.5e-5
+#define SLIME_STIFFNESS 8e-4
 
 using namespace std;
 
