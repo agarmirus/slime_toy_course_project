@@ -27,7 +27,7 @@ static void *updateForces(void *data)
                 xij.normalize();
 
                 Vector3d vp = (vm * v.cos(xij)) * xij;
-                double ko = k / d;
+                double ko = k / sp.second;
                 Vector3d fstif = -ko * (d - sp.second) * xij - kdmp * vp;
 
                 newF = newF + fstif;

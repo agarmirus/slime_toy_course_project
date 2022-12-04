@@ -41,9 +41,9 @@
 #define SLIME_KS 0.0
 #define SLIME_KT 0.0
 #define SLIME_KL 0.0
-#define SLIME_MASS 5
+#define SLIME_MASS 7
 #define SLIME_DAMP 1e-4
-#define SLIME_STIFFNESS 1e-3
+#define SLIME_STIFFNESS 1.5e-5
 
 using namespace std;
 
