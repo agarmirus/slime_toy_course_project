@@ -442,10 +442,19 @@ void MainWindow::resetSlime()
 {
     grabber->release();
 
+    RGBColor color = scene->getSlime()->getRGB();
+    double kt = scene->getSlime()->getKt();
+    double kl = scene->getSlime()->getKl();
+
+    shared_ptr<Object> newSlime = generateSlime();
+    newSlime->setRGB(color);
+    newSlime->setKt(kt);
+    newSlime->setKl(kl);
+
     scene = make_shared<Scene>(
         scene->getCamera(),
         scene->getLightSource(),
-        generateSlime(),
+        newSlime,
         scene->getFloor()
     );
 
