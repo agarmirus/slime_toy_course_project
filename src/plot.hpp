@@ -18,9 +18,6 @@
 #define SLIME_N 1.1
 #define MAX_RAYS_COUNT 5
 
-#define VIEW_W 600
-#define VIEW_H 370
-
 using namespace std;
 
 struct RanderData
@@ -50,6 +47,9 @@ class Plot
         );
 
         virtual ~Plot() = default;
+
+        virtual int getWidth() {return w * 2;}
+        virtual int getHeight() {return h * 2;}
 
         virtual void drawScene(const shared_ptr<Scene> &scene);
 

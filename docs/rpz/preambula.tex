@@ -15,6 +15,7 @@
 \usepackage{geometry}
 \usepackage{indentfirst}
 \usepackage{pdfpages}
+\usepackage{enumerate,letltxmacro}
 
 \def\labelitemi{-}
 
@@ -77,6 +78,9 @@
 	breakatwhitespace=false, % переносить строки только если есть пробел
 	escapeinside={\#*}{*)}   % если нужно добавить комментарии в коде
 }
+
+\LetLtxMacro\itemold\item
+\renewcommand{\item}{\itemindent0.7cm\itemold}
 
 \pgfplotsset{width=0.85\linewidth, height=0.5\columnwidth}
 

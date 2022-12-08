@@ -139,11 +139,11 @@ void Plot::drawScene(const shared_ptr<Scene> &scene)
 {
     QImage buf(w * 2, h * 2, QImage::Format_RGB32);
 
-    RanderData *data = new RanderData[VIEW_H];
-    pthread_t *threads = new pthread_t[VIEW_H];
+    RanderData *data = new RanderData[h * 2];
+    pthread_t *threads = new pthread_t[h * 2];
 
     // auto start = chrono::steady_clock::now();
-    for (int i = 0; i < VIEW_H; ++i)
+    for (int i = 0; i < h * 2; ++i)
     {
         data[i].w = w;
         data[i].h = h;
@@ -157,7 +157,7 @@ void Plot::drawScene(const shared_ptr<Scene> &scene)
 
     // printf("%ld\n", chrono::duration_cast<chrono::milliseconds>(end - start).count());
 
-    for (int i = 0; i < VIEW_H; ++i)
+    for (int i = 0; i < h * 2; ++i)
         pthread_join(threads[i], nullptr);
     
     delete[] data;

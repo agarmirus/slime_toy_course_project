@@ -153,11 +153,12 @@ static void changeSpring(
 // Получение точек сферы на основе полученного икосаэдра
 static void getSphere(
     list<shared_ptr<MassPoint>> &massPoints,
-    list<shared_ptr<PlaneFace>> &planeFaces
+    list<shared_ptr<PlaneFace>> &planeFaces,
+    const int splitCount
 )
 {
     const double r = (*massPoints.begin())->getPos().getDistance(Point(IC_X, IC_Y, IC_Z));
-    for (size_t i = 0; i < SPLIT_COUNT; ++i)
+    for (size_t i = 0; i < splitCount; ++i)
     {
         size_t facesCount = planeFaces.size();
 
@@ -260,7 +261,12 @@ static void connectMassPoints(
                 mp1->addSpring(mp2);
 }
 
-static shared_ptr<Object> generateSlime()
+static shared_ptr<Object> generateSlime(
+    const int splitCount,
+    const double mass,
+    const double stif,
+    const double damp
+)
 {
     auto slime = make_shared<Slime>();
 
@@ -268,21 +274,21 @@ static shared_ptr<Object> generateSlime()
     list<shared_ptr<PlaneFace>> planeFaces;
 
     genIcosahedron(massPoints, planeFaces);
-    getSphere(massPoints, planeFaces);
+    getSphere(massPoints, planeFaces, splitCount);
     connectMassPoints(massPoints);
 
     slime->setMassPoints(massPoints);
     slime->setFaces(planeFaces);
-    slime->setKa(0.15);
+    slime->setKa(SLIME_KA);
     slime->setKd(SLIME_KD);
     slime->setKs(SLIME_KS);
     slime->setKt(SLIME_KT);
     slime->setKl(SLIME_KL);
     slime->setRGB(RGBColor(255, 255, 255));
 
-    slime->setMass(SLIME_MASS);
-    slime->setStiffness(SLIME_STIFFNESS);
-    slime->setDamp(SLIME_DAMP);
+    slime->setMass(mass);
+    slime->setStiffness(stif);
+    slime->setDamp(damp);
 
     return slime;
 }
@@ -308,9 +314,12 @@ static void *perform_updating(void *data)
             double cy = camPos.getY();
             double cz = camPos.getZ();
 
-            double lx = x - VIEW_W / 2;
-            double ly = VIEW_H / 2.0 / tan(FOV / 2.0);
-            double lz = VIEW_H / 2 - y;
+            int width = updata->plot->getWidth();
+            int height = updata->plot->getHeight();
+
+            double lx = x - width / 2;
+            double ly = height / 2.0 / tan(FOV / 2.0);
+            double lz = height / 2 - y;
 
             Vector3d n = updata->scene->getCamera()->getVec();
             Point pos = updata->grabber->getPos();
@@ -353,11 +362,11 @@ MainWindow::MainWindow(QWidget *parent):
 
     this->grabber = make_shared<Grabber>();
 
-    auto slime = generateSlime();
+    auto slime = generateSlime(SPLIT_COUNT, SLIME_MASS, SLIME_STIFFNESS, SLIME_DAMP);
 
     this->scene = make_shared<Scene>(camera, lightSource, slime, floor);
 
-    this->plot = make_shared<Plot>(VIEW_W, VIEW_H);
+    this->plot = make_shared<Plot>(734, 564);
 
     this->timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(updateScene()));
@@ -446,7 +455,12 @@ void MainWindow::resetSlime()
     double kt = scene->getSlime()->getKt();
     double kl = scene->getSlime()->getKl();
 
-    shared_ptr<Object> newSlime = generateSlime();
+    int splitCount = ui->splitBox->value();
+    double mass = ui->massBox->value();
+    double stif = ui->stifBox->value() * 1e-4;
+    double damp = ui->dampBox->value() * 1e-4;
+
+    shared_ptr<Object> newSlime = generateSlime(splitCount, mass, stif, damp);
     newSlime->setRGB(color);
     newSlime->setKt(kt);
     newSlime->setKl(kl);
@@ -461,12 +475,6 @@ void MainWindow::resetSlime()
     data->scene = scene;
 }
 
-static bool mouseInScene(const QPoint &pos, const QPoint &scenePos)
-{
-    return pos.x() >= scenePos.x() && pos.y() >= scenePos.y() && \
-    pos.x() <= scenePos.x() + VIEW_W && pos.y() <= scenePos.y() + VIEW_H;
-}
-
 void MainWindow::grabPoint(const QPoint &mousePos)
 {
     double x = mousePos.x();
@@ -477,9 +485,9 @@ void MainWindow::grabPoint(const QPoint &mousePos)
     double cy = camPos.getY();
     double cz = camPos.getZ();
 
-    double d = VIEW_H / 2.0 / tan(FOV / 2);
+    double d = plot->getHeight() / 2.0 / tan(FOV / 2);
 
-    Vector3d dij(x - VIEW_W / 2, d, VIEW_H / 2 - y);
+    Vector3d dij(x - plot->getWidth() / 2, d, plot->getHeight() / 2 - y);
     Point frPos(cx, cy, cz);
     Ray fr(dij, frPos);
     auto gp = scene->getSlime()->getGrabbingPoint(fr);

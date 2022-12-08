@@ -36,6 +36,7 @@
 
 #define SPLIT_COUNT 1
 
+#define SLIME_KA 0.15
 #define SLIME_KD 1.0
 #define SLIME_KS 0.0
 #define SLIME_KT 0.0
@@ -74,7 +75,6 @@ protected:
     void grabPoint(const QPoint &mousePos);
 
 private slots:
-    // void on_resetButton_clicked();
     void updateScene();
     void updateSlimeR(int value);
     void updateSlimeG(int value);
