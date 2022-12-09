@@ -57,6 +57,18 @@ class Object
         virtual Point getPos() const {return Point(0.0, 0.0, 0.0);}
         virtual Vector3d getVec() const {return Vector3d();}
 
+        virtual void turnAroundOZ(const double angle) {return;}
+        virtual void turnAroundOY(const double angle) {return;}
+        virtual void turnAroundOX(const double angle) {return;}
+
+        virtual void move(
+            const double dx,
+            const double dy,
+            const double dz
+        ) {return;}
+
+        virtual void toViewport(Vector3d &vec) {return;}
+
         virtual bool isIntersected(const Ray &ray) const {return false;}
 };
 

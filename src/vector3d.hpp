@@ -50,12 +50,18 @@ class Vector3d
             eq(pos.getY(), 0.0) && eq(pos.getZ(), 0.0);
         }
 
+        virtual void turnAroundOZ(const double angle) {pos.turnAroundOZ(Point(0.0, 0.0, 0.0), angle);}
+        virtual void turnAroundOY(const double angle) {pos.turnAroundOY(Point(0.0, 0.0, 0.0), angle);}
+        virtual void turnAroundOX(const double angle) {pos.turnAroundOX(Point(0.0, 0.0, 0.0), angle);}
+
         virtual Vector3d operator+(const Vector3d &vec) const;
         virtual Vector3d operator-(const Vector3d &vec) const;
         virtual Vector3d operator*(const double k) const;
         virtual double operator*(const Vector3d &vec) const;
         virtual Vector3d operator^(const Vector3d &vec) const;
         virtual Vector3d operator-() const;
+        virtual bool operator==(const Vector3d &vec) const {return pos == vec.getPos();}
+        virtual bool operator!=(const Vector3d &vec) const {return !(pos == vec.getPos());}
 };
 
 Vector3d operator*(const double k, const Vector3d &vec);

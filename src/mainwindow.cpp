@@ -317,9 +317,12 @@ static void *perform_updating(void *data)
             int width = updata->plot->getWidth();
             int height = updata->plot->getHeight();
 
-            double lx = x - width / 2;
-            double ly = height / 2.0 / tan(FOV / 2.0);
-            double lz = height / 2 - y;
+            Vector3d dij(x - width / 2, height / 2.0 / tan(FOV / 2.0), height / 2 - y);
+            updata->scene->getCamera()->toViewport(dij);
+
+            double lx = dij.getX();
+            double ly = dij.getY();
+            double lz = dij.getZ();
 
             Vector3d n = updata->scene->getCamera()->getVec();
             Point pos = updata->grabber->getPos();
@@ -488,6 +491,8 @@ void MainWindow::grabPoint(const QPoint &mousePos)
     double d = plot->getHeight() / 2.0 / tan(FOV / 2);
 
     Vector3d dij(x - plot->getWidth() / 2, d, plot->getHeight() / 2 - y);
+    scene->getCamera()->toViewport(dij);
+
     Point frPos(cx, cy, cz);
     Ray fr(dij, frPos);
     auto gp = scene->getSlime()->getGrabbingPoint(fr);
@@ -502,4 +507,80 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event)
         grabber->release();
     
     return false;
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+    auto camera = scene->getCamera();
+
+    if (event->key() == Qt::Key_W)
+    {
+        Vector3d mvVec = CAM_MOVE_STEP * normalize(camera->getVec());
+        camera->move(mvVec.getX(), mvVec.getY(), mvVec.getZ());
+    }
+    else if (event->key() == Qt::Key_A)
+    {
+        Vector3d mvVec = CAM_MOVE_STEP * normalize(cross(Vector3d(0.0, 0.0, 1.0), camera->getVec()));
+        camera->move(mvVec.getX(), mvVec.getY(), mvVec.getZ());
+    }
+    else if (event->key() == Qt::Key_S)
+    {
+        Vector3d mvVec = -CAM_MOVE_STEP * normalize(camera->getVec());
+        camera->move(mvVec.getX(), mvVec.getY(), mvVec.getZ());
+    }
+    else if (event->key() == Qt::Key_D)
+    {
+        Vector3d mvVec = CAM_MOVE_STEP * normalize(cross(camera->getVec(), Vector3d(0.0, 0.0, 1.0)));
+        camera->move(mvVec.getX(), mvVec.getY(), mvVec.getZ());
+    }
+    else if (event->key() == Qt::Key_Q)
+        camera->turnAroundOZ(CAM_ROT_ANGLE);
+    else if (event->key() == Qt::Key_E)
+        camera->turnAroundOZ(-CAM_ROT_ANGLE);
+    else if (event->key() == Qt::Key_R)
+    {
+        Vector3d newVec(0.0, 1.0, 0.0);
+
+        double xAngle = (!eq(camera->getVec().getY(), 0.0) && !eq(camera->getVec().getZ(), 0.0)) ? \
+        acos(newVec.cos(Vector3d(0.0, camera->getVec().getY(), camera->getVec().getZ()))) * \
+        (le(camera->getVec().getZ(), 0.0) ? -1 : 1) : 0.0;
+
+        xAngle += CAM_ROT_ANGLE;
+
+        if (ge(xAngle, M_PI / 2.0))
+            xAngle = 2 * M_PI - xAngle;
+        else if (le(xAngle, -M_PI / 2.0))
+            xAngle = -2 * M_PI - xAngle;
+
+        double zAngle = acos(newVec.cos(Vector3d(camera->getVec().getX(), camera->getVec().getY(), 0.0))) * \
+        (gt(camera->getVec().getX(), 0.0) ? -1 : 1);
+
+        newVec.turnAroundOX(xAngle);
+        newVec.turnAroundOZ(zAngle);
+
+        camera->setVec(newVec);
+    }
+    else if (event->key() == Qt::Key_F)
+    {
+        Vector3d newVec(0.0, 1.0, 0.0);
+
+        double xAngle = (!eq(camera->getVec().getY(), 0.0) && !eq(camera->getVec().getZ(), 0.0)) ? \
+        acos(newVec.cos(Vector3d(0.0, camera->getVec().getY(), camera->getVec().getZ()))) * \
+        (le(camera->getVec().getZ(), 0.0) ? -1 : 1) : 0.0;
+
+        xAngle -= CAM_ROT_ANGLE;
+
+        if (ge(xAngle, M_PI / 2.0))
+            xAngle = 2 * M_PI - xAngle;
+        else if (le(xAngle, -M_PI / 2.0))
+            xAngle = -2 * M_PI - xAngle;
+
+        double zAngle = acos(newVec.cos(Vector3d(camera->getVec().getX(), camera->getVec().getY(), 0.0))) * \
+        (gt(camera->getVec().getX(), 0.0) ? -1 : 1);
+
+        newVec.turnAroundOX(xAngle);
+        newVec.turnAroundOZ(zAngle);
+
+        camera->setVec(newVec);
+    }
 }

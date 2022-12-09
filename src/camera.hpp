@@ -26,6 +26,18 @@ class Camera: public Object
 
         virtual Point getPos() const {return pos;}
         virtual Vector3d getVec() const {return viewVector;}
+
+        virtual void turnAroundOZ(const double angle) {viewVector.turnAroundOZ(angle);}
+        virtual void turnAroundOY(const double angle) {viewVector.turnAroundOY(angle);}
+        virtual void turnAroundOX(const double angle) {viewVector.turnAroundOX(angle);}
+
+        virtual void move(
+            const double dx,
+            const double dy,
+            const double dz
+        ) {pos.move(dx, dy, dz);}
+
+        virtual void toViewport(Vector3d &vec);
 };
 
 #endif

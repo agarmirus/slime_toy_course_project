@@ -103,6 +103,8 @@ static RGBColor renderTraceRay(
     return resColor;
 }
 
+#include <stdio.h>
+
 static void *render(void *data)
 {
     auto rdata = static_cast<RanderData *>(data);
@@ -123,6 +125,9 @@ static void *render(void *data)
     for (int i = 0; i < 2 * w; ++i)
     {
         Vector3d dij(i - w, d, h - hn);
+
+        scene->getCamera()->toViewport(dij);
+
         Point frPos(cx, cy, cz);
 
         Ray fr(dij, frPos);

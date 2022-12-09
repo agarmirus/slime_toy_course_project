@@ -45,6 +45,9 @@
 #define SLIME_DAMP 1e-4
 #define SLIME_STIFFNESS 8e-4
 
+#define CAM_MOVE_STEP 5
+#define CAM_ROT_ANGLE M_PI / 20.0
+
 using namespace std;
 
 struct UpdateData
@@ -70,6 +73,7 @@ public:
     ~MainWindow();
 
     bool eventFilter(QObject *obj, QEvent *event);
+    void keyPressEvent(QKeyEvent *event);
 
 protected:
     void grabPoint(const QPoint &mousePos);

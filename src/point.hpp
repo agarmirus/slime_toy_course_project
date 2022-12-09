@@ -11,6 +11,12 @@ class Point
         double x;
         double y;
         double z;
+
+    protected:
+        void moveToCenter(const Point &center);
+        void returnFromCenter(const Point &center);
+
+        double toRad(const double deg) {return deg * M_PI / 180;}
     
     public:
         Point() = default;
@@ -31,6 +37,16 @@ class Point
         virtual double getZ() const {return z;}
 
         virtual double getDistance(const Point &point) const;
+
+        virtual void turnAroundOZ(const Point &p, const double angle);
+        virtual void turnAroundOY(const Point &p, const double angle);
+        virtual void turnAroundOX(const Point &p, const double angle);
+
+        virtual void move(
+            const double dx,
+            const double dy,
+            const double dz
+        );
 
         virtual bool operator==(const Point &p) const
         {

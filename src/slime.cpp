@@ -104,8 +104,6 @@ void Slime::update(const size_t ms)
 
 void Slime::updateCover()
 {
-    double coverRadius = 0.0;
-
     double minX, maxX;
     double minY, maxY;
     double minZ, maxZ;

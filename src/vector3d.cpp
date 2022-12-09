@@ -43,7 +43,7 @@ double Vector3d::dot(const Vector3d &vec) const
            pos.getY() * vec.getY() + \
            pos.getZ() * vec.getZ();
 }
-#include <stdio.h>
+
 double Vector3d::cos(const Vector3d &vec) const
 {
     if (!isNull() && !vec.isNull())
