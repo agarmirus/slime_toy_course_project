@@ -17,7 +17,7 @@
 \usepackage{pdfpages}
 \usepackage{enumerate,letltxmacro}
 
-\def\labelitemi{-}
+\def\labelitemi{---}
 
 \newcommand{\ssr}[1]{\begin{center}
 		\LARGE\bfseries{#1}
@@ -51,11 +51,12 @@
 
 \renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
 
-\captionsetup[figure]{justification=centering,labelsep=endash}
-\captionsetup[table]{labelsep=endash,justification=raggedright,singlelinecheck=off}
-
+\addto\captionsrussian{\renewcommand{\figurename}{Рисунок}}
 \DeclareCaptionLabelSeparator{dash}{~---~}
 \captionsetup{labelsep=dash}
+
+\captionsetup[figure]{justification=centering,labelsep=dash}
+\captionsetup[table]{labelsep=dash,justification=raggedright,singlelinecheck=off}
 
 \graphicspath{{images/}}%путь к рисункам
 

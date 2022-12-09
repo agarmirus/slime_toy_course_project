@@ -1,8 +1,5 @@
 #include "plot.hpp"
 
-// #include <chrono>
-// #include <stdio.h>
-
 Plot::Plot(
     const int width,
     const int height
@@ -103,8 +100,6 @@ static RGBColor renderTraceRay(
     return resColor;
 }
 
-#include <stdio.h>
-
 static void *render(void *data)
 {
     auto rdata = static_cast<RanderData *>(data);
@@ -158,6 +153,7 @@ void Plot::drawScene(const shared_ptr<Scene> &scene)
 
         pthread_create(threads + i, NULL, render, data + i);
     }
+
     // auto end = chrono::steady_clock::now();
 
     // printf("%ld\n", chrono::duration_cast<chrono::milliseconds>(end - start).count());
