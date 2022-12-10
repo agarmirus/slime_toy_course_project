@@ -25,8 +25,12 @@ struct PhysData
     double kdmp;
 };
 
+class Grabber;
+
 class Slime: public Object
 {
+    friend Grabber;
+    
     private:
         list<shared_ptr<MassPoint>> massPoints;
         list<shared_ptr<PlaneFace>> faces;
@@ -78,7 +82,7 @@ class Slime: public Object
             const Ray &ray
         ) const;
 
-        virtual shared_ptr<Point> getGrabbingPoint(const Ray &ray) const;
+        virtual bool getGrabbingPoint(Point &point, const Ray &ray) const;
 
         virtual double getKa() const {return ka;}
         virtual double getKd() const {return kd;}

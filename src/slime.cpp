@@ -1,5 +1,5 @@
 #include "slime.hpp"
-
+#include <stdio.h>
 static void *updateForces(void *data)
 {
     auto pdata = static_cast<PhysData *>(data);
@@ -27,13 +27,14 @@ static void *updateForces(void *data)
                 xij.normalize();
 
                 Vector3d vp = (vm * v.cos(xij)) * xij;
+
                 double ko = k / sp.second;
                 Vector3d fstif = -ko * (d - sp.second) * xij - kdmp * vp;
 
                 newF = newF + fstif;
             }
         }
-
+        
         if (le(pos.getZ(), 0.0) && lt(newF.getZ(), 0.0))
             newF.setZ(0.0);
 
@@ -53,6 +54,11 @@ static void *updateCoors(void *data)
         (*b)->update(1);
     
     return nullptr;
+}
+
+static double toRad(const double angle)
+{
+    return angle * M_PI / 180.0;
 }
 
 void Slime::update(const size_t ms)
@@ -209,7 +215,7 @@ bool Slime::getIntersection(
     return isIntersected;
 }
 
-shared_ptr<Point> Slime::getGrabbingPoint(const Ray &ray) const
+bool Slime::getGrabbingPoint(Point &point, const Ray &ray) const
 {
     Point pos;
     RGBColor color;
@@ -240,11 +246,16 @@ shared_ptr<Point> Slime::getGrabbingPoint(const Ray &ray) const
             p = p3;
 
         for (auto mp: massPoints)
+        {
             if (mp->getPos() == p)
-                return mp->getPosPtr();
+            {
+                point = mp->getPos();
+                return true;
+            }
+        }
     }
 
-    return nullptr;
+    return false;
 }
 
 bool Slime::isIntersected(const Ray &ray) const

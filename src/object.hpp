@@ -46,7 +46,7 @@ class Object
             const Ray &ray
         ) const {return false;}
 
-        virtual shared_ptr<Point> getGrabbingPoint(const Ray &ray) const {return nullptr;}
+        virtual bool getGrabbingPoint(Point &point, const Ray &ray) const {return false;}
 
         virtual double getKa() const {return 0.0;}
         virtual double getKd() const {return 0.0;}
