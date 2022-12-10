@@ -150,35 +150,14 @@ static void changeSpring(
     }
 }
 
-static double maxArc(size_t count, ...)
-{
-    va_list args;
-    va_start(args, count);
-
-    double m = va_arg(args, double);
-
-    for (size_t i = 0; i < count - 1; ++i)
-    {
-        double a = va_arg(args, double);
-
-        if (gt(a, m))
-            m = a;
-    }
-
-    va_end(args);
-
-    return m;
-}
-
 // Получение точек сферы на основе полученного икосаэдра
-static double getSphere(
+static void getSphere(
     list<shared_ptr<MassPoint>> &massPoints,
     list<shared_ptr<PlaneFace>> &planeFaces,
     const int splitCount
 )
 {
     const double r = (*massPoints.begin())->getPos().getDistance(Point(IC_X, IC_Y, IC_Z));
-    double maxArcLen = 0.0;
     for (size_t i = 0; i < splitCount; ++i)
     {
         size_t facesCount = planeFaces.size();
@@ -262,20 +241,6 @@ static double getSphere(
             mid23->addSpring(mid12);
             mid23->addSpring(mid13);
 
-            maxArcLen = maxArc(
-                10,
-                maxArcLen,
-                p1->getDistance(mid12->getPos()),
-                p1->getDistance(mid13->getPos()),
-                p2->getDistance(mid12->getPos()),
-                p2->getDistance(mid23->getPos()),
-                p3->getDistance(mid13->getPos()),
-                p3->getDistance(mid23->getPos()),
-                mid12->getPos().getDistance(mid13->getPos()),
-                mid12->getPos().getDistance(mid23->getPos()),
-                mid13->getPos().getDistance(mid23->getPos())
-            );
-
             if (mid12IsNew)
                 massPoints.push_back(mid12);
             if (mid13IsNew)
@@ -284,8 +249,6 @@ static double getSphere(
                 massPoints.push_back(mid23);
         }
     }
-
-    return maxArcLen;
 }
 
 static void connectMassPoints(
@@ -309,7 +272,7 @@ static shared_ptr<Object> generateSlime(
     list<shared_ptr<PlaneFace>> planeFaces;
 
     genIcosahedron(massPoints, planeFaces);
-    double arc = getSphere(massPoints, planeFaces, splitCount);
+    getSphere(massPoints, planeFaces, splitCount);
     connectMassPoints(massPoints);
 
     auto slime = make_shared<Slime>();
@@ -343,6 +306,8 @@ static void *perform_updating(void *data)
 
         if (updata->grabber->isGrabbed())
         {
+            updata->grabber->returnPoints();
+
             QPoint mousePos = updata->graphicsView->mapFromGlobal(QCursor::pos());
 
             double x = mousePos.x();
@@ -372,7 +337,7 @@ static void *perform_updating(void *data)
 
             double t = -(a * cx + b * cy + c * cz + d) / (a * lx + b * ly + c * lz);
             double newZ = cz + t * lz;
-            updata->grabber->setPos(Point(cx + t * lx, cy + t * ly, le(newZ, 0.0) ? 0.0 : newZ));
+            updata->grabber->movePoints(Point(cx + t * lx, cy + t * ly, le(newZ, 0.0) ? 0.0 : newZ));
         }
 
         updata->scene->getSlime()->updateCover();
@@ -517,7 +482,7 @@ void MainWindow::resetSlime()
     data->scene = scene;
 }
 
-void MainWindow::grabPoint(const QPoint &mousePos)
+void MainWindow::grab(const QPoint &mousePos)
 {
     double x = mousePos.x();
     double y = mousePos.y();
@@ -534,14 +499,18 @@ void MainWindow::grabPoint(const QPoint &mousePos)
 
     Point frPos(cx, cy, cz);
     Ray fr(dij, frPos);
-    auto gp = scene->getSlime()->getGrabbingPoint(fr);
-    grabber->grab(gp);
+
+    Point grabbingPoint;
+    bool isIntersected = scene->getSlime()->getGrabbingPoint(grabbingPoint, fr);
+
+    if (isIntersected)
+        grabber->grab(*(static_cast<Slime*>(scene->getSlime().get())), grabbingPoint, 50);
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
 {
     if (event->type() == QEvent::MouseButtonPress && !grabber->isGrabbed())
-        grabPoint(static_cast<QMouseEvent *>(event)->pos());
+        grab(static_cast<QMouseEvent *>(event)->pos());
     else if (event->type() == QEvent::MouseButtonRelease)
         grabber->release();
     

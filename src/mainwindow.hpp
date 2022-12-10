@@ -77,7 +77,7 @@ public:
     void keyPressEvent(QKeyEvent *event);
 
 protected:
-    void grabPoint(const QPoint &mousePos);
+    void grab(const QPoint &mousePos);
 
 private slots:
     void updateScene();

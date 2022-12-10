@@ -27,6 +27,7 @@ void Grabber::release()
 void Grabber::returnPoints()
 {
     auto pcit = prevCoors.begin();
+    
     for (auto point: points)
     {
         *point = *pcit;

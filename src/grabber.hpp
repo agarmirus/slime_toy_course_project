@@ -30,6 +30,8 @@ class Grabber
         virtual void returnPoints();
         virtual void movePoints(const Point &point);
 
+        virtual Point getPos() {return centerPos;}
+
         virtual bool isGrabbed() {return !points.empty();}
 };
 
