@@ -504,7 +504,7 @@ void MainWindow::grab(const QPoint &mousePos)
     bool isIntersected = scene->getSlime()->getGrabbingPoint(grabbingPoint, fr);
 
     if (isIntersected)
-        grabber->grab(*(static_cast<Slime*>(scene->getSlime().get())), grabbingPoint, 50);
+        grabber->grab(*(static_cast<Slime*>(scene->getSlime().get())), grabbingPoint, GRABBING_RADIUS);
 }
 
 bool MainWindow::eventFilter(QObject *obj, QEvent *event)
