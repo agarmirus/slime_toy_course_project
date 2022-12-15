@@ -8,7 +8,7 @@
 
 ```
 git clone https://github.com/agarmirus/slime_toy_course_project
-cd src
+cd ./slime_toy_course_project/src
 qmake -project
 qmake -makefile
 make
