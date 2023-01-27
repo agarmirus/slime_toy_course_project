@@ -10,6 +10,7 @@
 git clone https://github.com/agarmirus/slime_toy_course_project
 cd ./slime_toy_course_project/src
 qmake -project
+<в pro-файле необходимо указать 14-ую версию C++>
 qmake -makefile
 make
 ```
