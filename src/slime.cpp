@@ -99,10 +99,6 @@ void Slime::update(const size_t ms)
         for (size_t i = 0; i < threadsCount; ++i)
             pthread_join(threads[i], NULL);
     }
-
-    // Обновляем коэффициенты уравнений плоскостей граней
-    for (auto it: faces)
-        it->updateCoefs();
     
     delete[] data;
     delete[] threads;
