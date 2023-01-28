@@ -10,7 +10,7 @@
 
 #define G 9.81e-3
 
-#define THREAD_POINTS_COUNT 20
+#define THREAD_POINTS_COUNT 8
 
 using namespace std;
 

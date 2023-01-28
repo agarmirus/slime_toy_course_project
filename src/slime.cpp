@@ -64,7 +64,7 @@ static double toRad(const double angle)
 void Slime::update(const size_t ms)
 {
     // Выделяем память под массивы потоков и данных
-    size_t threadsCount = round(double(massPoints.size()) / double(THREAD_POINTS_COUNT) + 0.5);
+    size_t threadsCount = ceil(double(massPoints.size()) / double(THREAD_POINTS_COUNT));
     PhysData *data = new PhysData[threadsCount];
     pthread_t *threads = new pthread_t[threadsCount];
 

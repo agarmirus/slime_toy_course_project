@@ -18,13 +18,16 @@
 #define SLIME_N 1.1
 #define MAX_RAYS_COUNT 5
 
+#define CORES_TRACING_THREADS_COUNT 8
+
 using namespace std;
 
 struct RanderData
 {
     int w;
     int h;
-    int hn;
+    int hb;
+    int he;
     shared_ptr<Scene> scene;
     QImage *buf;
 };

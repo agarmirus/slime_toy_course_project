@@ -106,7 +106,8 @@ static void *render(void *data)
     shared_ptr<Scene> scene = rdata->scene;
     int w = rdata->w;
     int h = rdata->h;
-    int hn = rdata->hn;
+    int hb = rdata->hb;
+    int he = rdata->he;
     QImage *buf = rdata->buf;
 
     Point camPos = scene->getCamera()->getPos();
@@ -117,19 +118,22 @@ static void *render(void *data)
 
     double d = h / tan(FOV / 2);
 
-    for (int i = 0; i < 2 * w; ++i)
+    for (int hn = hb; hn < he; ++hn)
     {
-        Vector3d dij(i - w, d, h - hn);
+        for (int i = 0; i < 2 * w; ++i)
+        {
+            Vector3d dij(i - w, d, h - hn);
 
-        scene->getCamera()->toViewport(dij);
+            scene->getCamera()->toViewport(dij);
 
-        Point frPos(cx, cy, cz);
+            Point frPos(cx, cy, cz);
 
-        Ray fr(dij, frPos);
+            Ray fr(dij, frPos);
 
-        RGBColor c = renderTraceRay(scene, fr);
+            RGBColor c = renderTraceRay(scene, fr);
 
-        buf->setPixelColor(i, hn, QColor(c.getR(), c.getG(), c.getB()));
+            buf->setPixelColor(i, hn, QColor(c.getR(), c.getG(), c.getB()));
+        }
     }
 
     return nullptr;
@@ -139,26 +143,33 @@ void Plot::drawScene(const shared_ptr<Scene> &scene)
 {
     QImage buf(w * 2, h * 2, QImage::Format_RGB32);
 
-    RanderData *data = new RanderData[h * 2];
-    pthread_t *threads = new pthread_t[h * 2];
+    int threadsCount = ceil(2 * h / double(CORES_TRACING_THREADS_COUNT));
 
+    RanderData *data = new RanderData[threadsCount];
+    pthread_t *threads = new pthread_t[threadsCount];
+
+    int hn = 0;
+    int hstep = CORES_TRACING_THREADS_COUNT;
     // auto start = chrono::steady_clock::now();
-    for (int i = 0; i < h * 2; ++i)
+    for (int i = 0; i < threadsCount; ++i)
     {
         data[i].w = w;
         data[i].h = h;
-        data[i].hn = i;
+        data[i].hb = hn;
+        data[i].he = hn + hstep > 2 * h ? 2 * h : hn + hstep;
         data[i].scene = scene;
         data[i].buf = &buf;
 
         pthread_create(threads + i, NULL, render, data + i);
+
+        hn += hstep;
     }
 
     // auto end = chrono::steady_clock::now();
 
     // printf("%ld\n", chrono::duration_cast<chrono::milliseconds>(end - start).count());
 
-    for (int i = 0; i < h * 2; ++i)
+    for (int i = 0; i < threadsCount; ++i)
         pthread_join(threads[i], nullptr);
     
     delete[] data;
