@@ -12,8 +12,3 @@ qmake -project
 qmake -makefile
 make
 ```
-
-Сердечные благодарности коллегам:
-
-- [muji40k](https://github.com/muji40k) - терпел мое нытье про то, как тяжело писать курсач
-- [seregadanser](https://github.com/seregadanser) - помог с вращением камеры и трассировкой лучей
